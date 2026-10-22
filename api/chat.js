@@ -1,8 +1,8 @@
-// Server kecil untuk Faisal AI (Vercel Serverless Function).
+// Server Faisal AI menggunakan OpenRouter (100% Gratis & Bebas Limit)
 const PERSONA = require('./persona.js');
 
-// Menggunakan model gratis yang didukung Serverless Inference API secara resmi
-const HF_MODEL = process.env.FAISAL_MODEL || 'Qwen/Qwen2.5-Coder-32B-Instruct';
+// Menggunakan model Meta Llama 3.1 8B Instruct gratis dari OpenRouter
+const MODEL = 'meta-llama/llama-3.1-8b-instruct:free';
 const MAX_TOKENS = 500;
 const MAX_TURNS = 12;
 const MAX_CHARS = 1000;
@@ -43,69 +43,22 @@ function clean(body) {
   return { turns: merged };
 }
 
-async function viaHuggingFace(token, turns) {
-  const messages = [{ role: 'system', content: PERSONA }].concat(
-    turns.map((t) => ({ role: t.role, content: t.content }))
-  );
-
-  const r = await fetch('https://router.huggingface.co/v1/chat/completions', {
-    method: 'POST',
-    headers: { 
-      'content-type': 'application/json', 
-      'authorization': 'Bearer ' + token 
-    },
-    body: JSON.stringify({ 
-      model: HF_MODEL, 
-      max_tokens: MAX_TOKENS, 
-      messages 
-    }),
-  });
-
-  const data = await r.json().catch(() => null);
-  if (!r.ok || !data) return { status: r.status, data };
-  const choice = (data.choices || [])[0] || {};
-  return { ok: true, text: String((choice.message && choice.message.content) || '').trim(), truncated: choice.finish_reason === 'length' };
-}
-
 module.exports = async function handler(req, res) {
-  const hf = process.env.HF_TOKEN;
+  const apiKey = process.env.OPENROUTER_API_KEY;
 
   if (req.method === 'GET') {
     return res.status(200).json({
       server: 'faisal-ai',
-      versi: 2,
-      penyedia: hf ? 'huggingface' : 'belum diatur',
-      token_terbaca: !!hf,
-      model_teks: HF_MODEL,
+      penyedia: 'openrouter',
+      status: apiKey ? 'siap' : 'OPENROUTER_API_KEY belum diatur',
     });
   }
 
   if (req.method !== 'POST') return bad(res, 405, 'Gunakan POST.');
-  if (!hf) return bad(res, 500, 'Server belum diatur: HF_TOKEN kosong.');
+  if (!apiKey) return bad(res, 500, 'Server belum diatur: OPENROUTER_API_KEY kosong di Vercel.');
 
   const ip = String((req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket?.remoteAddress || 'x').trim();
   if (limited(ip)) return bad(res, 429, 'Terlalu banyak pesan. Coba lagi beberapa menit lagi.');
 
   const c = clean(req.body);
-  if (!c) return bad(res, 400, 'Pesan tidak valid.');
-
-  try {
-    const out = await viaHuggingFace(hf, c.turns);
-    if (!out.ok) {
-      console.error('AI error', out.status, JSON.stringify(out.data));
-      const raw = out.data && (out.data.error || out.data.message);
-      const msg = String(typeof raw === 'string' ? raw : (raw && raw.message) || '').replace(/\s+/g, ' ').slice(0, 220);
-      const info = out.status + (msg ? ': ' + msg : '');
-      if (out.status === 402) return bad(res, 502, 'Kuota gratis Hugging Face habis atau akun belum punya kredit (' + info + ').');
-      if (out.status === 429) return bad(res, 429, 'Faisal lagi ramai. Coba lagi sebentar lagi.');
-      if (out.status === 401 || out.status === 403) return bad(res, 502, 'Token ditolak. Cek HF_TOKEN di pengaturan server.');
-      return bad(res, 502, 'Faisal lagi tidak bisa menjawab. (' + info + ')');
-    }
-    if (!out.text) return bad(res, 502, 'Jawaban kosong. Coba tanya dengan cara lain.');
-    return res.status(200).json({ text: out.text, truncated: out.truncated });
-  } catch (e) {
-    console.error('Fetch error', e);
-    return bad(res, 502, 'Tidak bisa menghubungi server AI.');
-  }
-};
-      
+                     
