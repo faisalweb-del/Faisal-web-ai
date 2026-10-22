@@ -61,4 +61,37 @@ module.exports = async function handler(req, res) {
   if (limited(ip)) return bad(res, 429, 'Terlalu banyak pesan. Coba lagi beberapa menit lagi.');
 
   const c = clean(req.body);
-                     
+  if (!c) return bad(res, 400, 'Format pesan tidak valid.');
+
+  try {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://vercel.com',
+        'X-Title': 'Faisal AI'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: [
+          { role: 'system', content: PERSONA },
+          ...c.turns
+        ],
+        max_tokens: MAX_TOKENS,
+      }),
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      return bad(res, response.status, errData.error?.message || 'Gagal menghubungi OpenRouter.');
+    }
+
+    const data = await response.json();
+    const text = data.choices?.[0]?.message?.content || '';
+    return res.status(200).json({ text });
+  } catch (err) {
+    return bad(res, 500, 'Terjadi kesalahan pada server: ' + err.message);
+  }
+};
+      
