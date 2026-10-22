@@ -1,8 +1,12 @@
 // Server kecil untuk Faisal AI (Vercel Serverless Function).
-// API key disimpan di environment variable ANTHROPIC_API_KEY, tidak pernah dikirim ke browser.
+// Token disimpan di environment variable, tidak pernah dikirim ke browser.
+// Pilihan 1: HF_TOKEN (Hugging Face). Pilihan 2: ANTHROPIC_API_KEY (Anthropic).
+// Kalau dua-duanya ada, HF_TOKEN yang dipakai.
 const PERSONA = require('./persona.js');
 
-const MODEL = process.env.FAISAL_MODEL || 'claude-haiku-5-5';
+const HF_MODEL = process.env.FAISAL_MODEL || 'meta-llama/Llama-3.3-70B-Instruct';
+const HF_VISION_MODEL = process.env.FAISAL_VISION_MODEL || 'Qwen/Qwen2.5-VL-72B-Instruct';
+const ANTHROPIC_MODEL = process.env.FAISAL_MODEL || 'claude-haiku-5-5';
 const MAX_TOKENS = 500;          // batas panjang jawaban (mengatur biaya)
 const MAX_TURNS = 12;            // jumlah pesan terakhir yang dikirim
 const MAX_CHARS = 1000;          // batas panjang tiap pesan
@@ -54,10 +58,49 @@ function clean(body) {
   return { turns: merged, image };
 }
 
+async function viaHuggingFace(token, turns, image) {
+  const messages = [{ role: 'system', content: PERSONA }].concat(
+    turns.map((t) => ({ role: t.role, content: t.content }))
+  );
+  if (image) {
+    const last = messages[messages.length - 1];
+    last.content = [
+      { type: 'image_url', image_url: { url: 'data:' + image.media_type + ';base64,' + image.data } },
+      { type: 'text', text: last.content },
+    ];
+  }
+  const r = await fetch('https://router.huggingface.co/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token },
+    body: JSON.stringify({ model: image ? HF_VISION_MODEL : HF_MODEL, max_tokens: MAX_TOKENS, messages }),
+  });
+  const data = await r.json().catch(() => null);
+  if (!r.ok || !data) return { status: r.status, data };
+  const choice = (data.choices || [])[0] || {};
+  return { ok: true, text: String((choice.message && choice.message.content) || '').trim(), truncated: choice.finish_reason === 'length' };
+}
+
+async function viaAnthropic(key, turns, image) {
+  const messages = turns.map((t) => ({ role: t.role, content: t.content }));
+  if (image) {
+    const last = messages[messages.length - 1];
+    last.content = [{ type: 'image', source: image }, { type: 'text', text: last.content }];
+  }
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: MAX_TOKENS, system: PERSONA, messages }),
+  });
+  const data = await r.json().catch(() => null);
+  if (!r.ok || !data) return { status: r.status, data };
+  const text = (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim();
+  return { ok: true, text, truncated: data.stop_reason === 'max_tokens' };
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return bad(res, 405, 'Gunakan POST.');
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return bad(res, 500, 'Server belum diatur: ANTHROPIC_API_KEY kosong.');
+  const hf = process.env.HF_TOKEN, an = process.env.ANTHROPIC_API_KEY;
+  if (!hf && !an) return bad(res, 500, 'Server belum diatur: HF_TOKEN kosong.');
 
   const ip = String((req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket?.remoteAddress || 'x').trim();
   if (limited(ip)) return bad(res, 429, 'Terlalu banyak pesan. Coba lagi beberapa menit lagi.');
@@ -66,29 +109,20 @@ module.exports = async function handler(req, res) {
   if (!c) return bad(res, 400, 'Pesan tidak valid.');
   if (c.error) return bad(res, 400, c.error);
 
-  const messages = c.turns.map((t) => ({ role: t.role, content: t.content }));
-  if (c.image) {
-    const last = messages[messages.length - 1];
-    last.content = [{ type: 'image', source: c.image }, { type: 'text', text: last.content }];
-  }
-
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: MODEL, max_tokens: MAX_TOKENS, system: PERSONA, messages }),
-    });
-    const data = await r.json().catch(() => null);
-    if (!r.ok || !data) {
-      console.error('Anthropic error', r.status, JSON.stringify(data));
-      if (r.status === 429) return bad(res, 429, 'Faisal lagi ramai. Coba lagi sebentar lagi.');
+    const out = hf ? await viaHuggingFace(hf, c.turns, c.image) : await viaAnthropic(an, c.turns, c.image);
+    if (!out.ok) {
+      console.error('AI error', out.status, JSON.stringify(out.data));
+      if (out.status === 429) return bad(res, 429, 'Faisal lagi ramai. Coba lagi sebentar lagi.');
+      if (out.status === 401 || out.status === 403) return bad(res, 502, 'Token ditolak. Cek HF_TOKEN di pengaturan server.');
+      if (c.image) return bad(res, 502, 'Fotonya belum bisa dibaca. Coba tanpa foto atau foto lain.');
       return bad(res, 502, 'Faisal lagi tidak bisa menjawab. Coba lagi nanti.');
     }
-    const text = (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim();
-    if (!text) return bad(res, 502, 'Jawaban kosong. Coba tanya dengan cara lain.');
-    return res.status(200).json({ text, truncated: data.stop_reason === 'max_tokens' });
+    if (!out.text) return bad(res, 502, 'Jawaban kosong. Coba tanya dengan cara lain.');
+    return res.status(200).json({ text: out.text, truncated: out.truncated });
   } catch (e) {
     console.error('Fetch error', e);
     return bad(res, 502, 'Tidak bisa menghubungi server AI.');
   }
 };
+    
