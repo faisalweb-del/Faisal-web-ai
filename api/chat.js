@@ -4,8 +4,9 @@
 // Kalau dua-duanya ada, HF_TOKEN yang dipakai.
 const PERSONA = require('./persona.js');
 
-const HF_MODEL = process.env.FAISAL_MODEL || 'meta-llama/Llama-3.3-70B-Instruct';
-const HF_VISION_MODEL = process.env.FAISAL_VISION_MODEL || 'Qwen/Qwen2.5-VL-72B-Instruct';
+// Menggunakan model 8B yang 100% gratis di Hugging Face Serverless API
+const HF_MODEL = process.env.FAISAL_MODEL || 'meta-llama/Llama-3.1-8B-Instruct';
+const HF_VISION_MODEL = process.env.FAISAL_VISION_MODEL || 'meta-llama/Llama-3.1-8B-Instruct';
 const ANTHROPIC_MODEL = process.env.FAISAL_MODEL || 'claude-haiku-5-5';
 const MAX_TOKENS = 500;          // batas panjang jawaban (mengatur biaya)
 const MAX_TURNS = 12;            // jumlah pesan terakhir yang dikirim
@@ -140,3 +141,4 @@ module.exports = async function handler(req, res) {
     return bad(res, 502, 'Tidak bisa menghubungi server AI.');
   }
 };
+      
