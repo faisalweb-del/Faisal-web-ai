@@ -8,6 +8,12 @@ function parseJson(raw) {
   const t = String(raw).trim();
   try { return JSON.parse(t); } catch (e) {}
   try { return JSON.parse(Buffer.from(t, 'base64').toString('utf8')); } catch (e) {}
+  // Terima juga hasil salinan langsung dari Firebase: const firebaseConfig = { apiKey: "...", ... };
+  if (/apiKey/.test(t)) {
+    const o = {};
+    t.replace(/["']?(\w+)["']?\s*:\s*["']([^"']*)["']/g, (m, k, v) => { o[k] = v; return m; });
+    if (o.apiKey) return o;
+  }
   return null;
 }
 
