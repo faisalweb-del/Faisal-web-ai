@@ -2,6 +2,8 @@
 // Pengaman: nomor 12 digit dengan digit pemeriksa, permintaan kontak harus diterima, blokir, laporan, batas kirim, tanpa pencarian nama.
 const crypto = require('crypto');
 const L = require('./_lib.js');
+let _wp = null;
+function wp() { if (_wp === null) { try { _wp = require('web-push'); } catch (e) { _wp = false; } } return _wp; }
 
 const MAX_CONTACTS = 100;
 const MSG_MAX = 1000;
@@ -28,6 +30,33 @@ function genNum() {
 function clean(s, n) { return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, n); }
 function tid(a, b) { return [a, b].sort().join('_'); }
 const wibDay = (ms) => new Date(ms + 7 * 3600 * 1000).toISOString().slice(0, 10);
+
+async function vapidKeys(db, w) {
+  const ref = db.collection('config').doc('vapid'), s = await ref.get();
+  if (s.exists && s.data().publicKey && s.data().privateKey) return s.data();
+  return db.runTransaction(async (tx) => {
+    const x = await tx.get(ref);
+    if (x.exists && x.data().publicKey) return x.data();
+    const k = w.generateVAPIDKeys(); tx.set(ref, k); return k;
+  });
+}
+function vapidSubject() {
+  const h = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  return h ? 'https://' + h : 'mailto:admin@example.com';
+}
+async function notify(db, toId, fromId, entry, fromProfile, text) {
+  const w = wp(); if (!w) return;
+  const pcol = db.collection('profiles').doc(toId).collection('push'), snap = await pcol.get();
+  if (!snap.size) return;
+  const keys = await vapidKeys(db, w);
+  w.setVapidDetails(vapidSubject(), keys.publicKey, keys.privateKey);
+  const nm = ((entry && ((entry.first || '') + ' ' + (entry.last || '')).trim()) || (fromProfile && fromProfile.name) || '').trim() || 'Pesan baru';
+  const payload = JSON.stringify({ title: nm, body: text.slice(0, 120), tag: 'chat-' + fromId, url: '/?chat=' + fromId });
+  await Promise.all(snap.docs.slice(0, 5).map(async (d) => {
+    try { await w.sendNotification(d.data().sub, payload, { TTL: 3600, urgency: 'high' }); }
+    catch (e) { if (e && (e.statusCode === 404 || e.statusCode === 410)) { try { await pcol.doc(d.id).delete(); } catch (x) {} } }
+  }));
+}
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
@@ -59,6 +88,22 @@ module.exports = async function handler(req, res) {
       }
       throw new Error('nomor penuh');
     }
+    if (op === 'msgs') { // jalur cepat: sekali baca kalau tidak ada pesan baru
+      const oid = String(b.id || '');
+      if (!/^[\w-]{1,80}$/.test(oid) || oid === me) return L.bad(res, 400, 'Kontak tidak valid.');
+      if (hit('poll' + me, 240, 60 * 1000)) return L.bad(res, 429, 'Terlalu sering memuat. Tunggu sebentar.');
+      const after = Number(b.after) || 0;
+      const meta = await db.collection('threads').doc(tid(me, oid)).get();
+      if (!meta.exists) return res.status(200).json({ msgs: [] });
+      if (after > 0 && (meta.data().lastTs || 0) <= after) return res.status(200).json({ msgs: [] });
+      const mcol = db.collection('threads').doc(tid(me, oid)).collection('msgs');
+      let q;
+      if (after > 0) q = await mcol.where('ts', '>', after).orderBy('ts', 'asc').limit(100).get();
+      else q = await mcol.orderBy('ts', 'desc').limit(80).get();
+      let msgs = q.docs.map((d) => d.data());
+      if (!(after > 0)) msgs = msgs.reverse();
+      return res.status(200).json({ msgs: msgs.map((m) => ({ id: m.id, from: m.from === me ? 'me' : 'them', text: m.text, ts: m.ts })) });
+    }
     const mine = await ensureProfile(me);
 
     if (op === 'me') return res.status(200).json({ number: mine.number, name: mine.name || '' });
@@ -79,6 +124,26 @@ module.exports = async function handler(req, res) {
 
     if (op === 'profile') {
       await prof(me).set({ name: clean(b.name, 24) }, { merge: true });
+      return res.status(200).json({ ok: true });
+    }
+
+    if (op === 'pushkey' || op === 'pushsub' || op === 'pushoff') {
+      const w = wp();
+      if (!w) return L.bad(res, 501, 'Notifikasi belum aktif di server (paket web-push belum terpasang).');
+      const keys = await vapidKeys(db, w);
+      if (op === 'pushkey') return res.status(200).json({ key: keys.publicKey });
+      const sub = b.sub || {}, ep = String(sub.endpoint || b.endpoint || '');
+      if (!/^https:\/\/[^\s]{10,600}$/.test(ep)) return L.bad(res, 400, 'Langganan notifikasi tidak valid.');
+      const hid = crypto.createHash('sha1').update(ep).digest('hex');
+      const pcol = prof(me).collection('push');
+      if (op === 'pushoff') { await pcol.doc(hid).delete(); return res.status(200).json({ ok: true }); }
+      if (!sub.keys || !sub.keys.p256dh || !sub.keys.auth) return L.bad(res, 400, 'Langganan notifikasi tidak lengkap.');
+      const map = db.collection('pushmap').doc(hid), prev = await map.get();
+      if (prev.exists && prev.data().uid !== me) await prof(prev.data().uid).collection('push').doc(hid).delete();
+      await map.set({ uid: me });
+      await pcol.doc(hid).set({ sub: { endpoint: ep, keys: { p256dh: String(sub.keys.p256dh).slice(0, 200), auth: String(sub.keys.auth).slice(0, 100) } }, ts: Date.now() });
+      const all = await pcol.get();
+      if (all.size > 5) { const old = all.docs.map((d) => ({ d, t: d.data().ts || 0 })).sort((x, y) => x.t - y.t).slice(0, all.size - 5); await Promise.all(old.map((o) => pcol.doc(o.d.id).delete())); }
       return res.status(200).json({ ok: true });
     }
 
@@ -170,25 +235,17 @@ module.exports = async function handler(req, res) {
     const blocked = (await bl(id).doc(me).get()).exists || (await bl(me).doc(id).get()).exists;
     const col = db.collection('threads').doc(tid(me, id)).collection('msgs');
 
-    if (op === 'msgs') {
-      const after = Number(b.after) || 0;
-      let q;
-      if (after > 0) q = await col.where('ts', '>=', after).orderBy('ts', 'asc').limit(100).get();
-      else { q = await col.orderBy('ts', 'desc').limit(80).get(); }
-      let msgs = q.docs.map((d) => d.data());
-      if (!(after > 0)) msgs = msgs.reverse();
-      return res.status(200).json({ msgs: msgs.map((m) => ({ id: m.id, from: m.from === me ? 'me' : 'them', text: m.text, ts: m.ts })) });
-    }
-
     if (op === 'send') {
       if (blocked || !theirE.exists || theirE.data().status !== 'ok') return L.bad(res, 403, 'Pesan tidak terkirim.');
       const text = String(b.text == null ? '' : b.text).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, MSG_MAX);
       if (!text) return L.bad(res, 400, 'Pesan kosong.');
       if (hit('msg' + me, 20, 60 * 1000) || hit('msgd' + me, 1500, 24 * 3600 * 1000)) return L.bad(res, 429, 'Kamu kirim terlalu cepat. Tunggu sebentar.');
       const cid = /^[\w-]{6,40}$/.test(String(b.cid || '')) ? String(b.cid) : crypto.randomBytes(8).toString('hex');
-      const ts = Date.now(), m = { id: cid, from: me, text, ts };
+      const tref = db.collection('threads').doc(tid(me, id)), meta = await tref.get();
+      const ts = Math.max(Date.now(), ((meta.exists && meta.data().lastTs) || 0) + 1), m = { id: cid, from: me, text, ts };
       await col.doc(cid).set(m);
-      await db.collection('threads').doc(tid(me, id)).set({ last: text.slice(0, 80), lastTs: ts, lastFrom: me }, { merge: true });
+      await tref.set({ last: text.slice(0, 80), lastTs: ts, lastFrom: me }, { merge: true });
+      try { await Promise.race([notify(db, id, me, theirE.data(), mine, text), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { console.error('push error', e && e.message); }
       return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts } });
     }
 
