@@ -457,6 +457,90 @@ footer p { max-width: 62ch; }
 img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; object-fit: cover; }
 .pap-wrap { display: block; max-width: 260px; border-radius: 14px; overflow: hidden; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .pap-wrap canvas { display: block; width: 100%; height: auto; pointer-events: none; }
+
+/* pemutar VN */
+.vn { display: flex; align-items: center; gap: 10px; width: min(300px, 100%); min-width: min(220px, 100%); max-width: 100%; margin-top: 8px; padding: 6px 12px 6px 6px; border-radius: 999px; background: rgba(124, 152, 255, .14); border: 1px solid var(--line); white-space: normal; box-sizing: border-box; }
+.vn-av { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; display: block; }
+.vn-btn { flex: none; position: relative; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--accent); color: var(--on-accent); cursor: pointer; padding: 0; }
+.vn-btn:disabled { opacity: .6; cursor: default; }
+.vn-btn svg { position: absolute; left: 50%; top: 50%; margin: -9px 0 0 -9px; width: 18px; height: 18px; transition: transform .22s ease, opacity .2s ease; }
+.vn-btn .ic-play { transform: translateX(1px); }
+.vn-btn .ic-pause { opacity: 0; transform: scale(.4) rotate(-90deg); }
+.vn.is-playing .ic-play { opacity: 0; transform: scale(.4) rotate(90deg); }
+.vn.is-playing .ic-pause { opacity: 1; transform: none; }
+.vn-main { flex: 1; min-width: 0; }
+.vn-wave { position: relative; height: 28px; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; outline-offset: 2px; }
+.vn.nosk .vn-wave { cursor: default; }
+.vn-bars { display: flex; align-items: center; justify-content: space-between; gap: 2px; height: 100%; padding: 0 6px; box-sizing: border-box; }
+.vn-bars span { flex: 1 1 0; min-width: 2px; max-width: 4px; border-radius: 2px; background: var(--accent); opacity: .35; transition: opacity .15s; }
+.vn-bars span.on { opacity: 1; }
+.vn-track { position: absolute; left: 6px; right: 6px; top: 0; bottom: 0; pointer-events: none; }
+.vn-dot { position: absolute; left: 0; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #fff; transform: translate(-50%, -50%); box-shadow: 0 0 0 2px rgba(0, 0, 0, .25); }
+.vn-times { display: flex; justify-content: space-between; margin-top: 1px; font: 600 11px var(--f-body); color: var(--muted); font-variant-numeric: tabular-nums; }
+.vn.loading .vn-bars { animation: fz-pulse 1.2s ease-in-out infinite; }
+/* titik tiga saat Faisal mengetik */
+.msg.typing.dots-only { padding: 13px 16px; }
+.tdots { display: inline-flex; align-items: center; gap: 5px; height: 14px; }
+.tdots i { display: block; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: fz-bounce 1.1s ease-in-out infinite; }
+.tdots i:nth-child(2) { animation-delay: .15s; } .tdots i:nth-child(3) { animation-delay: .3s; }
+@keyframes fz-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-6px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .tdots i, .vn.loading .vn-bars { animation: none !important; } .vn-btn svg { transition: none; } }
+
+/* menu tahan pesan */
+.msg { position: relative; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.msg.has-react { margin-bottom: 14px; }
+.msg.flash { animation: fz-flash 1.3s ease-out; }
+@keyframes fz-flash { 0%, 40% { box-shadow: 0 0 0 3px rgba(124, 152, 255, .85); } 100% { box-shadow: 0 0 0 3px rgba(124, 152, 255, 0); } }
+.react-chip { position: absolute; bottom: -15px; width: 28px; height: 28px; padding: 0; border: 2px solid #0e1424; border-radius: 50%; background: #1b2333; font-size: 15px; line-height: 1; display: grid; place-items: center; cursor: pointer; }
+.msg.bot .react-chip { left: 8px; } .msg.me .react-chip { right: 8px; }
+.star-mark { position: absolute; top: -7px; right: -4px; width: 18px; height: 18px; border-radius: 50%; background: #1b2333; border: 1px solid var(--line); color: #ffd166; font-size: 11px; line-height: 16px; text-align: center; }
+.quote { display: block; margin: -2px 0 8px; padding: 6px 10px; border-left: 3px solid rgba(255, 255, 255, .75); border-radius: 8px; background: rgba(0, 0, 0, .2); font-size: 13px; line-height: 1.35; white-space: normal; cursor: pointer; overflow: hidden; color: inherit; }
+.msg.bot .quote { border-left-color: var(--accent); background: rgba(124, 152, 255, .12); }
+.quote b { display: block; font-size: 12px; margin-bottom: 1px; }
+.quote span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; opacity: .88; }
+.reply-bar { display: flex; align-items: center; gap: 10px; margin: 0 12px; padding: 8px 10px; border-left: 3px solid var(--accent); border-radius: 10px; background: rgba(27, 35, 51, .95); font-size: 13px; }
+.reply-bar[hidden] { display: none; }
+.reply-bar .rb-body { flex: 1; min-width: 0; }
+.reply-bar b { display: block; font-size: 12px; color: var(--accent); }
+.reply-bar span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+.reply-bar button { flex: none; width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; }
+.ctx { position: fixed; inset: 0; z-index: 90; touch-action: none; }
+.ctx[hidden] { display: none; }
+.ctx-back { position: absolute; inset: 0; background: rgba(8, 12, 24, .5); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); opacity: 0; transition: opacity .24s ease; }
+.ctx.on .ctx-back { opacity: 1; }
+.ctx-clone { position: absolute; margin: 0 !important; max-width: none !important; box-sizing: border-box; transition: transform .26s cubic-bezier(.2, .8, .2, 1); animation: none !important; pointer-events: none; }
+.ctx-bar, .ctx-menu { position: absolute; opacity: 0; transform: scale(.7); transition: transform .24s cubic-bezier(.2, 1.1, .3, 1), opacity .18s ease; background: rgba(34, 36, 40, .97); box-shadow: 0 10px 40px rgba(0, 0, 0, .45); }
+.ctx.on .ctx-bar, .ctx.on .ctx-menu { opacity: 1; transform: none; }
+.ctx-bar { display: flex; align-items: center; gap: 2px; padding: 6px 8px; border-radius: 999px; transform-origin: 20% 100%; }
+.ctx.me .ctx-bar { transform-origin: 80% 100%; }
+.ctx-bar button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; font-size: 25px; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: transform .15s; }
+.ctx-bar button:hover, .ctx-bar button:active { transform: scale(1.2); }
+.ctx-bar button.sel { background: rgba(124, 152, 255, .3); }
+.ctx-bar button.plus { background: rgba(255, 255, 255, .08); color: #fff; font-size: 24px; margin-left: 4px; }
+.ctx-menu { width: min(250px, calc(100vw - 20px)); border-radius: 16px; overflow: hidden; transform-origin: 20% 0; color: #f2f4f8; }
+.ctx.me .ctx-menu { transform-origin: 80% 0; }
+.ctx-menu button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 46px; padding: 0 16px; border: 0; border-top: 1px solid rgba(255, 255, 255, .08); background: transparent; color: inherit; font: 500 16px var(--f-body); text-align: left; cursor: pointer; }
+.ctx-menu button:first-child { border-top: 0; }
+.ctx-menu button:hover, .ctx-menu button:active { background: rgba(255, 255, 255, .08); }
+.ctx-menu button.danger { color: #ff6b7a; }
+.ctx-menu .gap { height: 6px; background: rgba(0, 0, 0, .35); }
+.ctx-menu svg { flex: none; }
+.ctx-picker { position: absolute; left: 0; right: 0; bottom: 0; max-height: 55vh; padding: 14px 12px calc(14px + env(safe-area-inset-bottom, 0px)); border-radius: 20px 20px 0 0; background: rgba(34, 36, 40, .98); transform: translateY(100%); transition: transform .26s cubic-bezier(.2, .8, .2, 1); overflow-y: auto; touch-action: pan-y; }
+.ctx-picker.on { transform: none; }
+.ctx-picker .grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; max-width: 480px; margin: 0 auto; }
+.ctx-picker button { height: 42px; border: 0; border-radius: 10px; background: transparent; font-size: 26px; cursor: pointer; }
+.ctx-picker button:hover { background: rgba(255, 255, 255, .1); }
+.ctx-toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); z-index: 95; transform: translate(-50%, 10px); padding: 9px 16px; border-radius: 999px; background: rgba(34, 36, 40, .97); color: #fff; font: 600 13px var(--f-body); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; }
+.ctx-toast.on { opacity: 1; transform: translate(-50%, 0); }
+.starsheet { position: fixed; inset: 0; z-index: 85; display: flex; flex-direction: column; background: #0b0f17; color: var(--fg); }
+.starsheet[hidden] { display: none; }
+.starsheet header { display: flex; align-items: center; justify-content: space-between; padding: calc(12px + env(safe-area-inset-top, 0px)) 14px 12px; border-bottom: 1px solid var(--line); font: 700 17px var(--f-display); }
+.starsheet header button { border: 0; background: transparent; color: var(--muted); font: 600 14px var(--f-body); cursor: pointer; padding: 8px; }
+.starsheet .list { flex: 1; overflow-y: auto; padding: 10px 14px; }
+.starsheet .it { display: block; width: 100%; text-align: left; margin-bottom: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #131925; color: var(--fg); font: 400 14px/1.4 var(--f-body); cursor: pointer; }
+.starsheet .it small { display: block; color: var(--muted); margin-bottom: 3px; font-size: 12px; }
+.starsheet .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+@media (prefers-reduced-motion: reduce) { .ctx-back, .ctx-clone, .ctx-bar, .ctx-menu, .ctx-picker { transition: none !important; } .msg.flash { animation: none; } }
 </style>
 </head>
 <body>
@@ -1420,7 +1504,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     return [{ role: 'user', content: RULES }].concat(t);
   }
   /* ---------- Faisal AI sebagai tukang foto: HD-in dan hapus background di chat ---------- */
-  var lastPhoto = null, pendingTool = null;
+  var lastPhoto = null, pendingTool = null, lastBotEl = null, replyTo = null;
   var STAR = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 1l2.6 7.4L22 11l-7.4 2.6L12 21l-2.6-7.4L2 11l7.4-2.6z"/></svg>';
   function sparkle(host) {
     if (restoring) return;
@@ -1433,8 +1517,9 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     }
   }
   function addThinking(label) {
-    var d = document.createElement('div'); d.className = 'msg bot typing';
-    d.innerHTML = '<span class="think"><img src="img/faisal-192.jpg" alt=""><span>' + label + '<span class="dots"><span></span><span></span><span></span></span></span></span>';
+    var d = document.createElement('div'); d.className = 'msg bot typing' + (label ? '' : ' dots-only');
+    if (!label) d.innerHTML = '<span class="tdots" role="status" aria-label="Faisal sedang mengetik"><i></i><i></i><i></i></span>';
+    else d.innerHTML = '<span class="think"><img src="img/faisal-192.jpg" alt=""><span>' + label + '<span class="dots"><span></span><span></span><span></span></span></span></span>';
     logEl.appendChild(d); scrollLog(); return d;
   }
   function toolIntent(text) {
@@ -1555,7 +1640,6 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     document.body.appendChild(a); a.click(); a.remove();
   }
   function addResult(blob, text, opts) {
-    recRes(blob, text, opts);
     var d = document.createElement('div'); d.className = 'msg bot';
     var url = URL.createObjectURL(blob);
     var mg = document.createElement('span'); mg.className = 'magic reveal' + (opts.cut ? ' cut' : '');
@@ -1579,7 +1663,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       var a = document.createElement('a'); a.className = 'btn'; a.style.minHeight = '36px'; a.href = opts.link.href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = opts.link.label;
       row.appendChild(a);
     }
-    d.appendChild(row); logEl.appendChild(d); scrollLog(); return d;
+    d.appendChild(row); logEl.appendChild(d); scrollLog(); recRes(blob, text, opts, d); return d;
   }
   function say2(text, link) {
     var d = addMsg('bot', text);
@@ -1843,25 +1927,56 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     cur.updated = Date.now(); cur.turns = turns.slice(-30);
     return dbPut('chats', JSON.parse(JSON.stringify(cur))).then(refreshList);
   }
+  function paintExtras(el) {
+    var r = el._rec || {}, c = el.querySelector(':scope > .react-chip'), st = el.querySelector(':scope > .star-mark');
+    if (c) c.remove(); if (st) st.remove();
+    if (r.react) {
+      c = document.createElement('button'); c.type = 'button'; c.className = 'react-chip'; c.textContent = r.react;
+      c.setAttribute('aria-label', 'Reaksi ' + r.react + '. Ketuk untuk mengubah');
+      c.addEventListener('click', function (e) { e.stopPropagation(); openMsgMenu(el); });
+      el.appendChild(c);
+    }
+    el.classList.toggle('has-react', !!r.react);
+    if (r.star) { st = document.createElement('span'); st.className = 'star-mark'; st.setAttribute('aria-label', 'Berbintang'); st.textContent = '★'; el.appendChild(st); }
+  }
+  function linkRec(r, el) {
+    if (!r || !el || !el.classList) return;
+    if (!r.id) r.id = uidn();
+    el._rec = r; el.dataset.rid = r.id; paintExtras(el);
+  }
+  function paintReply(el, rp) {
+    if (!rp || el.querySelector(':scope > .quote')) return;
+    var q = document.createElement('div'); q.className = 'quote'; q.dataset.rid = rp.rid || '';
+    var b = document.createElement('b'); b.textContent = rp.who; var sp = document.createElement('span'); sp.textContent = rp.text;
+    q.appendChild(b); q.appendChild(sp);
+    q.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var t = q.dataset.rid && logEl.querySelector('.msg[data-rid="' + q.dataset.rid + '"]');
+      if (t) { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash'); }
+    });
+    el.insertBefore(q, el.firstChild);
+  }
   function recMe(text, blob) {
-    if (restoring) return;
-    var c = ensureChat(), r = { t: 'me', text: text || '' };
+    if (restoring) return null;
+    var c = ensureChat(), r = { t: 'me', text: text || '', ts: Date.now() };
+    linkRec(r, logEl.lastElementChild);
     if (!c.recs.length) c.title = text ? text.slice(0, 40) : 'Obrolan foto';
     c.recs.push(r);
     if (blob) {
       var id = 'p' + uidn(); r.img = id;
       thumbBlob(blob).then(function (tb) { return dbPut('photos', { id: id, uid: myUid(), kind: 'in', blob: tb, created: Date.now(), chat: c.id }); });
     }
-    persist();
+    persist(); return r;
   }
-  function recBot(text) {
-    if (restoring || !text) return;
-    ensureChat().recs.push({ t: 'bot', text: String(text).slice(0, 4000) }); persist();
+  function recBot(text, el) {
+    if (restoring || !text) return null;
+    var r = { t: 'bot', text: String(text).slice(0, 4000), ts: Date.now() };
+    ensureChat().recs.push(r); linkRec(r, el || logEl.lastElementChild); persist(); return r;
   }
-  function recRes(blob, text, opts) {
+  function recRes(blob, text, opts, el) {
     if (restoring) return;
-    var c = ensureChat(), id = 'r' + uidn();
-    c.recs.push({ t: 'res', text: text, img: id, cut: !!opts.cut, name: opts.name, alt: opts.alt });
+    var c = ensureChat(), id = 'r' + uidn(), rr = { t: 'res', text: text, img: id, cut: !!opts.cut, name: opts.name, alt: opts.alt, ts: Date.now() };
+    c.recs.push(rr); linkRec(rr, el);
     dbPut('photos', { id: id, uid: myUid(), kind: 'out', blob: blob, name: opts.name, cut: !!opts.cut, created: Date.now(), chat: c.id }).then(trimOut);
     persist();
   }
@@ -1887,10 +2002,11 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var all = await dbAll('photos'), map = {};
     all.forEach(function (x) { map[x.id] = x; });
     c.recs.forEach(function (r) {
-      var ph = r.img && map[r.img];
-      if (r.t === 'me') addMsg('me', r.text, '', ph ? URL.createObjectURL(ph.blob) : null);
-      else if (r.t === 'res' && ph) addResult(ph.blob, r.text, { alt: r.alt || 'Hasil dari Faisal', cut: r.cut, name: r.name || 'faisal.png' });
-      else addMsg('bot', r.text);
+      var ph = r.img && map[r.img], el;
+      if (r.t === 'me') { el = addMsg('me', r.text, '', ph ? URL.createObjectURL(ph.blob) : null); if (r.reply) paintReply(el, r.reply); }
+      else if (r.t === 'res' && ph) el = addResult(ph.blob, r.text, { alt: r.alt || 'Hasil dari Faisal', cut: r.cut, name: r.name || 'faisal.png' });
+      else el = addMsg('bot', r.text);
+      linkRec(r, el);
     });
     restoring = false; greeted = true; closeDrawer(); renderList(); scrollLog();
   }
@@ -2058,7 +2174,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   async function respond(q, pic) {
     var n0 = turns.length;
     setBusy(true);
-    var bubble = addThinking('Faisal lagi mikir');
+    var bubble = addThinking(''); lastBotEl = bubble;
     var done = false;
     if (sampleReady && !sampleFn) {
       await Promise.race([sampleReady.catch(function () { return null; }), delay(2500)]);
@@ -2163,7 +2279,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   async function sendPap() {
     setBusy(true);
-    var b = addThinking('Faisal lagi cari foto');
+    var b = addThinking('');
     await delay(900);
     var msg = '', ok = false;
     if (papCount() >= PAP_MAX) {
@@ -2201,8 +2317,11 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if ((!text && !pic) || busy) { if (pic) photo = pic; return null; }
     chipsEl.hidden = true;
     if (pic) lastPhoto = pic.blob;
-    addMsg('me', text, '', pic && pic.url);
-    recMe(text, pic && pic.blob);
+    var rp = replyTo; hideReplyBar();
+    var meEl = addMsg('me', text, '', pic && pic.url);
+    if (rp) paintReply(meEl, rp);
+    var meRec = recMe(text, pic && pic.blob);
+    if (meRec && rp) meRec.reply = { who: rp.who, text: rp.text, rid: rp.rid };
     if (!pic && text && PAP_RE.test(text) && !(opts && opts.call)) { turns.push({ role: 'user', content: text }); sendPap(); return null; }
     var it = text ? toolIntent(text) : null;
     if (!it && pic && !text && pendingTool) it = pendingTool;
@@ -2214,13 +2333,17 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     }
     if (pic && !text) { turns.push({ role: 'user', content: '(mengirim foto tanpa pesan)\n[Pengunjung melampirkan satu foto]' }); offerTools(); return null; }
     var content = text || '(mengirim foto tanpa pesan)';
+    if (rp) content = '[Membalas ' + (rp.who === 'Faisal' ? 'pesan Faisal' : 'pesan pengunjung sendiri') + ': "' + rp.text.slice(0, 200) + '"]\n' + content;
     if (pic) content += '\n[Pengunjung melampirkan satu foto]';
     if (opts.call) content += '\n[Lagi telepon suara: jawab singkat 1 sampai 2 kalimat, tanpa daftar, tanpa emoji.]';
     turns.push({ role: 'user', content: content });
     var p = respond(text, pic && pic.blob);
     p.then(function (rep) {
-      if (rep) { recBot(rep); decorateLast(rep); }
-      if (opts.voice && !opts.call && vstate.auto && rep) speak(rep);
+      if (rep) { recBot(rep, lastBotEl); decorateLast(rep); }
+      if (opts.voice && !opts.call && vstate.auto && rep) {
+        var le = logEl.lastElementChild, lb = le && le.querySelector('.speak-btn');
+        if (lb) vnOpen(le, lb, rep, true); else speak(rep);
+      }
     });
     return p;
   }
@@ -2279,9 +2402,10 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if (cur.trim()) out.push(cur.trim());
     return out;
   }
-  var speakTok = 0, curAudio = null, curDone = null, audioCache = {}, cacheKeys = [], ttsOff = false;
+  var vnCur = null, vnCtx = null, speakTok = 0, curAudio = null, curDone = null, audioCache = {}, cacheKeys = [], ttsOff = false;
   function stopSpeak() {
     speakTok++;
+    if (vnCur) { try { vnCur.pause(); } catch (e) {} }
     try { if (synth) synth.cancel(); } catch (e) {}
     if (curAudio) { try { curAudio.pause(); } catch (e) {} curAudio = null; }
     if (curDone) { var f = curDone; curDone = null; f(); }
@@ -2382,15 +2506,361 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     return 'Suaranya gagal dikenali. Coba lagi.';
   }
 
+  /* ---------- pemutar VN: play/pause, gelombang suara, titik progres, ketuk untuk lompat ---------- */
+  function vnContext() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+      if (!vnCtx) vnCtx = new AC();
+      if (vnCtx.state === 'suspended') { var p = vnCtx.resume(); if (p && p.catch) p.catch(function () {}); }
+    } catch (e) { return null; }
+    return vnCtx;
+  }
+  function fmtT(sec) { sec = Math.max(0, Math.round(sec)); return ('0' + Math.floor(sec / 60)).slice(-2) + ':' + ('0' + (sec % 60)).slice(-2); }
+  function decodeBuf(ctx, ab) { return new Promise(function (res, rej) { try { var p = ctx.decodeAudioData(ab, res, rej); if (p && p.catch) p.catch(rej); } catch (e) { rej(e); } }); }
+  async function vnBuild(text) {
+    var ctx = vnContext(); if (!ctx) throw new Error('noctx');
+    var chunks = chunkText(text.slice(0, 600)), p = presetObj();
+    var bufs = await Promise.all(chunks.map(async function (c) {
+      var url = await fetchTts(c, p);
+      var ab = await (await fetch(url)).arrayBuffer();
+      return decodeBuf(ctx, ab);
+    }));
+    var total = 0; bufs.forEach(function (b) { total += b.length; });
+    var out = ctx.createBuffer(1, total, ctx.sampleRate), ch = out.getChannelData(0), at = 0;
+    bufs.forEach(function (b) { ch.set(b.getChannelData(0), at); at += b.length; });
+    return out;
+  }
+  function vnPeaks(buf, n) {
+    var d = buf.getChannelData(0), seg = Math.max(1, Math.floor(d.length / n)), out = [], mx = 0.0001, i, j;
+    for (i = 0; i < n; i++) {
+      var m = 0, a = i * seg, b = Math.min(d.length, a + seg);
+      for (j = a; j < b; j += 8) { var v = Math.abs(d[j]); if (v > m) m = v; }
+      out.push(m); if (m > mx) mx = m;
+    }
+    return out.map(function (v) { return Math.pow(v / mx, 0.7); });
+  }
+  function vnFakePeaks(text, n) {
+    var h = 7, out = [], i;
+    for (i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) >>> 0;
+    for (i = 0; i < n; i++) { h = (h * 1664525 + 1013904223) >>> 0; out.push(0.2 + (h / 4294967296) * 0.8); }
+    return out;
+  }
+  function vnOpen(host, oldBtn, text, auto) {
+    var N = 36, clean = cleanForSpeech(text);
+    if (!clean) return;
+    if (oldBtn && oldBtn.parentNode) oldBtn.remove();
+    stopSpeak();
+    var box = document.createElement('div'); box.className = 'vn loading';
+    box.innerHTML = '<img class="vn-av" src="img/faisal-192.jpg" alt="">' +
+      '<button type="button" class="vn-btn" aria-label="Putar suara" disabled>' +
+      '<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>' +
+      '<svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>' +
+      '<div class="vn-main"><div class="vn-wave" role="slider" tabindex="0" aria-label="Posisi suara" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="vn-bars"></div><div class="vn-track"><span class="vn-dot"></span></div></div>' +
+      '<div class="vn-times"><span class="vn-cur">00:00</span><span class="vn-tot">…</span></div></div>';
+    host.appendChild(box); scrollLog();
+    var btn = box.querySelector('.vn-btn'), wave = box.querySelector('.vn-wave'), bars = box.querySelector('.vn-bars'),
+        dot = box.querySelector('.vn-dot'), track = box.querySelector('.vn-track'), curEl = box.querySelector('.vn-cur'), totEl = box.querySelector('.vn-tot');
+    var spans = [], i;
+    for (i = 0; i < N; i++) { var sp = document.createElement('span'); sp.style.height = '4px'; bars.appendChild(sp); spans.push(sp); }
+    var buf = null, phone = false, dur = 0, offset = 0, startedAt = 0, src = null, playing = false, ended = false, raf = 0, tok = 0, btk = 0, drag = false, lastOn = -1;
+    function clock() { return phone ? Date.now() / 1000 : (vnCtx ? vnCtx.currentTime : 0); }
+    function pos() { return playing ? Math.min(dur, offset + clock() - startedAt) : offset; }
+    function paint(f) {
+      f = Math.max(0, Math.min(1, f));
+      dot.style.left = (f * 100) + '%';
+      var on = Math.round(f * N);
+      if (on !== lastOn) { for (var k = 0; k < N; k++) spans[k].classList.toggle('on', k < on); lastOn = on; }
+      wave.setAttribute('aria-valuenow', String(Math.round(f * 100)));
+    }
+    function ui() {
+      var p = pos(), f = dur ? p / dur : 0;
+      paint(drag ? f : f);
+      curEl.textContent = fmtT(ended ? dur : p);
+      box.classList.toggle('is-playing', playing);
+      btn.setAttribute('aria-label', playing ? 'Jeda suara' : 'Putar suara');
+    }
+    function tick() { cancelAnimationFrame(raf); if (!playing) return; ui(); raf = requestAnimationFrame(tick); }
+    function finish() {
+      playing = false; ended = true; offset = dur; cancelAnimationFrame(raf); ui();
+    }
+    function startSrc() {
+      var ctx = vnContext(); src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination);
+      var my = ++tok; src.onended = function () { if (my === tok && playing) finish(); };
+      src.start(0, Math.min(offset, Math.max(0, dur - 0.01))); startedAt = ctx.currentTime;
+    }
+    function haltSrc() { tok++; if (src) { try { src.stop(); } catch (e) {} try { src.disconnect(); } catch (e) {} src = null; } }
+    var api = {
+      pause: function () {
+        if (!playing) return;
+        offset = pos(); playing = false;
+        if (phone) { speakTok++; try { synth.cancel(); } catch (e) {} offset = 0; } else haltSrc();
+        ui();
+      }
+    };
+    async function play() {
+      if (btn.disabled) return;
+      if (playing) { api.pause(); return; }
+      stopSpeak(); vnCur = api;
+      if (ended || offset >= dur - 0.05) { offset = 0; ended = false; }
+      if (phone) {
+        var tk = ++speakTok; playing = true; startedAt = clock(); offset = 0; ui(); tick();
+        speakBrowser(clean.slice(0, 600), tk).then(function () { if (playing && tk === speakTok) finish(); });
+        return;
+      }
+      var ctx = vnContext();
+      if (ctx.state !== 'running') { try { await Promise.race([ctx.resume(), delay(700)]); } catch (e) {} }
+      if (ctx.state !== 'running') return;
+      ended = false; startSrc(); playing = true; ui(); tick();
+    }
+    function seek(f) {
+      if (phone || !buf) return;
+      f = Math.max(0, Math.min(1, f)); ended = false; offset = f * dur;
+      if (playing) { haltSrc(); startSrc(); } 
+      ui();
+    }
+    function fracAt(ev) { var r = track.getBoundingClientRect(); return r.width ? (ev.clientX - r.left) / r.width : 0; }
+    wave.addEventListener('pointerdown', function (ev) {
+      if (phone || !buf) return; drag = true; try { wave.setPointerCapture(ev.pointerId); } catch (e) {}
+      paint(fracAt(ev));
+    });
+    wave.addEventListener('pointermove', function (ev) { if (drag) paint(fracAt(ev)); });
+    function up(ev) { if (!drag) return; drag = false; seek(fracAt(ev)); }
+    wave.addEventListener('pointerup', up);
+    wave.addEventListener('pointercancel', function () { drag = false; ui(); });
+    wave.addEventListener('keydown', function (ev) {
+      if (phone || !buf) return;
+      if (ev.key === 'ArrowRight') { ev.preventDefault(); seek(pos() / dur + 0.05); }
+      else if (ev.key === 'ArrowLeft') { ev.preventDefault(); seek(pos() / dur - 0.05); }
+    });
+    btn.addEventListener('click', play);
+    function ready(peaks) {
+      peaks.forEach(function (v, k) { spans[k].style.height = Math.round(4 + v * 20) + 'px'; });
+      totEl.textContent = fmtT(dur); box.classList.remove('loading'); btn.disabled = false; ui();
+      if (phone) box.classList.add('nosk');
+    }
+    (async function () {
+      try {
+        buf = await vnBuild(clean); dur = buf.duration; ready(vnPeaks(buf, N));
+        if (auto) { var c = vnContext(); if (c && c.state === 'running') play(); }
+      } catch (e) {
+        if (e && e.status === 401) { box.remove(); showLogin(); return; }
+        if (e && (e.status === 501 || e.status === 404 || e.status === 405)) ttsOff = true;
+        phone = true; dur = Math.max(2, Math.min(60, clean.length / 14)); ready(vnFakePeaks(clean, N));
+        if (auto && synth) play();
+      }
+    })();
+  }
+
   /* tombol dengar di balasan Faisal */
   function decorateLast(text) {
     var el = logEl.lastElementChild;
-    if (!el || !el.classList.contains('bot') || el.classList.contains('err') || el.querySelector('.speak-btn')) return;
+    if (!el || !el.classList.contains('bot') || el.classList.contains('err') || el.querySelector('.speak-btn') || el.querySelector('.vn')) return;
     var b = document.createElement('button'); b.type = 'button'; b.className = 'speak-btn';
     b.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg><span>Dengar</span>';
-    b.addEventListener('click', function () { speak(text); });
+    b.addEventListener('click', function () { vnContext(); vnOpen(el, b, text, true); });
     el.appendChild(b);
   }
+
+
+  /* ---------- menu tahan pesan: blur, reaksi emoji, balas, bagikan, salin, bintang, hapus ---------- */
+  var QUICK = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+  var MORE = '😀 😃 😄 😁 😆 😅 🤣 😂 🙂 😉 😊 😍 🥰 😘 😋 😎 🤩 🥳 😏 😒 😞 😔 😟 😕 🙁 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😱 😨 😰 😥 😓 🤗 🤔 🤭 🤫 🙄 😬 😮 😯 😲 😴 🤤 😷 🤒 🤕 🤢 🤮 🤧 😇 🤠 🤡 💩 👻 💀 👽 🤖 🙈 🙉 🙊 ❤️ 🧡 💛 💚 💙 💜 🖤 🤍 💔 💕 💞 💓 💗 💖 💘 💝 👍 👎 👊 ✊ 👏 🙌 👐 🤝 🙏 ✌️ 🤞 🤟 🤘 👌 👈 👉 👆 👇 ☝️ ✋ 👋 💪 🔥 ✨ ⭐ 🌟 💯 💥 💫 🎉 🎊 🏆 🥇'.split(' ');
+  var I_REPLY = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 6 6v3"/></svg>';
+  var I_SHARE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4l5 5-5 5M20 9H9a5 5 0 0 0-5 5v5"/></svg>';
+  var I_COPY = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+  var I_STAR = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/></svg>';
+  var I_TRASH = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+  var ctx = { open: false, el: null }, lp = { t: 0, x: 0, y: 0, fired: 0 };
+  var ctxRoot = document.createElement('div'); ctxRoot.className = 'ctx'; ctxRoot.hidden = true;
+  ctxRoot.innerHTML = '<div class="ctx-back"></div><div class="ctx-bar" role="toolbar" aria-label="Reaksi"></div><div class="ctx-menu" role="menu"></div><div class="ctx-picker" aria-label="Pilih emoji"><div class="grid"></div></div>';
+  chatEl.appendChild(ctxRoot);
+  var ctxBack = ctxRoot.querySelector('.ctx-back'), ctxBar = ctxRoot.querySelector('.ctx-bar'), ctxMenu = ctxRoot.querySelector('.ctx-menu'), ctxPick = ctxRoot.querySelector('.ctx-picker'), ctxClone = null;
+  var toastEl = document.createElement('div'); toastEl.className = 'ctx-toast'; toastEl.setAttribute('role', 'status'); chatEl.appendChild(toastEl);
+  var toastT = 0;
+  function toast(t) { toastEl.textContent = t; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, 1800); }
+
+  /* bar balasan di atas kolom ketik */
+  var rbar = document.createElement('div'); rbar.className = 'reply-bar'; rbar.hidden = true;
+  rbar.innerHTML = '<div class="rb-body"><b></b><span></span></div><button type="button" aria-label="Batal membalas">×</button>';
+  formEl.parentNode.insertBefore(rbar, formEl);
+  function hideReplyBar() { replyTo = null; rbar.hidden = true; }
+  rbar.querySelector('button').addEventListener('click', hideReplyBar);
+
+  function msgText(el) {
+    var c = el.cloneNode(true);
+    c.querySelectorAll('.quote,.vn,.speak-btn,.res-actions,.react-chip,.star-mark,.magic,.pap-wrap,canvas,button').forEach(function (n) { n.remove(); });
+    return (c.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+  function snippet(el) { var t = msgText(el); return t ? t.slice(0, 120) : '📷 Foto'; }
+  function copyText(t) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
+    return new Promise(function (res, rej) {
+      try { var ta = document.createElement('textarea'); ta.value = t; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); ta.remove(); ok ? res() : rej(); } catch (e) { rej(e); }
+    });
+  }
+  function holder(el) { return el._rec || (el._rec = { eph: true }); }
+  function setReact(el, em) { var r = holder(el); r.react = (r.react === em) ? null : em; paintExtras(el); persist(); }
+  function toggleStar(el) { var r = holder(el); r.star = !r.star; paintExtras(el); persist(); toast(r.star ? 'Diberi bintang' : 'Bintang dilepas'); }
+  function delMsg(el) {
+    var r = el._rec;
+    if (r && cur && !r.eph) {
+      var i = cur.recs.indexOf(r); if (i >= 0) cur.recs.splice(i, 1);
+      if (r.t === 'me' && r.img) dbDel('photos', r.img);
+      if (r.text && r.t !== 'res') {
+        var role = r.t === 'me' ? 'user' : 'assistant';
+        for (var k = turns.length - 1; k >= 0; k--) if (turns[k].role === role && String(turns[k].content).indexOf(r.text.slice(0, 40)) === 0) { turns.splice(k, 1); break; }
+      }
+      if (!cur.recs.length) { var id = cur.id; cur = null; dbDel('chats', id).then(refreshList); } else persist();
+    }
+    el.remove(); toast('Pesan dihapus');
+  }
+  function closeMsgMenu(done) {
+    if (!ctx.open) return; ctx.open = false;
+    ctxRoot.classList.remove('on'); ctxPick.classList.remove('on');
+    var el = ctx.el;
+    setTimeout(function () { ctxRoot.hidden = true; if (ctxClone) { ctxClone.remove(); ctxClone = null; } if (el) el.style.visibility = ''; if (done) done(); }, 220);
+  }
+  function mi(label, icon, fn, cls) {
+    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem'); if (cls) b.className = cls;
+    b.innerHTML = '<span></span>' + (icon || ''); b.firstChild.textContent = label;
+    b.addEventListener('click', function (e) { e.stopPropagation(); fn(); }); return b;
+  }
+  function menuMain(el) {
+    var r = el._rec || {}, isMe = el.classList.contains('me'), pap = !!el.querySelector('.pap-wrap'), txt = msgText(el);
+    ctxMenu.replaceChildren();
+    ctxMenu.appendChild(mi('Balas', I_REPLY, function () {
+      closeMsgMenu(function () {
+        replyTo = { who: isMe ? 'Kamu' : 'Faisal', text: snippet(el), rid: (el._rec && el._rec.id) || '' };
+        rbar.querySelector('b').textContent = 'Membalas ' + (isMe ? 'dirimu sendiri' : 'Faisal'); rbar.querySelector('span').textContent = replyTo.text; rbar.hidden = false; inputEl.focus();
+      });
+    }));
+    if (txt && !pap) {
+      ctxMenu.appendChild(mi('Bagikan', I_SHARE, function () {
+        closeMsgMenu(function () {
+          if (navigator.share) navigator.share({ text: txt }).catch(function () {});
+          else copyText(txt).then(function () { toast('Disalin (browser ini belum bisa bagikan)'); }, function () { toast('Gagal membagikan'); });
+        });
+      }));
+      ctxMenu.appendChild(mi('Salin', I_COPY, function () { closeMsgMenu(function () { copyText(txt).then(function () { toast('Pesan disalin'); }, function () { toast('Gagal menyalin'); }); }); }));
+    }
+    ctxMenu.appendChild(mi(r.star ? 'Lepas Bintang' : 'Beri Bintang', I_STAR, function () { closeMsgMenu(function () { toggleStar(el); }); }));
+    ctxMenu.appendChild(mi('Hapus', I_TRASH, function () { closeMsgMenu(function () { delMsg(el); }); }, 'danger'));
+    var g = document.createElement('div'); g.className = 'gap'; ctxMenu.appendChild(g);
+    ctxMenu.appendChild(mi('Lainnya…', '', function () { menuMore(el); }));
+  }
+  function menuMore(el) {
+    var r = el._rec || {}, isMe = el.classList.contains('me'), txt = msgText(el);
+    ctxMenu.replaceChildren();
+    if (isMe && txt) ctxMenu.appendChild(mi('Edit lalu kirim ulang', I_REPLY, function () { closeMsgMenu(function () { inputEl.value = txt; autosize(); inputEl.focus(); }); }));
+    if (!isMe && txt && !el.querySelector('.pap-wrap')) ctxMenu.appendChild(mi('Dengarkan sebagai VN', '', function () {
+      closeMsgMenu(function () { var v = el.querySelector('.vn-btn'); if (v) { v.click(); return; } vnContext(); vnOpen(el, el.querySelector('.speak-btn'), txt, true); });
+    }));
+    ctxMenu.appendChild(mi('Info pesan', '', function () {
+      closeMsgMenu(function () { toast(r.ts ? 'Dikirim ' + new Date(r.ts).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).replace(':', '.') + ' WIB' : 'Waktu pesan ini tidak tercatat'); });
+    }));
+    ctxMenu.appendChild(mi('Kembali', '', function () { menuMain(el); }));
+  }
+  function buildBar(el) {
+    var r = el._rec || {};
+    ctxBar.replaceChildren();
+    QUICK.forEach(function (em) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = em; b.setAttribute('aria-label', 'Reaksi ' + em);
+      if (r.react === em) b.className = 'sel';
+      b.addEventListener('click', function (e) { e.stopPropagation(); closeMsgMenu(function () { setReact(el, em); }); });
+      ctxBar.appendChild(b);
+    });
+    var p = document.createElement('button'); p.type = 'button'; p.className = 'plus'; p.textContent = '+'; p.setAttribute('aria-label', 'Pilih emoji lain');
+    p.addEventListener('click', function (e) {
+      e.stopPropagation(); ctxPick.classList.add('on');
+    });
+    ctxBar.appendChild(p);
+    var grid = ctxPick.querySelector('.grid'); grid.replaceChildren();
+    MORE.forEach(function (em) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = em;
+      b.addEventListener('click', function (e) { e.stopPropagation(); closeMsgMenu(function () { setReact(el, em); }); });
+      grid.appendChild(b);
+    });
+  }
+  function openMsgMenu(el) {
+    if (ctx.open || !el || el.classList.contains('typing')) return;
+    ctx.open = true; ctx.el = el;
+    var rect = el.getBoundingClientRect(), isMe = el.classList.contains('me');
+    ctxRoot.classList.toggle('me', isMe); ctxRoot.hidden = false; ctxRoot.classList.remove('on');
+    buildBar(el); menuMain(el);
+    var cl = el.cloneNode(true);
+    cl.classList.remove('typing', 'flash'); cl.removeAttribute('data-rid'); cl.classList.add('ctx-clone');
+    var oc = el.querySelectorAll('canvas'), cc = cl.querySelectorAll('canvas');
+    for (var i = 0; i < oc.length; i++) { try { cc[i].width = oc[i].width; cc[i].height = oc[i].height; cc[i].getContext('2d').drawImage(oc[i], 0, 0); } catch (e) {} }
+    cl.style.width = rect.width + 'px'; cl.style.left = rect.left + 'px'; cl.style.top = '0px';
+    ctxRoot.insertBefore(cl, ctxBar); ctxClone = cl;
+    var vw = window.innerWidth, vh = window.innerHeight, pad = 10, gap = 8;
+    var barW = ctxBar.offsetWidth, barH = ctxBar.offsetHeight, menuH = ctxMenu.offsetHeight, menuW = ctxMenu.offsetWidth;
+    var ch = Math.min(rect.height, Math.max(80, vh - 2 * pad - barH - menuH - 2 * gap));
+    var total = barH + gap + ch + gap + menuH;
+    var gTop = Math.max(pad, Math.min(rect.top - barH - gap, vh - total - pad));
+    var cTop = gTop + barH + gap;
+    cl.style.maxHeight = ch + 'px'; cl.style.overflow = 'hidden'; cl.style.top = cTop + 'px';
+    var side = function (w) { return isMe ? Math.min(vw - pad - w, Math.max(pad, rect.right - w)) : Math.max(pad, Math.min(rect.left, vw - pad - w)); };
+    ctxBar.style.left = side(barW) + 'px'; ctxBar.style.top = gTop + 'px';
+    ctxMenu.style.left = side(menuW) + 'px'; ctxMenu.style.top = (cTop + ch + gap) + 'px';
+    cl.style.transform = 'translateY(' + (rect.top - cTop) + 'px)';
+    el.style.visibility = 'hidden';
+    void ctxRoot.offsetWidth;
+    requestAnimationFrame(function () { ctxRoot.classList.add('on'); cl.style.transform = 'none'; });
+  }
+  ctxBack.addEventListener('click', function () { if (ctxPick.classList.contains('on')) ctxPick.classList.remove('on'); else closeMsgMenu(); });
+  ctxRoot.addEventListener('click', function (e) { if (e.target === ctxRoot) closeMsgMenu(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ctx.open) closeMsgMenu(); });
+  window.addEventListener('resize', function () { if (ctx.open) closeMsgMenu(); });
+
+  /* tahan lama (HP) atau klik kanan (komputer) pada pesan */
+  function lpTarget(e) { var m = e.target.closest && e.target.closest('.msg'); return (m && !m.classList.contains('typing') && !e.target.closest('button,a,input,textarea,.vn-wave')) ? m : null; }
+  logEl.addEventListener('pointerdown', function (e) {
+    if (e.button > 0) return;
+    var m = lpTarget(e); if (!m) return;
+    lp.x = e.clientX; lp.y = e.clientY; clearTimeout(lp.t);
+    lp.t = setTimeout(function () { lp.fired = Date.now(); try { if (navigator.vibrate) navigator.vibrate(12); } catch (x) {} openMsgMenu(m); }, 420);
+  });
+  logEl.addEventListener('pointermove', function (e) { if (lp.t && (Math.abs(e.clientX - lp.x) > 10 || Math.abs(e.clientY - lp.y) > 10)) { clearTimeout(lp.t); lp.t = 0; } });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (n) { logEl.addEventListener(n, function () { clearTimeout(lp.t); lp.t = 0; }); });
+  logEl.addEventListener('scroll', function () { clearTimeout(lp.t); lp.t = 0; }, { passive: true });
+  logEl.addEventListener('contextmenu', function (e) {
+    var m = e.target.closest && e.target.closest('.msg'); if (!m || m.classList.contains('typing')) return;
+    e.preventDefault(); clearTimeout(lp.t); lp.t = 0; if (!ctx.open) openMsgMenu(m);
+  });
+  logEl.addEventListener('click', function (e) { if (Date.now() - lp.fired < 700) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+  /* daftar pesan berbintang */
+  var starSheet = document.createElement('div'); starSheet.className = 'starsheet'; starSheet.hidden = true;
+  starSheet.innerHTML = '<header><span>Pesan berbintang</span><button type="button">Tutup</button></header><div class="list"></div>';
+  chatEl.appendChild(starSheet);
+  starSheet.querySelector('button').addEventListener('click', function () { starSheet.hidden = true; });
+  async function showStarred() {
+    closeDrawer(); await flushSave();
+    var all = (await dbAll('chats')).filter(function (c) { return c.uid === myUid(); }), list = starSheet.querySelector('.list'), n = 0;
+    list.replaceChildren();
+    all.sort(function (a, b) { return b.updated - a.updated; }).forEach(function (c) {
+      (c.recs || []).forEach(function (r) {
+        if (!r.star) return; n++;
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'it';
+        var sm = document.createElement('small'); sm.textContent = (c.title || 'Obrolan') + ' · ' + (r.t === 'me' ? 'Kamu' : 'Faisal');
+        var tx = document.createElement('span'); tx.textContent = (r.text || '📷 Foto').slice(0, 160);
+        b.appendChild(sm); b.appendChild(tx);
+        b.addEventListener('click', async function () {
+          starSheet.hidden = true; await openConversation(c.id);
+          var t = logEl.querySelector('.msg[data-rid="' + r.id + '"]');
+          if (t) { t.scrollIntoView({ block: 'center' }); t.classList.add('flash'); }
+        });
+        list.appendChild(b);
+      });
+    });
+    if (!n) { var e = document.createElement('div'); e.className = 'empty'; e.textContent = 'Belum ada pesan berbintang. Tahan sebuah pesan lalu pilih "Beri Bintang".'; list.appendChild(e); }
+    starSheet.hidden = false;
+  }
+  var starLink = document.createElement('button'); starLink.type = 'button'; starLink.className = 'drawer-link'; starLink.id = 'open-starred';
+  starLink.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/></svg> <span>Pesan berbintang</span>';
+  starLink.addEventListener('click', showStarred);
+  $('#open-gallery').insertAdjacentElement('afterend', starLink);
 
   /* VN: tekan mic, bicara, otomatis terkirim */
   var micBtn = $('#chat-mic'), recording = false;
@@ -2398,7 +2868,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   micBtn.addEventListener('click', async function () {
     if (recording) { stopListening(); return; }
     if (busy) return;
-    stopSpeak();
+    vnContext(); stopSpeak();
     if (!SR) { addMsg('bot', micMsg('unsupported'), 'err'); return; }
     recording = true; micBtn.classList.add('rec'); micBtn.setAttribute('aria-label', 'Berhenti merekam');
     var oldPh = inputEl.placeholder; inputEl.placeholder = 'Lagi dengerin… ngomong aja';
