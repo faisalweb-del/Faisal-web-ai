@@ -19,8 +19,9 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   const rvKey = process.env.REPLICAVOX_API_KEY;
   const rvVoice = String(process.env.REPLICAVOX_VOICE_ID || '').trim();
-  const useRv = !!(rvKey && rvVoice);
   const key = process.env.GEMINI_API_KEY;
+  const forceGemini = String(process.env.TTS_PROVIDER || '').toLowerCase() === 'gemini' && !!key;
+  const useRv = !forceGemini && !!(rvKey && rvVoice);
   if (!useRv && !key) return L.bad(res, 501, 'Suara belum aktif: REPLICAVOX_API_KEY + REPLICAVOX_VOICE_ID (atau GEMINI_API_KEY) belum diatur di server.', { code: 'no_tts' });
 
   let who = String((req.headers['x-forwarded-for'] || '').split(',')[0] || 'x').trim();

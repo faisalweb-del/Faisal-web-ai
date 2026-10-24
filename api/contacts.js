@@ -92,17 +92,34 @@ module.exports = async function handler(req, res) {
       const oid = String(b.id || '');
       if (!/^[\w-]{1,80}$/.test(oid) || oid === me) return L.bad(res, 400, 'Kontak tidak valid.');
       if (hit('poll' + me, 240, 60 * 1000)) return L.bad(res, 429, 'Terlalu sering memuat. Tunggu sebentar.');
-      const after = Number(b.after) || 0;
+      const after = Number(b.after) || 0, crts = Number(b.rts) || 0;
       const meta = await db.collection('threads').doc(tid(me, oid)).get();
-      if (!meta.exists) return res.status(200).json({ msgs: [] });
-      if (after > 0 && (meta.data().lastTs || 0) <= after) return res.status(200).json({ msgs: [] });
+      if (!meta.exists) return res.status(200).json({ msgs: [], rts: 0 });
+      const md = meta.data(), rts = md.rts || 0;
+      const newMsgs = !(after > 0 && (md.lastTs || 0) <= after), newUpd = after > 0 && rts > crts;
+      if (!newMsgs && !newUpd) return res.status(200).json({ msgs: [], rts });
       const mcol = db.collection('threads').doc(tid(me, oid)).collection('msgs');
-      let q;
-      if (after > 0) q = await mcol.where('ts', '>', after).orderBy('ts', 'asc').limit(100).get();
-      else q = await mcol.orderBy('ts', 'desc').limit(80).get();
-      let msgs = q.docs.map((d) => d.data());
-      if (!(after > 0)) msgs = msgs.reverse();
-      return res.status(200).json({ msgs: msgs.map((m) => ({ id: m.id, from: m.from === me ? 'me' : 'them', text: m.text, ts: m.ts })) });
+      const view = (m) => {
+        const o = { id: m.id, from: m.from === me ? 'me' : 'them', text: m.deleted ? '' : m.text, ts: m.ts };
+        if (m.deleted) o.deleted = true;
+        if (m.react && typeof m.react === 'object') { const r = {}; Object.keys(m.react).forEach((k) => { if (m.react[k]) r[k === me ? 'me' : 'them'] = m.react[k]; }); if (Object.keys(r).length) o.react = r; }
+        if (m.reply && m.reply.mid) o.reply = { mid: m.reply.mid, text: m.reply.text || '', who: m.from === me ? m.reply.who : (m.reply.who === 'me' ? 'them' : 'me') };
+        return o;
+      };
+      let msgs = [], upd = [];
+      if (newMsgs) {
+        const q = after > 0 ? await mcol.where('ts', '>', after).orderBy('ts', 'asc').limit(100).get() : await mcol.orderBy('ts', 'desc').limit(80).get();
+        msgs = q.docs.map((d) => d.data());
+        if (!(after > 0)) msgs = msgs.reverse();
+      }
+      if (newUpd) {
+        const q2 = await mcol.orderBy('ts', 'desc').limit(100).get();
+        upd = q2.docs.map((d) => d.data()).filter((m) => m.deleted || (m.react && Object.keys(m.react).some((k) => m.react[k]))).map((m) => { const v = view(m); return { id: v.id, react: v.react || null, deleted: !!v.deleted }; });
+        const have = {}; upd.forEach((u) => { have[u.id] = 1; });
+        // pesan yang reaksinya baru dihapus tidak ikut daftar di atas, jadi kirim juga yang tidak punya reaksi supaya klien bisa menghapusnya
+        q2.docs.forEach((d) => { const m = d.data(); if (!have[m.id] && m.ts <= (crts || 0) + 1e13) upd.push({ id: m.id, react: null, deleted: false }); });
+      }
+      return res.status(200).json({ msgs: msgs.map(view), upd, rts });
     }
     const mine = await ensureProfile(me);
 
@@ -117,7 +134,7 @@ module.exports = async function handler(req, res) {
       const bs = await bl(me).get();
       return res.status(200).json({
         me: { number: mine.number, name: mine.name || '' },
-        contacts: contacts.map((c) => ({ id: c.id, first: c.first || '', last: c.last || '', number: c.number || '', name: c.name || '', status: c.status, created: c.created || 0, last: lm[c.id] || null })),
+        contacts: contacts.map((c) => ({ id: c.id, first: c.first || '', last: c.last || '', number: c.number || '', name: c.name || '', status: c.status, created: c.created || 0, lastMsg: lm[c.id] || null })),
         blocked: bs.docs.map((d) => ({ id: d.id, first: d.data().first || '', last: d.data().last || '', number: d.data().number || '' })),
       });
     }
@@ -243,10 +260,31 @@ module.exports = async function handler(req, res) {
       const cid = /^[\w-]{6,40}$/.test(String(b.cid || '')) ? String(b.cid) : crypto.randomBytes(8).toString('hex');
       const tref = db.collection('threads').doc(tid(me, id)), meta = await tref.get();
       const ts = Math.max(Date.now(), ((meta.exists && meta.data().lastTs) || 0) + 1), m = { id: cid, from: me, text, ts };
+      if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me' };
       await col.doc(cid).set(m);
       await tref.set({ last: text.slice(0, 80), lastTs: ts, lastFrom: me }, { merge: true });
       try { await Promise.race([notify(db, id, me, theirE.data(), mine, text), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { console.error('push error', e && e.message); }
-      return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts } });
+      return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who } : undefined } });
+    }
+
+    if (op === 'react' || op === 'unsend') {
+      if (blocked || !theirE.exists || theirE.data().status !== 'ok') return L.bad(res, 403, 'Tidak bisa diproses.');
+      const mid = String(b.mid || '');
+      if (!/^[\w-]{6,40}$/.test(mid)) return L.bad(res, 400, 'Pesan tidak valid.');
+      const mref = col.doc(mid), ms = await mref.get();
+      if (!ms.exists) return L.bad(res, 404, 'Pesan tidak ditemukan.');
+      const md = ms.data(), tref = db.collection('threads').doc(tid(me, id)), meta = await tref.get(), now = Math.max(Date.now(), ((meta.exists && meta.data().rts) || 0) + 1);
+      if (op === 'react') {
+        if (hit('rx' + me, 60, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat.');
+        const em = clean(b.emoji, 8);
+        await mref.set({ react: { [me]: em } }, { merge: true });
+      } else {
+        if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa ditarik.');
+        await mref.set({ deleted: true, text: '' }, { merge: true });
+        if (meta.exists && meta.data().lastTs === md.ts) await tref.set({ last: 'Pesan ditarik' }, { merge: true });
+      }
+      await tref.set({ rts: now }, { merge: true });
+      return res.status(200).json({ ok: true });
     }
 
     return L.bad(res, 400, 'Perintah tidak dikenal.');
