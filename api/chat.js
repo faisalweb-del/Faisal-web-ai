@@ -7,7 +7,7 @@ const L = require('./_lib.js');
 const MODEL = process.env.FAISAL_MODEL || 'gemini-3.8-flash'; // khusus Gemini
 // Daftar model OpenRouter, dicoba berurutan kalau yang pertama gagal. Pisahkan dengan koma di FAISAL_MODELS.
 // Model gratis (akhiran :free) sering berganti, jadi ganti lewat FAISAL_MODELS kalau ada yang hilang.
-const OR_MODELS = (process.env.FAISAL_MODELS || 'minimax/minimax-m3.1-flash:free,nvidia/nemotron-3.5-super-vl:free')
+const OR_MODELS = (process.env.FAISAL_MODELS || 'nvidia/nemotron-3.5-super-vl:free,minimax/minimax-m3.1-flash:free,recursive/flint-v1.0:free,xingchen-agi/xing4.0-29b-a4b:free')
   .split(',').map((m) => m.trim()).filter(Boolean);
 const MAX_TOKENS = 1024;         // batas panjang jawaban (mengatur pemakaian)
 const MAX_TURNS = 12;            // jumlah pesan terakhir yang dikirim
@@ -91,23 +91,35 @@ async function viaOpenRouter(key, turns, image, referer) {
     ];
   }
   let lastFail = null;
+  // Model gratis banyak yang "penalar": jatah token habis untuk berpikir sehingga isi jawaban kosong.
+  // Percobaan 1: matikan mode berpikir. Percobaan 2: pikir ringan dengan jatah token lebih besar.
+  const tries = [
+    { reasoning: { enabled: false }, max_tokens: MAX_TOKENS },
+    { reasoning: { effort: 'low' }, max_tokens: MAX_TOKENS * 3 },
+  ];
   for (const model of OR_MODELS) {
-    const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: 'Bearer ' + key, 'HTTP-Referer': referer || 'https://vercel.app', 'X-Title': 'Faisal AI' },
-      body: JSON.stringify({ model, max_tokens: MAX_TOKENS, messages }),
-    });
-    const data = await r.json().catch(() => null);
-    if (r.ok && data && !data.error) {
-      const choice = (data.choices || [])[0] || {};
-      const text = String((choice.message && choice.message.content) || '').trim();
-      if (text) return { ok: true, text, truncated: choice.finish_reason === 'length', model };
-      lastFail = { status: 502, data: { error: { message: 'jawaban kosong dari ' + model } } };
-      continue;
+    let stop = false;
+    for (const t of tries) {
+      const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + key, 'HTTP-Referer': referer || 'https://vercel.app', 'X-Title': 'Faisal AI' },
+        body: JSON.stringify({ model, max_tokens: t.max_tokens, reasoning: t.reasoning, messages }),
+      });
+      const data = await r.json().catch(() => null);
+      if (r.ok && data && !data.error) {
+        const choice = (data.choices || [])[0] || {};
+        const text = String((choice.message && choice.message.content) || '').trim();
+        if (text) return { ok: true, text, truncated: choice.finish_reason === 'length', model };
+        lastFail = { status: 502, data: { error: { message: 'jawaban kosong dari ' + model } } };
+        continue; // coba lagi dengan pengaturan berpikir yang lain
+      }
+      const status = r.ok ? (data && data.error && data.error.code) || 502 : r.status;
+      lastFail = { status, data: { error: { message: ((data && data.error && data.error.message) || '') + ' [' + model + ']' } } };
+      if (status === 401 || status === 402 || status === 403) { stop = true; break; } // key atau kredit bermasalah
+      if (status === 400 || status === 404) continue; // parameter tidak didukung model ini, coba pengaturan lain
+      break; // 429/5xx: pindah ke model berikutnya
     }
-    const status = r.ok ? (data && data.error && data.error.code) || 502 : r.status;
-    lastFail = { status, data: { error: { message: ((data && data.error && data.error.message) || '') + ' [' + model + ']' } } };
-    if (status === 401 || status === 402 || status === 403) break; // key atau kredit bermasalah, model lain tidak membantu
+    if (stop) break;
   }
   return lastFail || { status: 502, data: null };
 }
