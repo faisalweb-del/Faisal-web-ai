@@ -44,16 +44,31 @@ function bad(res, code, msg, extra) {
   res.status(code).json(Object.assign({ error: msg }, extra || {}));
 }
 
-// Memeriksa token login (header Authorization: Bearer <token>) dan mengembalikan { id, email } atau null.
+// Memeriksa token login (header Authorization: Bearer <token>). Mengembalikan { id, email, verified },
+// null kalau tokennya tidak sah, atau melempar error { init: true } kalau server Firebase sendiri bermasalah.
 async function getUser(req) {
   const h = String((req.headers && req.headers.authorization) || '');
   const m = /^Bearer\s+(.+)$/i.exec(h);
   if (!m) return null;
+  let a;
   try {
-    const d = await admin().auth().verifyIdToken(m[1]);
+    a = admin();
+  } catch (e) {
+    console.error('firebase-admin gagal dimuat', e);
+    const err = new Error(e && e.code === 'MODULE_NOT_FOUND' ? 'paket firebase-admin belum terpasang (cek package.json di GitHub)' : 'kunci service account salah atau rusak (' + String((e && e.message) || e).slice(0, 120) + ')');
+    err.init = true;
+    throw err;
+  }
+  try {
+    const d = await a.auth().verifyIdToken(m[1]);
     return { id: d.uid, email: d.email || '', verified: !!d.email_verified };
   } catch (e) {
-    return null;
+    const code = String((e && e.code) || '');
+    if (/^auth\/(id-token-expired|argument-error|id-token-revoked|invalid-id-token)/.test(code)) return null;
+    console.error('verifyIdToken gagal', e);
+    const err = new Error('server tidak bisa memeriksa login (' + (code || String((e && e.message) || e).slice(0, 120)) + '). Biasanya service account berasal dari project Firebase yang berbeda');
+    err.init = true;
+    throw err;
   }
 }
 
@@ -143,9 +158,16 @@ function countWords(s) {
   return m ? m.length : 0;
 }
 
-// Balas 401 kalau belum login. Mengembalikan user, atau null (respons sudah dikirim).
+// Balas 401 kalau belum login, atau 500 dengan alasan jelas kalau server Firebase bermasalah.
+// Mengembalikan user, atau null (respons sudah dikirim).
 async function requireUser(req, res) {
-  const user = await getUser(req);
+  let user = null;
+  try {
+    user = await getUser(req);
+  } catch (e) {
+    bad(res, 500, 'Server login bermasalah: ' + e.message, { code: 'auth_server' });
+    return null;
+  }
   if (!user) {
     bad(res, 401, 'Masuk dulu ya supaya bisa pakai Faisal AI.', { code: 'login' });
     return null;

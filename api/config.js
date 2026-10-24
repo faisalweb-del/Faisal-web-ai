@@ -1,8 +1,21 @@
 // Memberi tahu browser apakah login aktif. Isinya hanya konfigurasi web Firebase yang memang publik.
+// Buka /api/config?check=1 untuk memeriksa apakah server Firebase sudah terpasang benar (tanpa membuka rahasia).
 const L = require('./_lib.js');
 
-module.exports = function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('cache-control', 'no-store');
+  if (req.query && req.query.check) {
+    const out = { login_aktif: L.enabled(), env_service_account: !!process.env.FIREBASE_SERVICE_ACCOUNT, env_web_config: !!process.env.FIREBASE_WEB_CONFIG, admin_emails_terisi: !!process.env.ADMIN_EMAILS };
+    try {
+      const db = L.admin().firestore();
+      await db.collection('usage').limit(1).get();
+      out.firebase_admin = 'ok';
+      out.firestore = 'ok';
+    } catch (e) {
+      out.firebase_admin = e && e.code === 'MODULE_NOT_FOUND' ? 'GAGAL: paket firebase-admin belum terpasang (cek package.json di GitHub)' : 'GAGAL: ' + String((e && e.message) || e).slice(0, 200);
+    }
+    return res.status(200).json(out);
+  }
   if (!L.enabled()) return res.status(200).json({ enabled: false });
   return res.status(200).json({
     enabled: true,
