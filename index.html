@@ -2513,12 +2513,12 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var synth = window.speechSynthesis;
   var PRESETS = [
-    { id: 'santai', name: 'Cowok santai', voice: 'Charon', style: '', rate: 1.03 },
+    { id: 'santai', name: 'Cowok muda', voice: 'Puck', style: 'young casual guy, bright light voice', rate: 1.05 },
+    { id: 'ramah', name: 'Ramah muda', voice: 'Achird', style: 'young friendly guy, light voice', rate: 1.03 },
+    { id: 'ceria', name: 'Ceria', voice: 'Fenrir', style: 'young energetic guy', rate: 1.05 },
     { id: 'tegas', name: 'Tegas', voice: 'Orus', style: '', rate: 1 },
     { id: 'berat', name: 'Berat serak', voice: 'Algenib', style: '', rate: 0.97 },
-    { id: 'ceria', name: 'Ceria', voice: 'Puck', style: '', rate: 1.05 },
-    { id: 'ramah', name: 'Ramah', voice: 'Achird', style: '', rate: 1 },
-    { id: 'kalem', name: 'Kalem', voice: 'Umbriel', style: 'speaking slowly', rate: 0.98 }
+    { id: 'kalem', name: 'Bapak-bapak', voice: 'Charon', style: 'speaking slowly', rate: 0.98 }
   ];
   var vstate = { preset: 'santai', auto: true };
   try { var sv = JSON.parse(localStorage.getItem('fz-voice') || 'null'); if (sv && typeof sv === 'object') { vstate.preset = sv.preset || 'santai'; vstate.auto = sv.auto !== false; } } catch (e) {}
