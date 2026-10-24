@@ -541,6 +541,59 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .starsheet .it small { display: block; color: var(--muted); margin-bottom: 3px; font-size: 12px; }
 .starsheet .empty { color: var(--muted); text-align: center; padding: 40px 0; }
 @media (prefers-reduced-motion: reduce) { .ctx-back, .ctx-clone, .ctx-bar, .ctx-menu, .ctx-picker { transition: none !important; } .msg.flash { animation: none; } }
+
+/* kontak dan chat antar teman */
+.ctsheet, .ptview { position: fixed; inset: 0; z-index: 86; display: flex; flex-direction: column; background: #0b0f17; color: var(--fg); }
+.ptview { z-index: 87; }
+.ctsheet[hidden], .ptview[hidden] { display: none; }
+.ct-head { display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px; border-bottom: 1px solid var(--line); background: rgba(19, 25, 37, .96); }
+.ct-head strong { flex: 1; min-width: 0; font: 700 17px var(--f-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ct-head small { display: block; font: 500 12px var(--f-body); color: var(--muted); }
+.ct-head button { min-width: 40px; height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: var(--fg); font: 600 14px var(--f-body); cursor: pointer; }
+.ct-head button.pri { background: var(--accent); color: var(--on-accent); }
+.ct-body { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px 24px; }
+.ct-card { padding: 12px 14px; margin-bottom: 14px; border: 1px solid var(--line); border-radius: 14px; background: #131925; }
+.ct-card .num { font: 700 22px var(--f-display); letter-spacing: .04em; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.ct-card .row2 { display: flex; flex-wrap: wrap; gap: 8px; }
+.ct-card input { flex: 1; min-width: 120px; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); font: 400 15px var(--f-body); }
+.ct-btn { min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--fg); font: 600 13px var(--f-body); cursor: pointer; }
+.ct-btn.pri { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.ct-btn.dng { color: #ff8a80; }
+.ct-h { margin: 16px 0 8px; font: 700 12px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ct-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 6px; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .06); background: transparent; color: var(--fg); text-align: left; font: 400 15px var(--f-body); cursor: pointer; }
+.ct-item.static { cursor: default; flex-wrap: wrap; }
+.ct-av { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font: 700 17px var(--f-display); }
+.ct-tx { flex: 1; min-width: 0; }
+.ct-tx b { display: block; font-weight: 600; }
+.ct-tx span { display: block; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct-dot { flex: none; min-width: 10px; height: 10px; border-radius: 50%; background: #4cd27a; }
+.ct-acts { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; padding-left: 54px; }
+.ct-empty { color: var(--muted); text-align: center; padding: 22px 0; font-size: 14px; }
+.ct-badge { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: #4cd27a; color: #06140b; font: 700 12px/20px var(--f-body); text-align: center; }
+.ct-badge[hidden] { display: none; }
+.ct-dlg { position: fixed; inset: 0; z-index: 92; display: grid; place-items: center; padding: 16px; background: rgba(5, 8, 16, .65); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.ct-dlg[hidden] { display: none; }
+.ct-dlg form { width: min(380px, 100%); padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: #131925; }
+.ct-dlg h3 { margin: 0 0 12px; font: 700 18px var(--f-display); }
+.ct-dlg label { display: block; margin: 10px 0 4px; font: 600 13px var(--f-body); color: var(--muted); }
+.ct-dlg input { width: 100%; height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); font: 400 16px var(--f-body); box-sizing: border-box; }
+.ct-dlg .err { min-height: 18px; margin: 8px 0 0; color: #ff8a80; font-size: 13px; }
+.ct-dlg .btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+.pt-log { flex: 1; min-height: 0; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.pm { max-width: 80%; padding: 8px 12px; border-radius: 14px; font-size: 15px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pm.me { align-self: flex-end; background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 4px; }
+.pm.them { align-self: flex-start; background: #1b2333; border-bottom-left-radius: 4px; }
+.pm.sending { opacity: .6; }
+.pm time { display: block; margin-top: 2px; font-size: 10px; opacity: .65; text-align: right; }
+.pt-note { align-self: center; max-width: 90%; margin: 6px 0; padding: 6px 12px; border-radius: 10px; background: rgba(255, 255, 255, .06); color: var(--muted); font-size: 12px; text-align: center; }
+.pt-form { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); background: rgba(19, 25, 37, .96); }
+.pt-form textarea { flex: 1; min-width: 0; max-height: 112px; resize: none; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--fg); font: 400 16px/1.4 var(--f-body); }
+.pt-form button { flex: none; width: 46px; height: 46px; border: 0; border-radius: 12px; background: var(--accent); color: var(--on-accent); cursor: pointer; display: grid; place-items: center; }
+.pt-menu { position: absolute; right: 10px; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 3; min-width: 190px; border-radius: 14px; overflow: hidden; background: rgba(34, 36, 40, .98); box-shadow: 0 10px 34px rgba(0, 0, 0, .5); }
+.pt-menu[hidden] { display: none; }
+.pt-menu button { display: block; width: 100%; min-height: 44px; padding: 0 16px; border: 0; border-top: 1px solid rgba(255, 255, 255, .08); background: transparent; color: #f2f4f8; text-align: left; font: 500 15px var(--f-body); cursor: pointer; }
+.pt-menu button:first-child { border-top: 0; }
+.pt-menu button.dng { color: #ff6b7a; }
 </style>
 </head>
 <body>
@@ -2907,6 +2960,220 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   starLink.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/></svg> <span>Pesan berbintang</span>';
   starLink.addEventListener('click', showStarred);
   $('#open-gallery').insertAdjacentElement('afterend', starLink);
+
+
+  /* ---------- kontak dan chat antar teman (nomor 12 digit, permintaan harus diterima) ---------- */
+  var ct = { me: null, contacts: [], blocked: [], thread: null, tpoll: 0, tlast: 0, tids: {}, busy: false };
+  function ctOn() { return !!(auth.on && auth.session); }
+  async function capi(body) {
+    var r = await fetch('/api/contacts', { method: 'POST', headers: await authHeaders(), body: JSON.stringify(body) });
+    var d = null; try { d = await r.json(); } catch (e) {}
+    if (!r.ok) { var er = new Error((d && d.error) || 'Gagal. Coba lagi.'); er.status = r.status; throw er; }
+    return d;
+  }
+  function luhnD(p) { var sum = 0, i; for (i = 0; i < p.length; i++) { var d = +p[p.length - 1 - i]; if (i % 2 === 0) { d *= 2; if (d > 9) d -= 9; } sum += d; } return String((10 - (sum % 10)) % 10); }
+  function numOk(n) { return /^\d{12}$/.test(n) && luhnD(n.slice(0, 11)) === n[11]; }
+  function fmtNum(n) { return String(n || '').replace(/(\d{4})(?=\d)/g, '$1 '); }
+  function dname(c) { var n = ((c.first || '') + ' ' + (c.last || '')).trim(); return n || c.name || 'Pengguna baru'; }
+  function seenMap() { try { return JSON.parse(localStorage.getItem('fz-seen-' + myUid()) || '{}') || {}; } catch (e) { return {}; } }
+  function markSeen(id, ts) { try { var m = seenMap(); if (!m[id] || m[id] < ts) { m[id] = ts; localStorage.setItem('fz-seen-' + myUid(), JSON.stringify(m)); } } catch (e) {} }
+  function unreadOf(c) { return !!(c.last && c.last.from !== myUid() && c.last.ts > (seenMap()[c.id] || 0)); }
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function timeOf(ts) { try { return new Date(ts).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta', hour12: false }).replace(':', '.'); } catch (e) { return ''; } }
+
+  var ctLink = document.createElement('button'); ctLink.type = 'button'; ctLink.className = 'drawer-link'; ctLink.id = 'open-contacts'; ctLink.hidden = true;
+  ctLink.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg> <span>Kontak</span><em class="ct-badge" hidden></em>';
+  $('#open-gallery').insertAdjacentElement('afterend', ctLink);
+  var ctBadge = ctLink.querySelector('.ct-badge');
+
+  var sheet = el('div', 'ctsheet'); sheet.hidden = true;
+  sheet.innerHTML = '<div class="ct-head"><button type="button" class="back" aria-label="Kembali">‹ Kembali</button><strong>Kontak</strong><button type="button" class="pri add">+ Tambah</button></div><div class="ct-body"></div>';
+  chatEl.appendChild(sheet);
+  var sBody = sheet.querySelector('.ct-body');
+  var view = el('div', 'ptview'); view.hidden = true;
+  view.innerHTML = '<div class="ct-head"><button type="button" class="back" aria-label="Kembali">‹</button><div class="ct-av"></div><strong><span class="nm"></span><small class="sb"></small></strong><button type="button" class="more" aria-label="Menu">⋮</button></div><div class="pt-menu" hidden></div><div class="pt-log" role="log"></div><form class="pt-form" autocomplete="off"><textarea rows="1" maxlength="1000" placeholder="Tulis pesan" aria-label="Tulis pesan"></textarea><button type="submit" aria-label="Kirim"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>';
+  chatEl.appendChild(view);
+  var vLog = view.querySelector('.pt-log'), vTa = view.querySelector('textarea'), vMenu = view.querySelector('.pt-menu');
+  var dlg = el('div', 'ct-dlg'); dlg.hidden = true; chatEl.appendChild(dlg);
+
+  function ctDialog(opts) {
+    dlg.innerHTML = '<form novalidate><h3></h3><label>Nama awal</label><input name="f" maxlength="24" autocomplete="off"><label>Nama akhir</label><input name="l" maxlength="24" autocomplete="off"><label>Nomor</label><input name="n" inputmode="numeric" maxlength="14" autocomplete="off" placeholder="0000 0000 0000"><p class="err" role="alert"></p><div class="btns"><button type="button" class="ct-btn cancel">Batal</button><button type="submit" class="ct-btn pri">Simpan</button></div></form>';
+    var f = dlg.querySelector('form'), er = dlg.querySelector('.err');
+    f.querySelector('h3').textContent = opts.title;
+    f.n.value = fmtNum(opts.number || ''); if (opts.lockNumber) { f.n.readOnly = true; }
+    f.f.value = opts.first || ''; f.l.value = opts.last || '';
+    f.n.addEventListener('input', function () { var v = f.n.value.replace(/\D/g, '').slice(0, 12); f.n.value = fmtNum(v); });
+    f.querySelector('.cancel').addEventListener('click', function () { dlg.hidden = true; });
+    f.addEventListener('submit', async function (e) {
+      e.preventDefault(); er.textContent = '';
+      var first = f.f.value.trim(), last = f.l.value.trim(), num = f.n.value.replace(/\D/g, '');
+      if (!first) { er.textContent = 'Isi nama awal dulu.'; return; }
+      if (!opts.lockNumber && !numOk(num)) { er.textContent = 'Nomornya tidak valid. Cek lagi 12 digitnya.'; return; }
+      var btn = f.querySelector('.pri'); btn.disabled = true;
+      try { await opts.save(first, last, num); dlg.hidden = true; } catch (x) { er.textContent = x.message; }
+      btn.disabled = false;
+    });
+    dlg.hidden = false; setTimeout(function () { try { f.f.focus(); } catch (e) {} }, 50);
+  }
+
+  function renderSheet() {
+    sBody.replaceChildren();
+    var me = ct.me || { number: '', name: '' };
+    var card = el('div', 'ct-card');
+    card.appendChild(el('div', '', 'Nomor kamu')); card.lastChild.style.cssText = 'font-size:12px;color:var(--muted);font-weight:600';
+    card.appendChild(el('div', 'num', fmtNum(me.number) || '…'));
+    var r1 = el('div', 'row2');
+    var cp = el('button', 'ct-btn', 'Salin'); cp.type = 'button';
+    cp.addEventListener('click', function () { copyText(me.number).then(function () { toast('Nomor disalin'); }, function () { toast('Gagal menyalin'); }); });
+    var nn = el('button', 'ct-btn', 'Ganti nomor'); nn.type = 'button';
+    nn.addEventListener('click', async function () {
+      if (!confirm('Ganti nomormu? Nomor lama nggak bisa dipakai lagi buat orang baru. Kontak yang sudah terhubung tetap aman.')) return;
+      try { var d = await capi({ op: 'newnumber' }); ct.me.number = d.number; renderSheet(); toast('Nomor diganti'); } catch (e) { toast(e.message); }
+    });
+    r1.appendChild(cp); r1.appendChild(nn); card.appendChild(r1);
+    var r2 = el('div', 'row2'); r2.style.marginTop = '10px';
+    var ni = el('input'); ni.maxLength = 24; ni.placeholder = 'Nama tampilan (dilihat saat kirim permintaan)'; ni.value = me.name || ''; ni.setAttribute('aria-label', 'Nama tampilan');
+    var ns = el('button', 'ct-btn pri', 'Simpan'); ns.type = 'button';
+    ns.addEventListener('click', async function () { try { await capi({ op: 'profile', name: ni.value }); ct.me.name = ni.value.trim(); toast('Nama disimpan'); } catch (e) { toast(e.message); } });
+    r2.appendChild(ni); r2.appendChild(ns); card.appendChild(r2);
+    card.appendChild(el('div', 'ct-empty', 'Bagikan nomor ini hanya ke orang yang kamu kenal.')); card.lastChild.style.cssText = 'text-align:left;padding:10px 0 0;font-size:12px';
+    sBody.appendChild(card);
+
+    var incoming = ct.contacts.filter(function (c) { return c.status === 'in'; });
+    var oks = ct.contacts.filter(function (c) { return c.status === 'ok'; }).sort(function (a, b) { return ((b.last && b.last.ts) || b.created) - ((a.last && a.last.ts) || a.created); });
+    var outs = ct.contacts.filter(function (c) { return c.status === 'out'; });
+    if (incoming.length) {
+      sBody.appendChild(el('div', 'ct-h', 'Permintaan masuk'));
+      incoming.forEach(function (c) {
+        var row = el('div', 'ct-item static'); var av = el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase()); var tx = el('div', 'ct-tx');
+        tx.appendChild(el('b', '', c.name || 'Pengguna baru')); tx.appendChild(el('span', '', 'Nomor ' + fmtNum(c.number)));
+        row.appendChild(av); row.appendChild(tx);
+        var ac = el('div', 'ct-acts');
+        var ok = el('button', 'ct-btn pri', 'Terima'); ok.type = 'button';
+        ok.addEventListener('click', function () {
+          ctDialog({ title: 'Terima kontak', number: c.number, lockNumber: true, first: c.name || '', save: async function (f, l) { await capi({ op: 'accept', id: c.id, first: f, last: l }); toast('Kontak diterima'); await ctRefresh(); } });
+        });
+        var no = el('button', 'ct-btn', 'Tolak'); no.type = 'button';
+        no.addEventListener('click', async function () { try { await capi({ op: 'decline', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
+        var bk = el('button', 'ct-btn dng', 'Blokir'); bk.type = 'button';
+        bk.addEventListener('click', async function () { if (!confirm('Blokir nomor ini?')) return; try { await capi({ op: 'block', id: c.id }); await ctRefresh(); toast('Diblokir'); } catch (e) { toast(e.message); } });
+        ac.appendChild(ok); ac.appendChild(no); ac.appendChild(bk); row.appendChild(ac); sBody.appendChild(row);
+      });
+    }
+    sBody.appendChild(el('div', 'ct-h', 'Kontak'));
+    if (!oks.length) sBody.appendChild(el('div', 'ct-empty', 'Belum ada kontak yang terhubung. Tekan "+ Tambah" lalu masukkan nomor temanmu.'));
+    oks.forEach(function (c) {
+      var b = el('button', 'ct-item'); b.type = 'button';
+      var tx = el('div', 'ct-tx'); tx.appendChild(el('b', '', dname(c)));
+      tx.appendChild(el('span', '', c.last ? (c.last.from === myUid() ? 'Kamu: ' : '') + c.last.text : 'Belum ada pesan'));
+      b.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); b.appendChild(tx);
+      if (unreadOf(c)) b.appendChild(el('span', 'ct-dot'));
+      b.addEventListener('click', function () { openThread(c); });
+      sBody.appendChild(b);
+    });
+    if (outs.length) {
+      sBody.appendChild(el('div', 'ct-h', 'Menunggu diterima'));
+      outs.forEach(function (c) {
+        var row = el('div', 'ct-item static'); var tx = el('div', 'ct-tx');
+        tx.appendChild(el('b', '', dname(c))); tx.appendChild(el('span', '', fmtNum(c.number)));
+        row.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); row.appendChild(tx);
+        var x = el('button', 'ct-btn', 'Batalkan'); x.type = 'button';
+        x.addEventListener('click', async function () { try { await capi({ op: 'remove', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
+        row.appendChild(x); sBody.appendChild(row);
+      });
+    }
+    if (ct.blocked.length) {
+      sBody.appendChild(el('div', 'ct-h', 'Diblokir'));
+      ct.blocked.forEach(function (c) {
+        var row = el('div', 'ct-item static'); var tx = el('div', 'ct-tx');
+        tx.appendChild(el('b', '', dname(c))); tx.appendChild(el('span', '', fmtNum(c.number)));
+        row.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); row.appendChild(tx);
+        var x = el('button', 'ct-btn', 'Buka blokir'); x.type = 'button';
+        x.addEventListener('click', async function () { try { await capi({ op: 'unblock', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
+        row.appendChild(x); sBody.appendChild(row);
+      });
+    }
+  }
+  function updBadge() {
+    var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; });
+    ctBadge.hidden = !n; ctBadge.textContent = String(n);
+  }
+  async function ctRefresh() {
+    if (!ctOn() || ct.busy) return; ct.busy = true;
+    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; updBadge(); if (!sheet.hidden) renderSheet(); }
+    catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
+  }
+  function ctSync() { ctLink.hidden = !ctOn(); if (!ctOn()) { sheet.hidden = true; closeThread(); } }
+  ctLink.addEventListener('click', function () { closeDrawer(); sheet.hidden = false; renderSheet(); ctRefresh(); });
+  $('#btn-menu').addEventListener('click', function () { ctSync(); ctRefresh(); });
+  sheet.querySelector('.back').addEventListener('click', function () { sheet.hidden = true; });
+  sheet.querySelector('.add').addEventListener('click', function () {
+    ctDialog({ title: 'Tambah kontak', save: async function (f, l, n) {
+      var d = await capi({ op: 'add', first: f, last: l, number: n });
+      toast(d.status === 'ok' ? 'Kontak terhubung' : 'Permintaan dikirim. Chat bisa dimulai setelah diterima.'); await ctRefresh();
+    } });
+  });
+
+  /* ruang chat dengan satu teman */
+  function addPm(m, sending) {
+    if (m.id && ct.tids[m.id]) { var ex = ct.tids[m.id]; if (ex.classList.contains('sending') && !sending) { ex.classList.remove('sending'); } return ex; }
+    var emp = document.getElementById('pt-empty'); if (emp) emp.remove();
+    var d = el('div', 'pm ' + m.from + (sending ? ' sending' : '')); d.appendChild(document.createTextNode(m.text));
+    var t = el('time', '', timeOf(m.ts)); d.appendChild(t);
+    vLog.appendChild(d); if (m.id) ct.tids[m.id] = d; return d;
+  }
+  function nearBottom() { return vLog.scrollHeight - vLog.scrollTop - vLog.clientHeight < 120; }
+  async function pollThread(first) {
+    var c = ct.thread; if (!c || document.hidden) return;
+    try {
+      var d = await capi({ op: 'msgs', id: c.id, after: first ? 0 : ct.tlast });
+      if (ct.thread !== c) return;
+      var stick = first || nearBottom(), ms = d.msgs || [];
+      ms.forEach(function (m) { addPm(m, false); if (m.ts > ct.tlast) ct.tlast = m.ts; });
+      if (ms.length) { markSeen(c.id, ct.tlast); if (stick) vLog.scrollTop = vLog.scrollHeight; }
+      if (first && !ms.length) { var en = el('div', 'pt-note', 'Belum ada pesan. Mulai ngobrol!'); en.id = 'pt-empty'; vLog.appendChild(en); }
+    } catch (e) { if (e.status === 403 && first) { toast(e.message); closeThread(); } }
+  }
+  function openThread(c) {
+    ct.thread = c; ct.tlast = 0; ct.tids = {}; vLog.replaceChildren(); vMenu.hidden = true;
+    view.querySelector('.ct-av').textContent = (dname(c)[0] || '?').toUpperCase();
+    view.querySelector('.nm').textContent = dname(c); view.querySelector('.sb').textContent = fmtNum(c.number);
+    view.hidden = false; vTa.value = '';
+    vLog.appendChild(el('div', 'pt-note', 'Obrolan dengan teman. Jangan bagikan data pribadi ke orang yang belum kamu kenal.'));
+    pollThread(true); clearInterval(ct.tpoll); ct.tpoll = setInterval(function () { pollThread(false); }, 3000);
+  }
+  function closeThread() { clearInterval(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; ctRefresh(); }
+  view.querySelector('.back').addEventListener('click', closeThread);
+  view.querySelector('.more').addEventListener('click', function (e) {
+    e.stopPropagation(); var c = ct.thread; if (!c) return; vMenu.replaceChildren();
+    function it(label, fn, cls) { var b = el('button', cls || '', label); b.type = 'button'; b.addEventListener('click', function () { vMenu.hidden = true; fn(); }); vMenu.appendChild(b); }
+    it('Ubah nama', function () {
+      ctDialog({ title: 'Ubah nama', number: c.number, lockNumber: true, first: c.first, last: c.last, save: async function (f, l) {
+        await capi({ op: 'rename', id: c.id, first: f, last: l }); c.first = f; c.last = l; view.querySelector('.nm').textContent = dname(c); await ctRefresh();
+      } });
+    });
+    it('Laporkan', async function () {
+      var why = prompt('Kenapa kamu laporkan orang ini? (singkat saja)'); if (why === null) return;
+      try { await capi({ op: 'report', id: c.id, reason: why }); toast('Laporan terkirim. Terima kasih.'); } catch (x) { toast(x.message); }
+    });
+    it('Blokir', async function () { if (!confirm('Blokir ' + dname(c) + '? Dia nggak bisa kirim pesan lagi.')) return; try { await capi({ op: 'block', id: c.id }); closeThread(); toast('Diblokir'); } catch (x) { toast(x.message); } }, 'dng');
+    it('Hapus kontak', async function () { if (!confirm('Hapus kontak ini?')) return; try { await capi({ op: 'remove', id: c.id }); closeThread(); toast('Kontak dihapus'); } catch (x) { toast(x.message); } }, 'dng');
+    vMenu.hidden = false;
+  });
+  view.addEventListener('click', function () { vMenu.hidden = true; });
+  vTa.addEventListener('input', function () { vTa.style.height = 'auto'; vTa.style.height = Math.min(112, vTa.scrollHeight) + 'px'; });
+  vTa.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); view.querySelector('form').requestSubmit(); } });
+  view.querySelector('form').addEventListener('submit', async function (e) {
+    e.preventDefault(); var c = ct.thread, text = vTa.value.trim(); if (!c || !text) return;
+    vTa.value = ''; vTa.style.height = 'auto';
+    var cid = 'c' + uidn(), node = addPm({ id: cid, from: 'me', text: text, ts: Date.now() }, true); vLog.scrollTop = vLog.scrollHeight;
+    try {
+      var d = await capi({ op: 'send', id: c.id, text: text, cid: cid });
+      node.classList.remove('sending'); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast);
+    } catch (x) { node.remove(); delete ct.tids[cid]; vTa.value = text; toast(x.message); }
+  });
+  setInterval(function () { if (!chatEl.hidden && !document.hidden) { ctSync(); if (ctOn() && !ct.thread) ctRefresh(); } }, 30000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && ctOn() && !chatEl.hidden) ctRefresh(); });
 
   /* VN: tekan mic, bicara, otomatis terkirim */
   var micBtn = $('#chat-mic'), recording = false;
