@@ -2097,7 +2097,13 @@ footer p { max-width: 62ch; }
         if (bd.truncated) addMsg('bot', 'Jawabanku terpotong. Coba tanya yang lebih spesifik.', 'err');
       } catch (e) {
         if (e && e.status === 401) {
-          bubble.remove(); turns.pop(); done = true; showLogin();
+          bubble.remove(); turns.pop(); done = true;
+          if (auth.on && auth.session) {
+            addMsg('bot', 'Sesi login kamu ditolak server. Masuk ulang ya.', 'err');
+            try { await auth.fb.auth().signOut(); } catch (e3) {}
+          } else if (!auth.on) {
+            addMsg('bot', 'Server minta login, tapi layar login belum siap. Muat ulang halaman ini. Kalau masih sama, buka alamat-web/api/config?check=1 dan kirim hasilnya ke admin.', 'err');
+          } else showLogin();
         } else if (e && (e.status === 429 || e.status === 400)) {
           bubble.remove(); addMsg('bot', e.message, 'err'); turns.pop(); done = true;
         } else if (e && e.status >= 500) {
@@ -2105,6 +2111,8 @@ footer p { max-width: 62ch; }
         } else if (!e || e.status === undefined || e.status === 404 || e.status === 405) {
           backendDead = true;
           addMsg('bot', 'Server AI belum nyambung' + (e && e.status ? ' (kode ' + e.status + ')' : '') + '. Cek apakah folder api ada di GitHub dan buka alamat-website/api/chat di browser.', 'err');
+        } else {
+          bubble.remove(); addMsg('bot', 'Faisal belum bisa menjawab (' + e.status + '): ' + (e.message || 'coba lagi'), 'err'); turns.pop(); done = true;
         }
       }
       updateSub();
