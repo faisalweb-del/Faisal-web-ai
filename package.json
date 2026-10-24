@@ -1,6 +1,8 @@
 {
   "name": "faisal-ai-web",
   "private": true,
-  "version": "2.0.0",
-  "dependencies": { "firebase-admin": ">=12.0.0" }
+  "version": "2.1.0",
+  "engines": { "node": "22.x" },
+  "dependencies": { "firebase-admin": "12.7.0" },
+  "overrides": { "jose": "^4.15.9" }
 }
