@@ -4,7 +4,7 @@ const L = require('./_lib.js');
 const TTS_MODEL = process.env.FAISAL_TTS_MODEL || 'gemini-3.8-flash-tts';
 // Suara cowok yang boleh dipilih (nama suara bawaan Gemini).
 const VOICES = ['Charon', 'Orus', 'Puck', 'Algenib', 'Achird', 'Umbriel', 'Fenrir', 'Sadaltager'];
-const MAX_CHARS = 400;
+const MAX_CHARS = 300;
 const hits = new Map();
 
 function limited(id) {
@@ -17,8 +17,11 @@ function limited(id) {
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
+  const rvKey = process.env.REPLICAVOX_API_KEY;
+  const rvVoice = String(process.env.REPLICAVOX_VOICE_ID || '').trim();
+  const useRv = !!(rvKey && rvVoice);
   const key = process.env.GEMINI_API_KEY;
-  if (!key) return L.bad(res, 501, 'Suara belum aktif: GEMINI_API_KEY belum diatur di server.', { code: 'no_tts' });
+  if (!useRv && !key) return L.bad(res, 501, 'Suara belum aktif: REPLICAVOX_API_KEY + REPLICAVOX_VOICE_ID (atau GEMINI_API_KEY) belum diatur di server.', { code: 'no_tts' });
 
   let who = String((req.headers['x-forwarded-for'] || '').split(',')[0] || 'x').trim();
   if (L.enabled()) {
@@ -32,6 +35,29 @@ module.exports = async function handler(req, res) {
   if (!text) return L.bad(res, 400, 'Teks kosong.');
   const voice = VOICES.includes(req.body.voice) ? req.body.voice : VOICES[0];
   const style = String(req.body.style || '').slice(0, 60).replace(/[^\p{L}\p{N} ,.-]/gu, '');
+
+  if (useRv) {
+    try {
+      const r = await fetch('https://api.replicavox.com/v1/audio/speech', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + rvKey },
+        body: JSON.stringify({ model: process.env.REPLICAVOX_MODEL || 'replicavox-expressive-v2', voice: rvVoice, input: text, language: process.env.REPLICAVOX_LANG || 'id', response_format: 'mp3' }),
+      });
+      if (!r.ok) {
+        const d = await r.json().catch(() => null);
+        console.error('Replicavox error', r.status, JSON.stringify(d).slice(0, 300));
+        const c = (d && (d.code || (d.error && d.error.code))) || '';
+        if (r.status === 429) return L.bad(res, 429, 'Jatah suara Replicavox habis atau terlalu cepat. Pakai suara HP dulu.', { code: 'tts_busy' });
+        return L.bad(res, 502, 'Suara Replicavox gagal (' + r.status + (c ? ' ' + c : '') + ').', { code: 'tts_fail' });
+      }
+      const buf = Buffer.from(await r.arrayBuffer());
+      if (!buf.length) return L.bad(res, 502, 'Suara kosong.', { code: 'tts_fail' });
+      return res.status(200).json({ audio: buf.toString('base64'), mime: 'audio/mpeg' });
+    } catch (e) {
+      console.error('Replicavox fetch error', e);
+      return L.bad(res, 502, 'Tidak bisa menghubungi Replicavox.', { code: 'tts_fail' });
+    }
+  }
 
   try {
     const content = { type: 'text', text };
