@@ -1789,7 +1789,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       if (r.ok && d) { auth.admin = !!d.admin; setUsage(d.usage); }
     } catch (e) {}
   }
-  function afterAuth() { updateGate(); if (auth.session) { refreshUsage(); refreshList(); } else { auth.usage = null; auth.admin = false; updateSub(); } }
+  function afterAuth() { updateGate(); if (auth.session) { refreshUsage(); refreshList(); syncPull(); } else { auth.usage = null; auth.admin = false; updateSub(); } }
   function showLogin() { if (chatEl.hidden) openChat(); updateGate(); }
   async function consumePhoto() {
     if (!auth.on) return true;
@@ -1925,8 +1925,54 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     clearTimeout(saveT);
     if (!cur || !cur.recs.length) return Promise.resolve();
     cur.updated = Date.now(); cur.turns = turns.slice(-30);
-    return dbPut('chats', JSON.parse(JSON.stringify(cur))).then(refreshList);
+    var snap = JSON.parse(JSON.stringify(cur));
+    return dbPut('chats', snap).then(function () { syncPush(snap); return refreshList(); });
   }
+  /* sinkron teks obrolan antar perangkat (foto tetap di perangkat masing-masing) */
+  var syncT = {}, syncBusy = false;
+  function syncOn() { return !!(auth.on && auth.session); }
+  function syncPush(c) {
+    if (!syncOn() || !c) return;
+    clearTimeout(syncT[c.id]);
+    syncT[c.id] = setTimeout(async function () {
+      try { await fetch('/api/sync', { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ chat: c }) }); } catch (e) {}
+    }, 1200);
+  }
+  async function syncDelete(id) {
+    if (!syncOn()) return;
+    try { await fetch('/api/sync', { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ op: 'delete', id: id }) }); } catch (e) {}
+  }
+  async function syncPull() {
+    if (!syncOn() || syncBusy) return;
+    syncBusy = true;
+    try {
+      var r = await fetch('/api/sync', { headers: await authHeaders() });
+      if (!r.ok) return;
+      var d = await r.json(), remote = d.chats || [], uid = myUid();
+      var local = (await dbAll('chats')).filter(function (c) { return c.uid === uid; }), lm = {}, rm = {};
+      local.forEach(function (c) { lm[c.id] = c; }); remote.forEach(function (c) { rm[c.id] = c; });
+      var changed = false, reopen = null;
+      for (var i = 0; i < remote.length; i++) {
+        var rc = remote[i], lc = lm[rc.id];
+        if (rc.deleted) {
+          if (lc && rc.updated >= lc.updated) {
+            await dbDel('chats', rc.id); changed = true;
+            if (cur && cur.id === rc.id && !busy) { cur = null; resetLog(); chipsEl.hidden = false; greeted = true; greet(); }
+          } else if (lc) syncPush(lc);
+          continue;
+        }
+        if (!lc || rc.updated > lc.updated) {
+          if (cur && cur.id === rc.id && busy) continue;
+          rc.uid = uid; await dbPut('chats', rc); changed = true;
+          if (cur && cur.id === rc.id) reopen = rc.id;
+        } else if (lc.updated > rc.updated) syncPush(lc);
+      }
+      local.forEach(function (c) { if (!rm[c.id]) syncPush(c); });
+      if (reopen && !busy) { cur = null; await openConversation(reopen); }
+      if (changed) await refreshList();
+    } catch (e) {} finally { syncBusy = false; }
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) syncPull(); });
   function paintExtras(el) {
     var r = el._rec || {}, c = el.querySelector(':scope > .react-chip'), st = el.querySelector(':scope > .star-mark');
     if (c) c.remove(); if (st) st.remove();
@@ -2013,13 +2059,13 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   async function togglePin(id) {
     if (cur && cur.id === id) { cur.pinned = !cur.pinned; await flushSave(); return; }
     var c = await dbGet('chats', id); if (!c) return;
-    c.pinned = !c.pinned; await dbPut('chats', c); refreshList();
+    c.pinned = !c.pinned; c.updated = Date.now(); await dbPut('chats', c); syncPush(c); refreshList();
   }
   async function delChat(id) {
     if (!confirm('Hapus obrolan ini? Foto hasil di folder "Hasil foto anda" tetap aman.')) return;
     var all = await dbAll('photos');
     all.filter(function (x) { return x.chat === id && x.kind === 'in'; }).forEach(function (x) { dbDel('photos', x.id); });
-    await dbDel('chats', id);
+    await dbDel('chats', id); syncDelete(id);
     if (cur && cur.id === id) { cur = null; if (!busy) newChat(); }
     refreshList();
   }
@@ -2049,7 +2095,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if (pins.length) { head('Dipin'); pins.forEach(addRow); }
     if (rest.length) { head(pins.length ? 'Obrolan lainnya' : 'Semua obrolan'); rest.forEach(addRow); }
   }
-  function openDrawer() { refreshList(); drawerEl.hidden = false; scrimEl.hidden = false; $('#btn-menu').setAttribute('aria-expanded', 'true'); }
+  function openDrawer() { refreshList(); syncPull(); drawerEl.hidden = false; scrimEl.hidden = false; $('#btn-menu').setAttribute('aria-expanded', 'true'); }
   function closeDrawer() { drawerEl.hidden = true; scrimEl.hidden = true; $('#btn-menu').setAttribute('aria-expanded', 'false'); }
   $('#btn-menu').addEventListener('click', function () { if (drawerEl.hidden) openDrawer(); else closeDrawer(); });
   $('#drawer-x').addEventListener('click', closeDrawer);
