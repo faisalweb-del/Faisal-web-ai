@@ -136,12 +136,12 @@ module.exports = async function handler(req, res) {
     try {
       usage = await L.rpc('faisal_usage', { p_user: user.id });
       if (!usage.chat_ok) {
-        return res.status(429).json({ error: 'Jatah chat kamu habis (lebih dari 500 kata). Bisa ngobrol lagi jam ' + L.wib(usage.blocked_until) + '.', code: 'chat_limit', usage });
+        return res.status(429).json({ error: 'Jatah balasan Faisal (' + usage.words_max + ' kata) sudah habis. Bisa ngobrol lagi jam ' + L.wib(usage.blocked_until) + '.' + (usage.plan === 'free' ? ' Mau lebih banyak? Lihat paket Pro di menu Akun saya.' : ''), code: 'chat_limit', usage });
       }
       if (c.image) {
         const p = await L.rpc('faisal_use_photo', { p_user: user.id });
         usage = p.usage;
-        if (!p.ok) return res.status(429).json({ error: 'Jatah foto hari ini (4 kali) sudah habis. Reset otomatis jam 00.00 WIB.', code: 'photo_limit', usage });
+        if (!p.ok) return res.status(429).json({ error: 'Jatah foto hari ini (' + usage.photos_max + ' kali) sudah habis. Reset otomatis jam 00.00 WIB.' + (usage.plan === 'free' ? ' Mau lebih banyak? Lihat paket Pro di menu Akun saya.' : ''), code: 'photo_limit', usage });
       }
     } catch (e) {
       console.error('kuota error', e);
@@ -168,8 +168,7 @@ module.exports = async function handler(req, res) {
       return bad(res, 502, 'Jawaban kosong. Coba tanya dengan cara lain.');
     }
     if (user) {
-      const lastUser = c.turns[c.turns.length - 1].content.replace(/\n?\[[^\]]*\]/g, '');
-      try { usage = await L.rpc('faisal_add_words', { p_user: user.id, p_n: L.countWords(lastUser) + L.countWords(out.text) }); } catch (e) { console.error('hitung kata gagal', e); }
+      try { usage = await L.rpc('faisal_add_words', { p_user: user.id, p_n: L.countWords(out.text) }); } catch (e) { console.error('hitung kata gagal', e); }
     }
     return res.status(200).json({ text: out.text, truncated: out.truncated, usage });
   } catch (e) {

@@ -1,7 +1,10 @@
 // Fungsi bersama untuk server Faisal AI: cek login (Firebase) dan kuota pemakaian (Firestore).
 // Semua rahasia ada di environment variable Vercel, tidak pernah dikirim ke browser.
-const LIMITS = { words: 500, photos: 4 };
-const TWO_HOURS = 2 * 60 * 60 * 1000;
+// Batas per paket. Kata dihitung dari balasan AI saja. Foto reset tiap 00.00 WIB, kata reset 3 jam setelah mulai terpakai.
+const PLANS = { free: { words: 700, photos: 4 }, pro: { words: 3200, photos: 50 } };
+const LIMITS = PLANS.free;
+const WORD_WINDOW = 3 * 60 * 60 * 1000;
+const DAY = 24 * 60 * 60 * 1000;
 
 function parseJson(raw) {
   if (!raw) return null;
@@ -48,7 +51,7 @@ async function getUser(req) {
   if (!m) return null;
   try {
     const d = await admin().auth().verifyIdToken(m[1]);
-    return { id: d.uid, email: d.email || '' };
+    return { id: d.uid, email: d.email || '', verified: !!d.email_verified };
   } catch (e) {
     return null;
   }
@@ -58,24 +61,31 @@ function wibDay(ms) {
   return new Date(ms + 7 * 3600 * 1000).toISOString().slice(0, 10); // tanggal di WIB (UTC+7)
 }
 
-// Menerapkan reset otomatis: foto reset tiap 00.00 WIB, kata reset setelah istirahat selesai atau 2 jam tidak aktif.
+// Menerapkan reset otomatis: foto reset tiap 00.00 WIB, kata reset 3 jam setelah mulai terpakai, Pro kembali ke Free kalau sudah habis masa aktif.
 function touch(r, now) {
-  r = Object.assign({ plan: 'free', words: 0, last_at: now, blocked_until: null, photos: 0, photo_day: wibDay(now) }, r || {});
+  r = Object.assign({ plan: 'free', words: 0, win_start: null, photos: 0, photo_day: wibDay(now), pro_until: null, ever_pro: false }, r || {});
+  delete r.blocked_until; delete r.last_at;
+  if (r.plan === 'pro' && r.pro_until && now >= r.pro_until) r.plan = 'free';
+  if (r.plan !== 'pro') r.plan = 'free';
   if (r.photo_day !== wibDay(now)) { r.photos = 0; r.photo_day = wibDay(now); }
-  if (r.blocked_until && now >= r.blocked_until) { r.words = 0; r.blocked_until = null; }
-  else if (!r.blocked_until && now - r.last_at >= TWO_HOURS) r.words = 0;
+  if (r.win_start && now - r.win_start >= WORD_WINDOW) { r.words = 0; r.win_start = null; }
   return r;
 }
 
 function view(r) {
+  const lim = PLANS[r.plan] || PLANS.free;
+  const ok = r.words < lim.words;
+  const resetAt = r.win_start ? new Date(r.win_start + WORD_WINDOW).toISOString() : null;
   return {
-    plan: r.plan, words: r.words, words_max: LIMITS.words,
-    blocked_until: r.blocked_until ? new Date(r.blocked_until).toISOString() : null,
-    photos: r.photos, photos_max: LIMITS.photos, chat_ok: !r.blocked_until,
+    plan: r.plan, words: r.words, words_max: lim.words,
+    blocked_until: ok ? null : resetAt, reset_at: resetAt,
+    photos: r.photos, photos_max: lim.photos, chat_ok: ok,
+    pro_until: r.plan === 'pro' && r.pro_until ? new Date(r.pro_until).toISOString() : null,
+    ever_pro: !!r.ever_pro,
   };
 }
 
-// Operasi kuota. Nama dan bentuk hasilnya sama dengan versi sebelumnya supaya file lain tidak berubah.
+// Operasi kuota (satu transaksi per panggilan supaya hitungannya tidak bisa diakali dengan permintaan bersamaan).
 async function rpc(name, args) {
   const db = admin().firestore();
   const ref = db.collection('usage').doc(String(args.p_user));
@@ -84,23 +94,40 @@ async function rpc(name, args) {
     const snap = await tx.get(ref);
     let r = touch(snap.exists ? snap.data() : null, now);
     let out;
-    if (name === 'faisal_usage') {
+    if (name === 'faisal_usage' || name === 'admin_get') {
       out = view(r);
     } else if (name === 'faisal_add_words') {
-      r.words += Math.max(0, args.p_n | 0);
-      r.last_at = now;
-      if (r.words > LIMITS.words && !r.blocked_until) r.blocked_until = now + TWO_HOURS;
+      const n = Math.max(0, args.p_n | 0);
+      r.words += n;
+      if (n > 0 && !r.win_start) r.win_start = now;
       out = view(r);
     } else if (name === 'faisal_use_photo') {
       let ok = false;
-      if (r.photos < LIMITS.photos) { r.photos += 1; ok = true; }
+      if (r.photos < (PLANS[r.plan] || PLANS.free).photos) { r.photos += 1; ok = true; }
       out = { ok, usage: view(r) };
+    } else if (name === 'admin_set') {
+      if (args.plan === 'pro') {
+        r.plan = 'pro'; r.ever_pro = true;
+        r.pro_until = now + Math.max(1, Math.min(365, args.days | 0 || 30)) * DAY;
+      } else {
+        r.plan = 'free'; r.pro_until = null;
+      }
+      if (args.p_email) r.email = String(args.p_email).slice(0, 200);
+      out = view(r);
     } else {
       throw new Error('fungsi tidak dikenal: ' + name);
     }
     tx.set(ref, r);
     return out;
   });
+}
+
+function adminEmails() {
+  return String(process.env.ADMIN_EMAILS || '').toLowerCase().split(/[\s,;]+/).filter(Boolean);
+}
+// Admin = email ada di ADMIN_EMAILS dan emailnya sudah terverifikasi (login Google otomatis terverifikasi).
+function isAdmin(user) {
+  return !!(user && user.email && user.verified && adminEmails().includes(user.email.toLowerCase()));
 }
 
 function wib(iso) {
@@ -126,4 +153,4 @@ async function requireUser(req, res) {
   return user;
 }
 
-module.exports = { enabled, webConfig, bad, getUser, rpc, wib, countWords, requireUser, LIMITS };
+module.exports = { enabled, webConfig, bad, getUser, rpc, wib, countWords, requireUser, isAdmin, admin, LIMITS, PLANS };
