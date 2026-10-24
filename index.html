@@ -2513,8 +2513,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var synth = window.speechSynthesis;
   var PRESETS = [
-    { id: 'santai', name: 'Cowok muda', voice: 'Puck', style: 'young casual guy, bright light voice', rate: 1.05 },
-    { id: 'ramah', name: 'Ramah muda', voice: 'Achird', style: 'young friendly guy, light voice', rate: 1.03 },
+    { id: 'santai', name: 'Cowok muda', voice: 'Puck', style: 'young casual guy', rate: 1.05 },
+    { id: 'ramah', name: 'Ramah muda', voice: 'Achird', style: 'young friendly guy', rate: 1.03 },
     { id: 'ceria', name: 'Ceria', voice: 'Fenrir', style: 'young energetic guy', rate: 1.05 },
     { id: 'tegas', name: 'Tegas', voice: 'Orus', style: '', rate: 1 },
     { id: 'berat', name: 'Berat serak', voice: 'Algenib', style: '', rate: 0.97 },
@@ -2553,8 +2553,13 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   async function fetchTts(chunk, p) {
     var k = p.voice + '|' + p.style + '|' + chunk;
     if (audioCache[k]) return audioCache[k];
-    var r = await fetch('/api/tts', { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ text: chunk, voice: p.voice, style: p.style }) });
-    var d = null; try { d = await r.json(); } catch (e) {}
+    var r, d = null;
+    for (var tryN = 0; tryN < 2; tryN++) {
+      r = await fetch('/api/tts', { method: 'POST', headers: await authHeaders(), body: JSON.stringify({ text: chunk, voice: p.voice, style: p.style }) });
+      d = null; try { d = await r.json(); } catch (e) {}
+      if (r.ok || (r.status !== 429 && r.status !== 502)) break;
+      await new Promise(function (ok) { setTimeout(ok, 1800); });
+    }
     if (!r.ok || !d || !d.audio) { var er = new Error((d && d.error) || 'tts'); er.status = r.status; er.code = d && d.code; throw er; }
     var bin = atob(d.audio), bytes = new Uint8Array(bin.length);
     for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
@@ -2604,6 +2609,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
           if (tok !== speakTok) return;
           if (e && (e.status === 401)) { showLogin(); return; }
           if (e && (e.status === 501 || e.status === 404 || e.status === 405)) ttsOff = true;
+          try { toast('Suara Gemini gagal (' + (e && e.status || '?') + '): ' + String((e && e.message) || '').slice(0, 90)); } catch (x) {}
           await speakBrowser(chunks.slice(i).join(' '), tok);
           return;
         }
