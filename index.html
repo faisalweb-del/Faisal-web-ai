@@ -594,6 +594,16 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .pt-menu button { display: block; width: 100%; min-height: 44px; padding: 0 16px; border: 0; border-top: 1px solid rgba(255, 255, 255, .08); background: transparent; color: #f2f4f8; text-align: left; font: 500 15px var(--f-body); cursor: pointer; }
 .pt-menu button:first-child { border-top: 0; }
 .pt-menu button.dng { color: #ff6b7a; }
+
+@keyframes pm-in-them { 0% { opacity: 0; transform: translateX(-16px) scale(.88); } 60% { opacity: 1; transform: translateX(2px) scale(1.02); } 100% { opacity: 1; transform: none; } }
+@keyframes pm-in-me { 0% { opacity: 0; transform: translateX(16px) scale(.88); } 60% { opacity: 1; transform: translateX(-2px) scale(1.02); } 100% { opacity: 1; transform: none; } }
+.pm.pop.them { animation: pm-in-them .38s cubic-bezier(.2, .8, .2, 1) both; transform-origin: left bottom; }
+.pm.pop.me { animation: pm-in-me .3s cubic-bezier(.2, .8, .2, 1) both; transform-origin: right bottom; }
+.pm.flashin { box-shadow: 0 0 0 0 rgba(124, 152, 255, .6); animation: pm-glow 1s ease-out; }
+@keyframes pm-glow { 0% { box-shadow: 0 0 0 0 rgba(124, 152, 255, .7); } 100% { box-shadow: 0 0 0 12px rgba(124, 152, 255, 0); } }
+.ct-note { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #131925; font-size: 13px; color: var(--muted); }
+.ct-note span { flex: 1; min-width: 0; }
+@media (prefers-reduced-motion: reduce) { .pm.pop, .pm.flashin { animation: none !important; } }
 </style>
 </head>
 <body>
@@ -1842,7 +1852,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       if (r.ok && d) { auth.admin = !!d.admin; setUsage(d.usage); }
     } catch (e) {}
   }
-  function afterAuth() { updateGate(); if (auth.session) { refreshUsage(); refreshList(); syncPull(); } else { auth.usage = null; auth.admin = false; updateSub(); } }
+  function afterAuth() { updateGate(); if (auth.session) { refreshUsage(); refreshList(); syncPull(); try { ctBoot(); } catch (e) {} } else { auth.usage = null; auth.admin = false; updateSub(); } }
   function showLogin() { if (chatEl.hidden) openChat(); updateGate(); }
   async function consumePhoto() {
     if (!auth.on) return true;
@@ -3038,6 +3048,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     r2.appendChild(ni); r2.appendChild(ns); card.appendChild(r2);
     card.appendChild(el('div', 'ct-empty', 'Bagikan nomor ini hanya ke orang yang kamu kenal.')); card.lastChild.style.cssText = 'text-align:left;padding:10px 0 0;font-size:12px';
     sBody.appendChild(card);
+    sBody.appendChild(pushCard());
 
     var incoming = ct.contacts.filter(function (c) { return c.status === 'in'; });
     var oks = ct.contacts.filter(function (c) { return c.status === 'ok'; }).sort(function (a, b) { return ((b.last && b.last.ts) || b.created) - ((a.last && a.last.ts) || a.created); });
@@ -3094,13 +3105,62 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       });
     }
   }
+  /* notifikasi pesan di HP (jalan di latar belakang lewat service worker) */
+  function pushSupported() { return !!(window.isSecureContext && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window); }
+  function b64u8(b) { var p = '='.repeat((4 - b.length % 4) % 4), r = atob((b + p).replace(/-/g, '+').replace(/_/g, '/')), o = new Uint8Array(r.length), i; for (i = 0; i < r.length; i++) o[i] = r.charCodeAt(i); return o; }
+  async function pushGet() { try { var reg = await navigator.serviceWorker.getRegistration('/'); return reg ? await reg.pushManager.getSubscription() : null; } catch (e) { return null; } }
+  async function pushEnable() {
+    if (!pushSupported()) throw new Error('Browser ini belum mendukung notifikasi. Di iPhone, tambahkan web ini ke Layar Utama dulu.');
+    var perm = await Notification.requestPermission();
+    if (perm !== 'granted') throw new Error('Izin notifikasi ditolak. Aktifkan lewat pengaturan situs di browser.');
+    var reg = await navigator.serviceWorker.register('/sw.js'); await navigator.serviceWorker.ready;
+    var key = (await capi({ op: 'pushkey' })).key, sub = null;
+    try { sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u8(key) }); }
+    catch (e) { var old = await reg.pushManager.getSubscription(); if (old) await old.unsubscribe(); sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u8(key) }); }
+    await capi({ op: 'pushsub', sub: sub.toJSON() });
+  }
+  async function pushDisable() { var sub = await pushGet(); if (sub) { try { await capi({ op: 'pushoff', endpoint: sub.endpoint }); } catch (e) {} await sub.unsubscribe(); } }
+  function pushCard() {
+    var box = el('div', 'ct-note'), tx = el('span', '', 'Notifikasi pesan: memeriksa…'), btn = el('button', 'ct-btn pri', '…'); btn.type = 'button'; btn.disabled = true;
+    box.appendChild(tx); box.appendChild(btn);
+    if (!pushSupported()) { tx.textContent = 'Notifikasi belum didukung di browser ini. Di iPhone, tambahkan web ke Layar Utama dulu.'; btn.remove(); return box; }
+    pushGet().then(function (sub) {
+      var on = !!(sub && Notification.permission === 'granted');
+      tx.textContent = on ? 'Notifikasi pesan aktif di HP ini.' : 'Aktifkan notifikasi supaya tahu ada pesan baru walau web ditutup.';
+      btn.textContent = on ? 'Matikan' : 'Aktifkan'; btn.className = 'ct-btn' + (on ? '' : ' pri'); btn.disabled = false;
+      btn.onclick = async function () {
+        btn.disabled = true;
+        try { if (on) { await pushDisable(); toast('Notifikasi dimatikan'); } else { await pushEnable(); toast('Notifikasi aktif'); } } catch (e) { toast(e.message || 'Gagal'); }
+        renderSheet();
+      };
+    });
+    return box;
+  }
+  async function pushResync() {
+    if (!pushSupported() || Notification.permission !== 'granted' || !ctOn()) return;
+    try { var sub = await pushGet(); if (sub) await capi({ op: 'pushsub', sub: sub.toJSON() }); } catch (e) {}
+  }
+  function openFromUrl(u) {
+    var m = /[?&]chat=([\w-]+)/.exec(u || ''); if (!m) return;
+    ct.pendingOpen = m[1]; if (chatEl.hidden) openChat(); ctRefresh();
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', function (e) {
+      var d = e.data || {};
+      if (d.type === 'push') { ctRefresh(); if (ct.thread) pollThread(false); }
+      else if (d.type === 'open-chat') openFromUrl(d.url);
+    });
+    try { var q0 = /[?&]chat=([\w-]+)/.exec(location.search); if (q0) { ct.pendingOpen = q0[1]; history.replaceState(null, '', location.pathname); } } catch (e) {}
+  }
+  function ctBoot() { ctSync(); ctRefresh(); pushResync(); }
   function updBadge() {
     var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; });
     ctBadge.hidden = !n; ctBadge.textContent = String(n);
   }
   async function ctRefresh() {
     if (!ctOn() || ct.busy) return; ct.busy = true;
-    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; updBadge(); if (!sheet.hidden) renderSheet(); }
+    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; updBadge(); if (!sheet.hidden) renderSheet();
+      if (ct.pendingOpen) { var po = ct.contacts.filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
     catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
   }
   function ctSync() { ctLink.hidden = !ctOn(); if (!ctOn()) { sheet.hidden = true; closeThread(); } }
@@ -3118,31 +3178,41 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function addPm(m, sending) {
     if (m.id && ct.tids[m.id]) { var ex = ct.tids[m.id]; if (ex.classList.contains('sending') && !sending) { ex.classList.remove('sending'); } return ex; }
     var emp = document.getElementById('pt-empty'); if (emp) emp.remove();
-    var d = el('div', 'pm ' + m.from + (sending ? ' sending' : '')); d.appendChild(document.createTextNode(m.text));
+    var d = el('div', 'pm ' + m.from + (sending ? ' sending' : '') + (ct.anim ? ' pop' : '')); d.appendChild(document.createTextNode(m.text));
+    if (ct.anim && m.from === 'them') { try { if (navigator.vibrate && !document.hidden) navigator.vibrate(15); } catch (x) {} }
     var t = el('time', '', timeOf(m.ts)); d.appendChild(t);
     vLog.appendChild(d); if (m.id) ct.tids[m.id] = d; return d;
   }
   function nearBottom() { return vLog.scrollHeight - vLog.scrollTop - vLog.clientHeight < 120; }
   async function pollThread(first) {
     var c = ct.thread; if (!c || document.hidden) return;
+    if (ct.polling) return; ct.polling = true;
     try {
       var d = await capi({ op: 'msgs', id: c.id, after: first ? 0 : ct.tlast });
       if (ct.thread !== c) return;
       var stick = first || nearBottom(), ms = d.msgs || [];
       ms.forEach(function (m) { addPm(m, false); if (m.ts > ct.tlast) ct.tlast = m.ts; });
-      if (ms.length) { markSeen(c.id, ct.tlast); if (stick) vLog.scrollTop = vLog.scrollHeight; }
+      if (ms.length) { ct.lastAct = Date.now(); markSeen(c.id, ct.tlast); if (stick) vLog.scrollTo({ top: vLog.scrollHeight, behavior: first ? 'auto' : 'smooth' }); }
+      if (first) ct.anim = true;
       if (first && !ms.length) { var en = el('div', 'pt-note', 'Belum ada pesan. Mulai ngobrol!'); en.id = 'pt-empty'; vLog.appendChild(en); }
     } catch (e) { if (e.status === 403 && first) { toast(e.message); closeThread(); } }
+    finally { ct.polling = false; }
+  }
+  function schedulePoll() {
+    clearTimeout(ct.tpoll);
+    if (!ct.thread) return;
+    var idle = Date.now() - (ct.lastAct || 0) > 120000;
+    ct.tpoll = setTimeout(async function () { await pollThread(false); schedulePoll(); }, document.hidden ? 4000 : (idle ? 2500 : 1000));
   }
   function openThread(c) {
-    ct.thread = c; ct.tlast = 0; ct.tids = {}; vLog.replaceChildren(); vMenu.hidden = true;
+    ct.thread = c; ct.tlast = 0; ct.tids = {}; ct.anim = false; ct.lastAct = Date.now(); ct.polling = false; vLog.replaceChildren(); vMenu.hidden = true;
     view.querySelector('.ct-av').textContent = (dname(c)[0] || '?').toUpperCase();
     view.querySelector('.nm').textContent = dname(c); view.querySelector('.sb').textContent = fmtNum(c.number);
     view.hidden = false; vTa.value = '';
     vLog.appendChild(el('div', 'pt-note', 'Obrolan dengan teman. Jangan bagikan data pribadi ke orang yang belum kamu kenal.'));
-    pollThread(true); clearInterval(ct.tpoll); ct.tpoll = setInterval(function () { pollThread(false); }, 3000);
+    pollThread(true).then(schedulePoll);
   }
-  function closeThread() { clearInterval(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; ctRefresh(); }
+  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; ctRefresh(); }
   view.querySelector('.back').addEventListener('click', closeThread);
   view.querySelector('.more').addEventListener('click', function (e) {
     e.stopPropagation(); var c = ct.thread; if (!c) return; vMenu.replaceChildren();
@@ -3169,10 +3239,10 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var cid = 'c' + uidn(), node = addPm({ id: cid, from: 'me', text: text, ts: Date.now() }, true); vLog.scrollTop = vLog.scrollHeight;
     try {
       var d = await capi({ op: 'send', id: c.id, text: text, cid: cid });
-      node.classList.remove('sending'); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast);
+      node.classList.remove('sending'); ct.lastAct = Date.now(); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast); schedulePoll();
     } catch (x) { node.remove(); delete ct.tids[cid]; vTa.value = text; toast(x.message); }
   });
-  setInterval(function () { if (!chatEl.hidden && !document.hidden) { ctSync(); if (ctOn() && !ct.thread) ctRefresh(); } }, 30000);
+  setInterval(function () { if (!chatEl.hidden && !document.hidden) { ctSync(); if (ctOn() && !ct.thread) ctRefresh(); } }, 15000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden && ctOn() && !chatEl.hidden) ctRefresh(); });
 
   /* VN: tekan mic, bicara, otomatis terkirim */
