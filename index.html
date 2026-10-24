@@ -454,6 +454,9 @@ footer p { max-width: 62ch; }
 .lb p { color: #E9EEF8; font-size: 14px; text-align: center; }
 .lb-close { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.14); color: #fff; cursor: pointer; display: grid; place-items: center; }
 .lb-close:hover { background: rgba(255,255,255,0.24); }
+img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; object-fit: cover; }
+.pap-wrap { display: block; max-width: 260px; border-radius: 14px; overflow: hidden; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.pap-wrap canvas { display: block; width: 100%; height: auto; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -762,14 +765,14 @@ footer p { max-width: 62ch; }
 <section class="chat" id="chat" role="dialog" aria-label="Faisal AI" hidden>
   <div class="chat-head">
     <button type="button" id="btn-menu" aria-label="Buka menu obrolan" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-    <img src="img/logo-192.png" width="36" height="36" alt="">
+    <img src="img/faisal-192.jpg" width="36" height="36" alt="">
     <div class="who"><strong>Faisal AI</strong><span id="chat-sub">Asisten untuk web ini</span></div>
     <button type="button" id="btn-call" aria-label="Telepon Faisal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></button>
     <button type="button" id="btn-voice" aria-label="Pengaturan suara" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg></button>
     <button type="button" id="chat-close" class="back-txt" aria-label="Kembali ke website">Back</button>
   </div>
   <div class="login" id="login" hidden>
-    <img src="img/logo-192.png" width="64" height="64" alt="">
+    <img src="img/faisal-192.jpg" width="64" height="64" alt="">
     <h3>Masuk dulu ya</h3>
     <p>Akun gratis langsung jadi <strong>Free user</strong>: 4 foto per hari (reset jam 00.00 WIB) dan 700 kata balasan Faisal (reset tiap 3 jam). Mau lebih banyak? Ada paket Pro.</p>
     <button type="button" class="btn" id="login-google" hidden>Lanjut dengan Google</button>
@@ -880,7 +883,7 @@ footer p { max-width: 62ch; }
   <div class="call" id="call" hidden role="dialog" aria-label="Telepon dengan Faisal">
     <div class="call-top"><strong class="call-name">Faisal AI</strong><span class="call-timer" id="call-timer">00:00</span></div>
     <div class="call-mid">
-      <div class="call-avatar" id="call-avatar"><span class="ring"></span><span class="ring r2"></span><img src="img/logo-512.png" alt="" width="180" height="180"></div>
+      <div class="call-avatar" id="call-avatar"><span class="ring"></span><span class="ring r2"></span><img src="img/faisal-512.jpg" alt="" width="180" height="180"></div>
       <div class="call-status" id="call-status" role="status" aria-live="polite">Menyambung…</div>
       <div class="call-heard" id="call-heard"></div>
     </div>
@@ -1431,7 +1434,7 @@ footer p { max-width: 62ch; }
   }
   function addThinking(label) {
     var d = document.createElement('div'); d.className = 'msg bot typing';
-    d.innerHTML = '<span class="think"><img src="img/logo-192.png" alt=""><span>' + label + '<span class="dots"><span></span><span></span><span></span></span></span></span>';
+    d.innerHTML = '<span class="think"><img src="img/faisal-192.jpg" alt=""><span>' + label + '<span class="dots"><span></span><span></span><span></span></span></span></span>';
     logEl.appendChild(d); scrollLog(); return d;
   }
   function toolIntent(text) {
@@ -1613,7 +1616,7 @@ footer p { max-width: 62ch; }
     var work = document.createElement('div'); work.className = 'msg bot typing';
     var mg = document.createElement('span'); mg.className = 'magic working'; var wi = document.createElement('img'); wi.alt = ''; mg.appendChild(wi);
     var u0 = URL.createObjectURL(file); wi.src = u0; work.appendChild(mg);
-    var lab = document.createElement('div'); lab.className = 'think'; lab.innerHTML = '<img src="img/logo-192.png" alt=""><span>Faisal lagi nyulap fotomu<span class="dots"><span></span><span></span><span></span></span></span>';
+    var lab = document.createElement('div'); lab.className = 'think'; lab.innerHTML = '<img src="img/faisal-192.jpg" alt=""><span>Faisal lagi nyulap fotomu<span class="dots"><span></span><span></span><span></span></span></span>';
     var pr = document.createElement('div'); pr.className = 'prog'; pr.textContent = ' ';
     work.appendChild(lab); work.appendChild(pr); logEl.appendChild(work); scrollLog();
     var cur = file, last = null, note = [];
@@ -2129,6 +2132,67 @@ footer p { max-width: 62ch; }
     var lt = turns[turns.length - 1];
     return (turns.length > n0 && lt && lt.role === 'assistant') ? lt.content : '';
   }
+  /* ---------- Pap Faisal: foto asli pilihan (img/pap/daftar.json), diacak, bermerek air, dibatasi per hari ---------- */
+  var PAP_RE = /\b(pap|pep)\b|foto\s*(kamu|lu|loe|elu|faisal|mu)\b|(kirim|minta|liat|lihat|mana)\s*(dong\s*)?(foto|wajah|muka|selfie)\s*(kamu|lu|loe|faisal|mu)\b|(wajah|muka)\s*(kamu|lu|faisal)|\bselfie\b/i;
+  var PAP_MAX = 3, papList = null, papLast = '';
+  function papKey() { var d = new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10); return 'fz-pap-' + d; }
+  function papCount() { try { return parseInt(localStorage.getItem(papKey()) || '0', 10) || 0; } catch (e) { return 0; } }
+  function papInc() { try { localStorage.setItem(papKey(), String(papCount() + 1)); } catch (e) {} }
+  async function papLoad() {
+    if (papList) return papList;
+    try { var r = await fetch('img/pap/daftar.json', { cache: 'no-cache' }); var d = await r.json(); papList = Array.isArray(d) ? d.filter(function (x) { return /^[\w.-]+\.(jpe?g|png|webp)$/i.test(x); }) : []; } catch (e) { papList = []; }
+    return papList;
+  }
+  function papCanvas(src) {
+    return new Promise(function (res, rej) {
+      var im = new Image();
+      im.onload = function () {
+        var w = Math.min(720, im.naturalWidth), h = Math.round(im.naturalHeight * w / im.naturalWidth);
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        var x = c.getContext('2d'); x.drawImage(im, 0, 0, w, h);
+        x.save(); x.globalAlpha = 0.22; x.fillStyle = '#fff'; x.font = '700 ' + Math.round(w / 12) + 'px sans-serif'; x.textAlign = 'center';
+        x.translate(w / 2, h / 2); x.rotate(-0.5);
+        for (var k = -3; k <= 3; k++) x.fillText('Faisal AI', 0, k * Math.round(w / 4));
+        x.restore();
+        x.globalAlpha = 0.85; x.fillStyle = '#fff'; x.font = '700 ' + Math.round(w / 22) + 'px sans-serif'; x.textAlign = 'right'; x.fillText('Faisal AI', w - 14, h - 14);
+        res(c);
+      };
+      im.onerror = function () { rej(new Error('img')); };
+      im.src = src;
+    });
+  }
+  async function sendPap() {
+    setBusy(true);
+    var b = addThinking('Faisal lagi cari foto');
+    await delay(900);
+    var msg = '', ok = false;
+    if (papCount() >= PAP_MAX) {
+      msg = 'Udah ' + PAP_MAX + ' pap hari ini, jangan serakah 😒 Besok lagi ya.';
+    } else {
+      var list = await papLoad();
+      if (!list.length) msg = 'Aku belum punya foto buat dikirim 🗿';
+      else {
+        var pool = list.length > 1 ? list.filter(function (f) { return f !== papLast; }) : list;
+        var f = pool[Math.floor(Math.random() * pool.length)];
+        try {
+          var cv = await papCanvas('img/pap/' + f);
+          papLast = f; papInc(); ok = true;
+          b.remove();
+          var d = document.createElement('div'); d.className = 'msg bot';
+          var w = document.createElement('span'); w.className = 'pap-wrap';
+          w.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+          w.appendChild(cv); d.appendChild(w);
+          var caps = ['Nih, jangan disebar ya 😘', 'Nih pap-nya, ganteng kan 🗿', 'Nih. Jangan di-screenshot, awas ya 😠', 'Tadaa 🤭 Simpen sendiri aja ya'];
+          d.appendChild(document.createTextNode(caps[Math.floor(Math.random() * caps.length)]));
+          logEl.appendChild(d); scrollLog();
+          recBot('(Faisal mengirim pap)');
+        } catch (e) { msg = 'Fotonya gagal kebuka. Coba lagi bentar 😒'; }
+      }
+    }
+    if (!ok) { b.remove(); addMsg('bot', msg); recBot(msg); }
+    setBusy(false);
+  }
+
   function ask(text, opts) {
     opts = opts || {};
     text = String(text || '').trim();
@@ -2139,6 +2203,7 @@ footer p { max-width: 62ch; }
     if (pic) lastPhoto = pic.blob;
     addMsg('me', text, '', pic && pic.url);
     recMe(text, pic && pic.blob);
+    if (!pic && text && PAP_RE.test(text) && !(opts && opts.call)) { turns.push({ role: 'user', content: text }); sendPap(); return null; }
     var it = text ? toolIntent(text) : null;
     if (!it && pic && !text && pendingTool) it = pendingTool;
     if (it) {
