@@ -31,13 +31,18 @@ function webConfig() {
   return WEB;
 }
 
+// Memakai cara impor modular firebase-admin (jalan di versi 10 ke atas, termasuk yang terbaru).
 let _admin = null;
 function admin() {
   if (_admin) return _admin;
-  const a = require('firebase-admin');
-  if (!a.apps.length) a.initializeApp({ credential: a.credential.cert(SERVICE) });
-  _admin = a;
-  return a;
+  const { initializeApp, getApps, getApp, cert } = require('firebase-admin/app');
+  const { getAuth } = require('firebase-admin/auth');
+  const { getFirestore } = require('firebase-admin/firestore');
+  const sa = Object.assign({}, SERVICE);
+  if (typeof sa.private_key === 'string') sa.private_key = sa.private_key.replace(/\\n/g, '\n');
+  const app = getApps().length ? getApp() : initializeApp({ credential: cert(sa) });
+  _admin = { auth: () => getAuth(app), firestore: () => getFirestore(app) };
+  return _admin;
 }
 
 function bad(res, code, msg, extra) {
