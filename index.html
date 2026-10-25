@@ -366,7 +366,7 @@ section.block { padding-top: 72px; scroll-margin-top: 8px; }
 .row .ic[aria-pressed="true"] { color: var(--accent); }
 .row .ic:hover { background: var(--surface-2); color: var(--fg); }
 /* halaman penuh: akun dan galeri */
-.sheet { position: absolute; inset: 0; z-index: 6; display: flex; flex-direction: column; background: var(--bg); }
+.sheet { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; background: var(--bg); }
 .sheet-head { display: flex; align-items: center; gap: 6px; padding: calc(10px + env(safe-area-inset-top, 0px)) 10px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .sheet-head h3 { margin: 0; font: 700 18px var(--f-display); }
 .sheet-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 14px calc(24px + env(safe-area-inset-bottom, 0px)); width: min(100%, 720px); margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
@@ -605,12 +605,6 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .ct-note span { flex: 1; min-width: 0; }
 @media (prefers-reduced-motion: reduce) { .pm.pop, .pm.flashin { animation: none !important; } }
 
-.drawer-bottom { display: flex; gap: 8px; align-items: stretch; }
-.drawer-bottom .drawer-link { flex: 1; min-width: 0; }
-.ct-fab { position: relative; flex: none; width: 54px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--fg); display: grid; place-items: center; cursor: pointer; }
-.ct-fab[hidden] { display: none; }
-.ct-fab:hover { border-color: var(--accent); color: var(--accent); }
-.ct-fab .ct-badge { position: absolute; top: -6px; right: -6px; margin: 0; }
 .dl-stack { display: flex; flex-direction: column; gap: 2px; }
 .pmrow { border: 0; border-radius: 10px; padding: 8px 8px; }
 .pmrow.on { background: var(--accent-soft); }
@@ -622,12 +616,87 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .pm.del { font-style: italic; opacity: .75; }
 .pm.them .react-chip { left: 8px; } .pm.me .react-chip { right: 8px; }
 .react-chip.multi { width: auto; min-width: 28px; padding: 0 7px; border-radius: 14px; letter-spacing: 1px; }
+}
+
+.wrap, #fab { display: none !important; }
+#chat-close { display: none !important; }
+.pm-media { position: relative; width: min(240px, 62vw); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.06); margin-bottom: 4px; }
+.pm-media img, .pm-media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pm-media .pm-ph { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 8px; font-size: 12px; opacity: .75; }
+.pm-media.k-sticker { width: 150px; background: none; }
+.pm-media.k-sticker img { object-fit: contain; cursor: pointer; -webkit-user-drag: none; }
+.pm.stk-msg { background: none !important; padding: 2px 4px; box-shadow: none; }
+.pm.stk-msg time { color: var(--muted); }
+.pt-form button.pt-ic { background: var(--surface-2); color: var(--fg); width: 42px; border: 1px solid var(--line); }
+.stk-panel { max-height: 42vh; overflow-y: auto; padding: 10px 12px; border-top: 1px solid var(--line); background: #0f1522; }
+.stk-panel[hidden] { display: none; }
+.stk-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
+.stk-mg { border: 0; background: none; color: var(--accent); font: 600 13px var(--f-body); cursor: pointer; }
+.stk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+.stk-it, .stk-add { position: relative; aspect-ratio: 1; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); padding: 4px; cursor: pointer; display: grid; place-items: center; color: var(--accent); font-size: 30px; }
+.stk-it img { width: 100%; height: 100%; object-fit: contain; }
+.stk-x { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%; background: #ff3b30; color: #fff; font: 700 14px/22px var(--f-body); font-style: normal; text-align: center; }
+.stk-empty { grid-column: 1 / -1; margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+.stk-ed { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column; background: #0b0f17; color: var(--fg); }
+.stk-ed[hidden] { display: none; }
+.se-h { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.se-h button { border: 0; background: none; color: var(--accent); font: 600 15px var(--f-body); cursor: pointer; }
+.se-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.se-body canvas { width: min(340px, 86vw); aspect-ratio: 1; border-radius: 12px; background: repeating-conic-gradient(#222 0 25%, #2c2c2c 0 50%) 0 0 / 20px 20px; touch-action: none; cursor: grab; }
+.se-hint { margin: 0; font-size: 12px; color: var(--muted); text-align: center; }
+.se-txt { width: min(340px, 86vw); padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--fg); font: 400 16px var(--f-body); }
+.se-row { display: flex; align-items: center; gap: 10px; width: min(340px, 86vw); }
+.se-cols { display: flex; gap: 8px; }
+.se-cols button { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line); cursor: pointer; padding: 0; }
+.se-cols button.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.se-size { flex: 1; }
+.se-pos button { flex: 1; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--fg); font: 600 13px var(--f-body); cursor: pointer; }
+.se-act { display: flex; gap: 10px; padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); }
+.se-act button { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); font: 700 15px var(--f-body); cursor: pointer; }
+.se-act .se-send { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.se-act button:disabled { opacity: .4; }
+.lbx, .stk-pop { position: fixed; inset: 0; z-index: 96; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: rgba(0,0,0,.88); }
+.lbx img { max-width: 94vw; max-height: 86vh; }
+.stk-pop img { width: min(300px, 70vw); height: min(300px, 70vw); object-fit: contain; }
+.stk-pop .acts { display: flex; gap: 10px; }
+.stk-pop button { padding: 12px 18px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); font: 700 15px var(--f-body); cursor: pointer; }
+.stk-pop button.pri { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+
+.home { position: absolute; inset: 0; z-index: 9; display: flex; flex-direction: column; background: var(--bg); padding-top: env(safe-area-inset-top, 0px); }
+.chat.gated .home { display: none !important; }
+.home-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; }
+.home-top strong { font: 800 26px var(--f-display); color: var(--accent); letter-spacing: -.01em; }
+.home-top button { width: 42px; height: 42px; border: 0; border-radius: 50%; background: transparent; color: var(--fg); display: grid; place-items: center; cursor: pointer; }
+.home-top button:hover { background: var(--surface-2); }
+.home-menu { position: absolute; right: 12px; top: calc(58px + env(safe-area-inset-top, 0px)); z-index: 3; min-width: 210px; display: flex; flex-direction: column; padding: 6px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+.home-menu button { border: 0; background: none; color: var(--fg); text-align: left; padding: 12px 14px; border-radius: 10px; font: 600 15px var(--f-body); cursor: pointer; }
+.home-menu button:hover { background: var(--accent-soft); }
+.home-search { padding: 6px 14px 8px; }
+.home-search input { width: 100%; padding: 11px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--fg); font: 400 15px var(--f-body); }
+.home-list { flex: 1; min-height: 0; overflow-y: auto; padding: 2px 8px 96px; }
+.home-empty { color: var(--muted); font-size: 13px; padding: 12px 10px; margin: 0; }
+.ct-fab { position: absolute; left: 16px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 2; width: 56px; height: 56px; border: 0; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.ct-fab[hidden] { display: none; }
+.ct-fab .ct-badge { position: absolute; top: -4px; right: -4px; margin: 0; }
+.ct-av.has { color: transparent; background-size: cover; background-position: center; }
+.ct-av.big { width: 104px; height: 104px; font-size: 42px; cursor: pointer; }
+.info-body { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px 18px; }
+.info-body h3 { margin: 6px 0 0; font: 800 22px var(--f-display); }
+.info-num { margin: 0 0 14px; color: var(--muted); font: 500 15px var(--f-mono); letter-spacing: .04em; }
+.info-body .ct-btn { width: min(340px, 100%); padding: 13px; font-size: 15px; }
+.ct-btn.dng { color: #ff6b6b; }
+.set-body { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+.set-row { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-2); }
+.set-row div { flex: 1; min-width: 0; font-size: 13px; color: var(--muted); }
+.set-row b { display: block; font: 700 15px var(--f-body); color: var(--fg); margin-bottom: 2px; }
+.prof-acts { display: flex; gap: 8px; margin: 10px 0 4px; flex-wrap: wrap; }
+.prof-acts .btn { flex: 1; min-width: 140px; }
 @media (min-width: 860px) {
   .chat:not(.gated) { padding-left: 340px; }
-  .chat:not(.gated) .drawer { width: 340px; animation: none; }
-  .chat:not(.gated) .drawer[hidden] { display: flex !important; }
-  .chat:not(.gated) .scrim { display: none !important; }
-  .chat:not(.gated) #btn-menu, .chat:not(.gated) .drawer-x { display: none; }
+  .chat:not(.gated) .home { right: auto; width: 340px; border-right: 1px solid var(--line); }
+  .chat:not(.gated) .home[hidden] { display: flex !important; }
+  .chat:not(.gated) #btn-home { display: none; }
+  .chat:not(.gated) .drawer, .chat:not(.gated) .scrim { left: 340px; }
   .chat:not(.gated) > .ctsheet, .chat:not(.gated) > .ptview, .chat:not(.gated) > .starsheet, .chat:not(.gated) > .sheet { left: 340px; }
 }
 </style>
@@ -937,6 +1006,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 
 <section class="chat" id="chat" role="dialog" aria-label="Faisal AI" hidden>
   <div class="chat-head">
+    <button type="button" id="btn-home" aria-label="Kembali ke daftar obrolan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button type="button" id="btn-menu" aria-label="Buka menu obrolan" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <img src="img/faisal-192.jpg" width="36" height="36" alt="">
     <div class="who"><strong>Faisal AI</strong><span id="chat-sub">Asisten untuk web ini</span></div>
@@ -947,7 +1017,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   <div class="login" id="login" hidden>
     <img src="img/faisal-192.jpg" width="64" height="64" alt="">
     <h3>Masuk dulu ya</h3>
-    <p>Akun gratis langsung jadi <strong>Free user</strong>: 4 foto per hari (reset jam 00.00 WIB) dan 700 kata balasan Faisal (reset tiap 3 jam). Mau lebih banyak? Ada paket Pro.</p>
+    <p>Akun gratis langsung jadi <strong>Free user</strong>: 4 foto per hari (reset jam 00.00 WIB), 100 kata balasan Faisal (reset tiap 3 jam), dan 1 kali suara Faisal per hari (maksimal 10 detik). Mau lebih banyak? Ada paket Pro.</p>
     <button type="button" class="btn" id="login-google" hidden>Lanjut dengan Google</button>
     <form id="login-form" autocomplete="on">
       <label for="login-email">Email</label>
@@ -991,7 +1061,14 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </button>
   </form>
-  <p class="chat-foot">Foto di slider dan Alat HD tidak dikirim ke chat. Hanya foto yang kamu kirim lewat tombol foto di sini yang dibaca AI.</p>
+  <p class="chat-foot">Hanya foto yang kamu kirim lewat tombol foto di sini yang dibaca AI.</p>
+
+  <section class="home" id="home" aria-label="Daftar obrolan">
+    <div class="home-top"><strong>Obrolan</strong><button type="button" id="home-more" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div>
+    <div class="home-menu" id="home-menu" hidden></div>
+    <div class="home-search"><input id="home-q" type="search" placeholder="Cari obrolan" aria-label="Cari obrolan" autocomplete="off"></div>
+    <div class="home-list" id="pm-box"></div>
+  </section>
 
   <div class="scrim" id="scrim" hidden></div>
   <aside class="drawer" id="drawer" hidden aria-label="Riwayat obrolan">
@@ -1001,8 +1078,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     </div>
     <button type="button" class="btn new-chat" id="new-chat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Percakapan baru</button>
     <button type="button" class="drawer-link" id="open-gallery"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> <span>Hasil foto anda</span> <em id="gal-count"></em></button>
-    <div class="drawer-scroll" id="drawer-scroll"><div id="pm-box"></div><div class="dl-stack" id="chat-list" aria-label="Riwayat obrolan Faisal AI"></div></div>
-    <button type="button" class="drawer-link" id="open-acct"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> <span>Akun saya</span></button>
+    <div class="drawer-scroll" id="drawer-scroll"><div class="dl-stack" id="chat-list" aria-label="Riwayat obrolan Faisal AI"></div></div>
   </aside>
 
   <div class="sheet" id="gallery" hidden role="dialog" aria-label="Hasil foto anda">
@@ -1020,16 +1096,18 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
         <div class="avatar" id="acct-av" aria-hidden="true"></div>
         <div class="prof-t"><strong id="acct-name"></strong><span id="acct-mask"></span></div>
       </div>
+      <div class="prof-acts"><button type="button" class="btn" id="acct-photo">Ganti foto profil</button><button type="button" class="btn out" id="acct-photo-del" hidden>Hapus foto</button><input class="vh" id="acct-photo-in" type="file" accept="image/*" tabindex="-1" aria-hidden="true"></div>
+      <p class="sheet-note" style="margin:0 0 8px">Foto profil ini dilihat teman di kontakmu. Kamu hanya bisa mengganti fotomu sendiri.</p>
       <div class="nowuse" id="acct-now"></div>
       <div class="plans">
         <article class="plan" id="plan-free">
           <header><h4>Paket Free</h4><span class="own" id="own-free">Dimiliki</span></header>
-          <ul><li>4 foto per hari (kirim foto, HD-in, hapus background)</li><li>700 kata balasan Faisal</li><li>Kata reset tiap 3 jam, foto reset jam 00.00 WIB</li></ul>
+          <ul><li>4 foto per hari (kirim foto, HD-in, hapus background)</li><li>100 kata balasan Faisal</li><li>1 kali suara Faisal (teks ke suara) per hari, maksimal 10 detik</li><li>Kata reset tiap 3 jam, foto dan suara reset jam 00.00 WIB</li></ul>
           <p class="price">Gratis</p>
         </article>
         <article class="plan pro" id="plan-pro">
           <header><h4>Paket Pro</h4><span class="own" id="own-pro" hidden>Dimiliki</span></header>
-          <ul><li>50 foto per hari (kirim foto, HD-in, hapus background)</li><li>3.200 kata balasan Faisal</li><li>Kata reset tiap 3 jam, foto reset jam 00.00 WIB</li></ul>
+          <ul><li>50 foto per hari (kirim foto, HD-in, hapus background)</li><li>3.200 kata balasan Faisal</li><li>15 kali suara Faisal (teks ke suara) per hari</li><li>Kata reset tiap 3 jam, foto dan suara reset jam 00.00 WIB</li></ul>
           <p class="price" id="pro-price"></p>
           <p class="pro-until" id="pro-until" hidden></p>
           <a class="btn" id="buy-pro" target="_blank" rel="noopener">Beli lewat WhatsApp</a>
@@ -1860,7 +1938,12 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     $('#login-google').hidden = !(auth.google && !auth.broken);
     if (auth.broken) lmsg('Login gagal dimuat. Cek koneksi lalu muat ulang halaman.', true);
     $('#btn-menu').hidden = need;
+    if (need) { homeShown = false; try { closeDrawer(); } catch (e) {} }
+    else if (!homeShown) { homeShown = true; try { if (!window.matchMedia('(min-width: 860px)').matches) showHome(); } catch (e) {} }
+    $('#btn-home').hidden = need;
   }
+  var homeShown = false, homeEl = $('#home');
+  function hideHome() { homeEl.hidden = true; }
   function renderAcct() { updateSub(); if (!$('#acctpage').hidden) renderAcctPage(); }
   function wibTime(iso) {
     try { return new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta', hour12: false }).replace(':', '.') + ' WIB'; } catch (e) { return ''; }
@@ -2242,6 +2325,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var us = auth.usage, isPro = !!(us && us.plan === 'pro'), now = $('#acct-now'); now.replaceChildren();
     if (us) {
       now.appendChild(usageRow('Foto hari ini', us.photos, us.photos_max, 'Reset otomatis jam 00.00 WIB'));
+      if (us.tts_max) now.appendChild(usageRow('Suara Faisal hari ini', us.tts || 0, us.tts_max, (us.plan === 'pro' ? 'Tiap suara maks sekitar 20 detik. ' : 'Tiap suara maks 10 detik. ') + 'Reset jam 00.00 WIB'));
       now.appendChild(usageRow('Kata dari Faisal', us.words, us.words_max, us.chat_ok ? (us.reset_at ? 'Reset jam ' + wibTime(us.reset_at) : 'Reset 3 jam setelah mulai terpakai') : 'Habis. Bisa lagi jam ' + wibTime(us.blocked_until)));
     }
     $('#own-pro').hidden = !isPro;
@@ -2258,7 +2342,6 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     closeDrawer(); closeSheets(); $('#acctpage').hidden = false; renderAcctPage();
     await refreshUsage(); renderAcctPage();
   }
-  $('#open-acct').addEventListener('click', openAcct);
   async function admCall(plan) {
     var msg = $('#adm-msg'), em = $('#adm-email').value.trim();
     if (!em) { msg.textContent = 'Isi email pembeli dulu.'; return; }
@@ -2560,7 +2643,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       if (r.ok || (r.status !== 429 && r.status !== 502)) break;
       await new Promise(function (ok) { setTimeout(ok, 1800); });
     }
-    if (!r.ok || !d || !d.audio) { var er = new Error((d && d.error) || 'tts'); er.status = r.status; er.code = d && d.code; throw er; }
+    if (!r.ok || !d || !d.audio) { var er = new Error((d && d.error) || 'tts'); er.status = r.status; er.code = d && d.code; er.usage = d && d.usage; throw er; }
+    if (d.usage) setUsage(d.usage);
     var bin = atob(d.audio), bytes = new Uint8Array(bin.length);
     for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
     var url = URL.createObjectURL(new Blob([bytes], { type: d.mime || 'audio/wav' }));
@@ -2594,7 +2678,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var t = cleanForSpeech(text);
     if (!t) return;
     stopSpeak();
-    var tok = speakTok, chunks = chunkText(t.slice(0, 600)), p = presetObj(), jobs = [];
+    var tok = speakTok, pro = !!(auth.usage && auth.usage.plan === 'pro'), chunks = [t.slice(0, pro ? 300 : 130)], p = presetObj(), jobs = [];
     function job(i) {
       if (i >= chunks.length) return null;
       if (!jobs[i]) { jobs[i] = fetchTts(chunks[i], p); jobs[i].catch(function () {}); }
@@ -2608,6 +2692,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
         catch (e) {
           if (tok !== speakTok) return;
           if (e && (e.status === 401)) { showLogin(); return; }
+          if (e && e.code === 'tts_limit') { if (e.usage) setUsage(e.usage); toast(e.message); return; }
           if (e && (e.status === 501 || e.status === 404 || e.status === 405)) ttsOff = true;
           try { toast('Suara Gemini gagal (' + (e && e.status || '?') + '): ' + String((e && e.message) || '').slice(0, 90)); } catch (x) {}
           await speakBrowser(chunks.slice(i).join(' '), tok);
@@ -3009,7 +3094,6 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var starLink = document.createElement('button'); starLink.type = 'button'; starLink.className = 'drawer-link'; starLink.id = 'open-starred';
   starLink.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/></svg> <span>Pesan berbintang</span>';
   starLink.addEventListener('click', showStarred);
-  $('#open-gallery').insertAdjacentElement('afterend', starLink);
 
 
   /* ---------- kontak dan chat antar teman (nomor 12 digit, permintaan harus diterima) ---------- */
@@ -3033,8 +3117,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 
   var ctLink = document.createElement('button'); ctLink.type = 'button'; ctLink.className = 'ct-fab'; ctLink.id = 'open-contacts'; ctLink.hidden = true; ctLink.setAttribute('aria-label', 'Kontak'); ctLink.title = 'Kontak';
   ctLink.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M2.5 21a7.5 7.5 0 0 1 15 0M19 8v6M16 11h6"/></svg><em class="ct-badge" hidden></em>';
-  var acctBtn = $('#open-acct'), bbar = document.createElement('div'); bbar.className = 'drawer-bottom';
-  acctBtn.parentNode.insertBefore(bbar, acctBtn); bbar.appendChild(ctLink); bbar.appendChild(acctBtn);
+  $('#home').appendChild(ctLink);
   var ctBadge = ctLink.querySelector('.ct-badge');
 
   var sheet = el('div', 'ctsheet'); sheet.hidden = true;
@@ -3098,7 +3181,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if (incoming.length) {
       sBody.appendChild(el('div', 'ct-h', 'Permintaan masuk'));
       incoming.forEach(function (c) {
-        var row = el('div', 'ct-item static'); var av = el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase()); var tx = el('div', 'ct-tx');
+        var row = el('div', 'ct-item static'); var av = mkAv(c); var tx = el('div', 'ct-tx');
         tx.appendChild(el('b', '', c.name || 'Pengguna baru')); tx.appendChild(el('span', '', 'Nomor ' + fmtNum(c.number)));
         row.appendChild(av); row.appendChild(tx);
         var ac = el('div', 'ct-acts');
@@ -3119,7 +3202,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       var b = el('button', 'ct-item'); b.type = 'button';
       var tx = el('div', 'ct-tx'); tx.appendChild(el('b', '', dname(c)));
       tx.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : 'Belum ada pesan'));
-      b.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); b.appendChild(tx);
+      b.appendChild(mkAv(c)); b.appendChild(tx);
       if (unreadOf(c)) b.appendChild(el('span', 'ct-dot'));
       b.addEventListener('click', function () { openThread(c); });
       sBody.appendChild(b);
@@ -3129,7 +3212,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       outs.forEach(function (c) {
         var row = el('div', 'ct-item static'); var tx = el('div', 'ct-tx');
         tx.appendChild(el('b', '', dname(c))); tx.appendChild(el('span', '', fmtNum(c.number)));
-        row.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); row.appendChild(tx);
+        row.appendChild(mkAv(c)); row.appendChild(tx);
         var x = el('button', 'ct-btn', 'Batalkan'); x.type = 'button';
         x.addEventListener('click', async function () { try { await capi({ op: 'remove', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
         row.appendChild(x); sBody.appendChild(row);
@@ -3140,7 +3223,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       ct.blocked.forEach(function (c) {
         var row = el('div', 'ct-item static'); var tx = el('div', 'ct-tx');
         tx.appendChild(el('b', '', dname(c))); tx.appendChild(el('span', '', fmtNum(c.number)));
-        row.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); row.appendChild(tx);
+        row.appendChild(mkAv(c)); row.appendChild(tx);
         var x = el('button', 'ct-btn', 'Buka blokir'); x.type = 'button';
         x.addEventListener('click', async function () { try { await capi({ op: 'unblock', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
         row.appendChild(x); sBody.appendChild(row);
@@ -3173,7 +3256,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       btn.onclick = async function () {
         btn.disabled = true;
         try { if (on) { await pushDisable(); toast('Notifikasi dimatikan'); } else { await pushEnable(); toast('Notifikasi aktif'); } } catch (e) { toast(e.message || 'Gagal'); }
-        renderSheet();
+        renderSheet(); if (!setS.hidden) openSettings();
       };
     });
     return box;
@@ -3198,23 +3281,30 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function wideMode() { return window.matchMedia('(min-width: 860px)').matches && !chatEl.classList.contains('gated'); }
   function renderPm() {
     var box = $('#pm-box'); if (!box) return; box.replaceChildren();
-    box.appendChild(el('div', 'dl-h', 'Pesan'));
-    var f = el('button', 'ct-item pmrow' + (ct.thread ? '' : ' on')); f.type = 'button';
-    var av = el('img', 'pm-av'); av.src = 'img/faisal-192.jpg'; av.alt = '';
-    var tx = el('div', 'ct-tx'); tx.appendChild(el('b', '', 'Faisal AI')); tx.appendChild(el('span', '', 'Asisten AI · selalu di atas'));
-    f.appendChild(av); f.appendChild(tx);
-    f.addEventListener('click', function () { if (ct.thread) closeThread(); sheet.hidden = true; starSheet.hidden = true; if (!wideMode()) closeDrawer(); });
-    box.appendChild(f);
-    if (!ctOn()) return;
-    ct.contacts.filter(function (c) { return c.status === 'ok' && (c.lastMsg || (ct.thread && ct.thread.id === c.id)); }).sort(function (a, b) { return ((b.lastMsg && b.lastMsg.ts) || Date.now()) - ((a.lastMsg && a.lastMsg.ts) || Date.now()); }).forEach(function (c) {
-      var act = ct.thread && ct.thread.id === c.id;
-      var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
-      var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : ''));
-      b.appendChild(el('div', 'ct-av', (dname(c)[0] || '?').toUpperCase())); b.appendChild(t2);
-      var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
-      b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
-      box.appendChild(b);
-    });
+    var q = (($('#home-q') || {}).value || '').trim().toLowerCase();
+    if (!q || 'faisal ai'.indexOf(q) >= 0) {
+      var f = el('button', 'ct-item pmrow' + (!ct.thread ? ' on' : '')); f.type = 'button';
+      var av = el('img', 'pm-av'); av.src = 'img/faisal-192.jpg'; av.alt = '';
+      var tx = el('div', 'ct-tx'); tx.appendChild(el('b', '', 'Faisal AI')); tx.appendChild(el('span', '', 'Asisten AI · selalu di atas'));
+      f.appendChild(av); f.appendChild(tx);
+      f.addEventListener('click', function () { if (ct.thread) closeThread(); sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; hideHome(); });
+      box.appendChild(f);
+    }
+    var rows = 0;
+    if (ctOn()) {
+      ct.contacts.filter(function (c) { return c.status === 'ok' && (q ? dname(c).toLowerCase().indexOf(q) >= 0 : (c.lastMsg || (ct.thread && ct.thread.id === c.id))); }).sort(function (a, b) { return ((b.lastMsg && b.lastMsg.ts) || Date.now()) - ((a.lastMsg && a.lastMsg.ts) || Date.now()); }).forEach(function (c) {
+        rows++;
+        var act = ct.thread && ct.thread.id === c.id;
+        var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
+        var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : ''));
+        b.appendChild(mkAv(c)); b.appendChild(t2);
+        var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
+        b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
+        box.appendChild(b);
+      });
+    }
+    if (q && !box.children.length) box.appendChild(el('p', 'home-empty', 'Tidak ada obrolan yang cocok.'));
+    else if (!q && !rows) box.appendChild(el('p', 'home-empty', 'Ketuk tombol orang di kiri bawah untuk tambah teman lewat nomor.'));
   }
   function updBadge() {
     var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; });
@@ -3222,12 +3312,12 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   async function ctRefresh() {
     if (!ctOn() || ct.busy) return; ct.busy = true;
-    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; updBadge(); renderPm(); if (!sheet.hidden) renderSheet();
+    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet();
       if (ct.pendingOpen) { var po = ct.contacts.filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
     catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
   }
   function ctSync() { ctLink.hidden = !ctOn(); if (!ctOn()) { ct.contacts = []; sheet.hidden = true; if (ct.thread) closeThread(); } renderPm(); }
-  ctLink.addEventListener('click', function () { closeDrawer(); sheet.hidden = false; renderSheet(); ctRefresh(); });
+  ctLink.addEventListener('click', function () { setS.hidden = true; sheet.hidden = false; renderSheet(); ctRefresh(); });
   $('#btn-menu').addEventListener('click', function () { ctSync(); ctRefresh(); });
   sheet.querySelector('.back').addEventListener('click', function () { sheet.hidden = true; });
   sheet.querySelector('.add').addEventListener('click', function () {
@@ -3254,7 +3344,9 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var m = node._m;
     node.replaceChildren(); node.classList.toggle('del', !!m.deleted);
     if (m.reply && !m.deleted) paintReply(node, { who: pmWho(m.reply.who), text: m.reply.text, go: function () { var t = ct.tids[m.reply.mid]; if (t) { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); t.classList.remove('flashin'); void t.offsetWidth; t.classList.add('flashin'); } } });
-    node.appendChild(document.createTextNode(m.deleted ? '🚫 Pesan ini ditarik' : m.text));
+    node.classList.toggle('stk-msg', m.kind === 'sticker' && !m.deleted);
+    if (m.kind && !m.deleted) { var mb = el('div', 'pm-media k-' + m.kind); mb.style.aspectRatio = String(m.kind === 'sticker' ? 1 : (m.ar || 1)); node.appendChild(mb); fillMedia(mb, m); }
+    if (m.deleted || m.text) node.appendChild(document.createTextNode(m.deleted ? '🚫 Pesan ini ditarik' : m.text));
     node.appendChild(el('time', '', timeOf(m.ts)));
     paintPm(node);
   }
@@ -3288,7 +3380,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function clearPmReply() { ct.reply = null; pbar.hidden = true; }
   pbar.querySelector('button').addEventListener('click', clearPmReply);
   function setPmReply(m) {
-    ct.reply = { mid: m.id, text: String(m.text || '').slice(0, 120), who: m.from };
+    ct.reply = { mid: m.id, text: String(m.text || (m.kind ? kindLabel(m.kind) : '')).slice(0, 120), who: m.from };
     pbar.querySelector('b').textContent = 'Membalas ' + (m.from === 'me' ? 'dirimu sendiri' : dname(ct.thread));
     pbar.querySelector('span').textContent = ct.reply.text; pbar.hidden = false; vTa.focus();
   }
@@ -3297,6 +3389,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     ctxMenu.replaceChildren();
     if (!m.deleted) {
       ctxMenu.appendChild(mi('Balas', I_REPLY, function () { closeMsgMenu(function () { setPmReply(m); }); }));
+      if (m.kind === 'sticker') ctxMenu.appendChild(mi('Simpan stiker', I_STAR, function () { closeMsgMenu(function () { getMedia(m).then(stkSaveUi).catch(function () { toast('Gagal menyimpan'); }); }); }));
       if (m.text) ctxMenu.appendChild(mi('Salin', I_COPY, function () { closeMsgMenu(function () { copyText(m.text).then(function () { toast('Pesan disalin'); }, function () { toast('Gagal menyalin'); }); }); }));
     }
     ctxMenu.appendChild(mi(m.from === 'me' && !m.deleted ? 'Tarik pesan' : 'Hapus untuk saya', I_TRASH, function () { closeMsgMenu(function () { pmDelete(node); }); }, 'danger'));
@@ -3333,30 +3426,42 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     ct.thread = c; ct.tlast = 0; ct.rts = 0; ct.tids = {}; ct.anim = false; ct.lastAct = Date.now(); ct.polling = false; vLog.replaceChildren(); vMenu.hidden = true; clearPmReply();
     try { ct.hidden = JSON.parse(localStorage.getItem('fz-hide-' + myUid() + '-' + c.id) || '{}') || {}; } catch (e) { ct.hidden = {}; }
     markSeen(c.id, (c.lastMsg && c.lastMsg.ts) || 0); renderPm();
-    view.querySelector('.ct-av').textContent = (dname(c)[0] || '?').toUpperCase();
+    var hav = view.querySelector('.ct-av'); hav.textContent = (dname(c)[0] || '?').toUpperCase(); hav.dataset.uid = c.id; phPaint(hav);
     view.querySelector('.nm').textContent = dname(c); view.querySelector('.sb').textContent = fmtNum(c.number);
     view.hidden = false; vTa.value = '';
     vLog.appendChild(el('div', 'pt-note', 'Obrolan dengan teman. Jangan bagikan data pribadi ke orang yang belum kamu kenal.'));
     pollThread(true).then(schedulePoll);
   }
-  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; clearPmReply(); renderPm(); ctRefresh(); }
+  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; clearPmReply(); try { spanel.hidden = true; info.hidden = true; } catch (e) {} renderPm(); ctRefresh(); }
   view.querySelector('.back').addEventListener('click', closeThread);
-  view.querySelector('.more').addEventListener('click', function (e) {
-    e.stopPropagation(); var c = ct.thread; if (!c) return; vMenu.replaceChildren();
-    function it(label, fn, cls) { var b = el('button', cls || '', label); b.type = 'button'; b.addEventListener('click', function () { vMenu.hidden = true; fn(); }); vMenu.appendChild(b); }
-    it('Ubah nama', function () {
+  /* halaman info kontak */
+  var info = el('div', 'ctsheet'); info.hidden = true; info.style.zIndex = 88;
+  info.innerHTML = '<div class="ct-head"><button type="button" class="back">‹ Kembali</button><strong>Info kontak</strong><span style="width:40px"></span></div><div class="info-body"></div>';
+  chatEl.appendChild(info);
+  info.querySelector('.back').addEventListener('click', function () { info.hidden = true; });
+  function openInfo() {
+    var c = ct.thread; if (!c) return; var b = info.querySelector('.info-body'); b.replaceChildren();
+    var av = mkAv(c, 'big'); av.addEventListener('click', function () { var p = phGet(c.id); if (p && p.data) lightbox(p.data); }); b.appendChild(av);
+    b.appendChild(el('h3', '', dname(c))); b.appendChild(el('p', 'info-num', fmtNum(c.number)));
+    function act(label, fn, cls) { var x = el('button', 'ct-btn' + (cls ? ' ' + cls : ''), label); x.type = 'button'; x.addEventListener('click', fn); b.appendChild(x); }
+    act('Ubah nama', function () {
       ctDialog({ title: 'Ubah nama', number: c.number, lockNumber: true, first: c.first, last: c.last, save: async function (f, l) {
-        await capi({ op: 'rename', id: c.id, first: f, last: l }); c.first = f; c.last = l; view.querySelector('.nm').textContent = dname(c); await ctRefresh();
+        await capi({ op: 'rename', id: c.id, first: f, last: l }); c.first = f; c.last = l; view.querySelector('.nm').textContent = dname(c); await ctRefresh(); openInfo();
       } });
     });
-    it('Laporkan', async function () {
+    act('Laporkan', async function () {
       var why = prompt('Kenapa kamu laporkan orang ini? (singkat saja)'); if (why === null) return;
       try { await capi({ op: 'report', id: c.id, reason: why }); toast('Laporan terkirim. Terima kasih.'); } catch (x) { toast(x.message); }
     });
-    it('Blokir', async function () { if (!confirm('Blokir ' + dname(c) + '? Dia nggak bisa kirim pesan lagi.')) return; try { await capi({ op: 'block', id: c.id }); closeThread(); toast('Diblokir'); } catch (x) { toast(x.message); } }, 'dng');
-    it('Hapus kontak', async function () { if (!confirm('Hapus kontak ini?')) return; try { await capi({ op: 'remove', id: c.id }); closeThread(); toast('Kontak dihapus'); } catch (x) { toast(x.message); } }, 'dng');
-    vMenu.hidden = false;
-  });
+    act('Blokir', async function () { if (!confirm('Blokir ' + dname(c) + '? Dia nggak bisa kirim pesan lagi.')) return; try { await capi({ op: 'block', id: c.id }); closeThread(); toast('Diblokir'); } catch (x) { toast(x.message); } }, 'dng');
+    act('Hapus kontak', async function () { if (!confirm('Hapus kontak ini?')) return; try { await capi({ op: 'remove', id: c.id }); closeThread(); toast('Kontak dihapus'); } catch (x) { toast(x.message); } }, 'dng');
+    info.hidden = false;
+  }
+  view.querySelector('.more').textContent = 'ⓘ'; view.querySelector('.more').setAttribute('aria-label', 'Info kontak');
+  view.querySelector('.more').addEventListener('click', function (e) { e.stopPropagation(); openInfo(); });
+  view.querySelector('.ct-head .ct-av').addEventListener('click', openInfo);
+  view.querySelector('.ct-head strong').addEventListener('click', openInfo);
+  view.querySelector('.ct-head strong').style.cursor = 'pointer'; view.querySelector('.ct-head .ct-av').style.cursor = 'pointer';
   view.addEventListener('click', function () { vMenu.hidden = true; });
   vTa.addEventListener('input', function () { vTa.style.height = 'auto'; vTa.style.height = Math.min(112, vTa.scrollHeight) + 'px'; });
   vTa.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); view.querySelector('form').requestSubmit(); } });
@@ -3370,6 +3475,261 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       node.classList.remove('sending'); ct.lastAct = Date.now(); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast); schedulePoll();
     } catch (x) { node.remove(); delete ct.tids[cid]; vTa.value = text; toast(x.message); }
   });
+  /* ---------- lampiran di chat teman: foto, video, stiker ---------- */
+  var mediaCache = {}, mediaKeys = [];
+  function mcache(id, d) { if (!mediaCache[id]) mediaKeys.push(id); mediaCache[id] = d; if (mediaKeys.length > 50) delete mediaCache[mediaKeys.shift()]; }
+  function kindLabel(k) { return k === 'sticker' ? 'Stiker' : k === 'video' ? 'Video' : 'Foto'; }
+  async function getMedia(m) {
+    if (mediaCache[m.id]) return mediaCache[m.id];
+    var t = ct.thread && ct.thread.id; if (!t) throw new Error('x');
+    var d = await capi({ op: 'getmedia', id: t, mid: m.id }); mcache(m.id, d.data); return d.data;
+  }
+  function fillMedia(box, m) {
+    box.replaceChildren(); box.appendChild(el('span', 'pm-ph', 'Memuat…'));
+    getMedia(m).then(function (data) {
+      box.replaceChildren();
+      if (m.kind === 'video') { var v = document.createElement('video'); v.src = data; v.controls = true; v.playsInline = true; v.preload = 'metadata'; box.appendChild(v); }
+      else { var i = new Image(); i.src = data; i.alt = kindLabel(m.kind); i.draggable = false; box.appendChild(i); i.addEventListener('click', function () { if (m.kind === 'sticker') stkPopup(data); else lightbox(data); }); }
+    }).catch(function (e) {
+      box.replaceChildren(); box.appendChild(el('span', 'pm-ph', e && e.status === 404 ? 'Lampiran sudah tidak ada' : 'Gagal memuat. Ketuk untuk coba lagi.'));
+      if (!(e && e.status === 404)) box.addEventListener('click', function f() { box.removeEventListener('click', f); fillMedia(box, m); });
+    });
+  }
+  function lightbox(data) {
+    var o = el('div', 'lbx'), i = new Image(); i.src = data; o.appendChild(i);
+    o.addEventListener('click', function () { o.remove(); }); chatEl.appendChild(o);
+  }
+  /* menu stiker disimpan di HP (IndexedDB) */
+  var stkDb = null;
+  function stkOpen() { return stkDb || (stkDb = new Promise(function (ok, no) { var r = indexedDB.open('faisal-stickers', 1); r.onupgradeneeded = function () { r.result.createObjectStore('st', { keyPath: 'id' }); }; r.onsuccess = function () { ok(r.result); }; r.onerror = function () { stkDb = null; no(r.error); }; })); }
+  function stkTx(mode, fn) { return stkOpen().then(function (db) { return new Promise(function (ok, no) { var t = db.transaction('st', mode), rq = fn(t.objectStore('st')); t.oncomplete = function () { ok(rq && rq.result); }; t.onerror = t.onabort = function () { no(t.error); }; }); }); }
+  function stkAll() { return stkTx('readonly', function (s) { return s.getAll(); }).then(function (a) { return (a || []).sort(function (x, y) { return y.ts - x.ts; }); }); }
+  function hashStr(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 's' + (h >>> 0).toString(36) + s.length.toString(36); }
+  async function stkSave(data) {
+    var id = hashStr(data), all = await stkAll();
+    if (all.some(function (x) { return x.id === id; })) return false;
+    if (all.length >= 80) throw new Error('Menu stiker penuh (80). Hapus beberapa dulu.');
+    await stkTx('readwrite', function (s) { return s.put({ id: id, data: data, ts: Date.now() }); }); return true;
+  }
+  async function stkSaveUi(data) {
+    try { var ok = await stkSave(data); toast(ok ? 'Stiker disimpan ke menu stikermu' : 'Stiker ini sudah ada di menumu'); if (!spanel.hidden) renderPanel(); } catch (e) { toast(e.message || 'Gagal menyimpan'); }
+  }
+  function stkPopup(data) {
+    var o = el('div', 'stk-pop'), i = new Image(); i.src = data; o.appendChild(i);
+    var a = el('div', 'acts'), sv = el('button', 'pri', 'Simpan stiker'), cl2 = el('button', '', 'Tutup'); sv.type = cl2.type = 'button';
+    sv.addEventListener('click', function () { stkSaveUi(data); o.remove(); }); cl2.addEventListener('click', function () { o.remove(); });
+    a.appendChild(sv); a.appendChild(cl2); o.appendChild(a);
+    o.addEventListener('click', function (e) { if (e.target === o) o.remove(); }); chatEl.appendChild(o);
+  }
+  /* kirim lampiran */
+  async function sendMedia(kind, data, ar, dur) {
+    var c = ct.thread; if (!c) return;
+    var rp = ct.reply; clearPmReply();
+    var rr = rp ? { mid: rp.mid, text: rp.text, who: rp.who } : undefined;
+    var cid = 'c' + uidn(); mcache(cid, data);
+    var node = addPm({ id: cid, from: 'me', text: '', ts: Date.now(), kind: kind, ar: ar, dur: dur, reply: rr }, true); vLog.scrollTop = vLog.scrollHeight;
+    try {
+      var d = await capi({ op: 'send', id: c.id, text: '', kind: kind, data: data, ar: ar, dur: dur, cid: cid, reply: rr });
+      node.classList.remove('sending'); ct.lastAct = Date.now(); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast); schedulePoll();
+    } catch (x) { node.remove(); delete ct.tids[cid]; toast(x.message); }
+  }
+  function loadBitmap(file) {
+    return createImageBitmap(file).catch(function () { return new Promise(function (ok, no) { var u = URL.createObjectURL(file), i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { no(new Error('Gambar tidak bisa dibuka')); }; i.src = u; }); });
+  }
+  async function compressImage(file) {
+    var bmp = await loadBitmap(file), w = bmp.width, h = bmp.height, sc = Math.min(1, 960 / Math.max(w, h)), cv = document.createElement('canvas');
+    for (var tries = 0; tries < 6; tries++) {
+      cv.width = Math.max(1, Math.round(w * sc)); cv.height = Math.max(1, Math.round(h * sc));
+      cv.getContext('2d').drawImage(bmp, 0, 0, cv.width, cv.height);
+      var d = cv.toDataURL('image/jpeg', tries < 2 ? 0.72 : 0.55);
+      if (d.length <= 400000) return { data: d, ar: cv.width / cv.height };
+      sc *= 0.8;
+    }
+    throw new Error('Fotonya terlalu besar.');
+  }
+  async function transcodeVideo(file) {
+    if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) throw new Error('Browser ini belum bisa kirim video. Coba Chrome terbaru.');
+    if (file.size > 200 * 1024 * 1024) throw new Error('Videonya terlalu besar.');
+    var url = URL.createObjectURL(file), v = document.createElement('video');
+    v.src = url; v.playsInline = true; v.preload = 'auto';
+    try {
+      await new Promise(function (ok, no) { v.onloadedmetadata = ok; v.onerror = function () { no(new Error('Video tidak bisa dibuka')); }; });
+      var vw = v.videoWidth, vh = v.videoHeight; if (!vw || !vh) throw new Error('Video tidak bisa dibaca.');
+      var sc = Math.min(1, 400 / Math.max(vw, vh)), W = Math.max(2, Math.round(vw * sc / 2) * 2), H = Math.max(2, Math.round(vh * sc / 2) * 2);
+      var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var g = cv.getContext('2d');
+      var stream = cv.captureStream(24), ac = null;
+      try { ac = new (window.AudioContext || window.webkitAudioContext)(); var src = ac.createMediaElementSource(v), dest = ac.createMediaStreamDestination(); src.connect(dest); dest.stream.getAudioTracks().forEach(function (t) { stream.addTrack(t); }); } catch (e) { ac = null; }
+      var mt = ['video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'].filter(function (t) { return MediaRecorder.isTypeSupported(t); })[0] || '';
+      var rec = new MediaRecorder(stream, mt ? { mimeType: mt, videoBitsPerSecond: 280000, audioBitsPerSecond: 24000 } : { videoBitsPerSecond: 280000 }), chunks = [];
+      rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+      var done = new Promise(function (ok) { rec.onstop = ok; });
+      var maxDur = Math.min(10, isFinite(v.duration) && v.duration > 0 ? v.duration : 10);
+      rec.start(500);
+      try { await v.play(); } catch (e) { v.muted = true; await v.play(); }
+      await new Promise(function (ok) {
+        var iv = setInterval(function () { g.drawImage(v, 0, 0, W, H); if (v.ended || v.currentTime >= maxDur) { clearInterval(iv); ok(); } }, 41);
+      });
+      v.pause(); try { rec.stop(); } catch (e) {} await done;
+      try { if (ac) ac.close(); } catch (e) {}
+      var type = /mp4/.test(mt) ? 'video/mp4' : 'video/webm', blob = new Blob(chunks, { type: type });
+      var data = await new Promise(function (ok, no) { var fr = new FileReader(); fr.onload = function () { ok(fr.result); }; fr.onerror = function () { no(new Error('Gagal membaca video')); }; fr.readAsDataURL(blob); });
+      if (data.length > 860000) throw new Error('Video masih terlalu besar. Pakai yang lebih pendek atau lebih sederhana.');
+      return { data: data, ar: W / H, dur: Math.round(maxDur) };
+    } finally { URL.revokeObjectURL(url); }
+  }
+  /* tombol lampiran dan stiker di kolom ketik */
+  var vForm = view.querySelector('form');
+  var icAttach = el('button', 'pt-ic'), icStk = el('button', 'pt-ic'); icAttach.type = icStk.type = 'button';
+  icAttach.setAttribute('aria-label', 'Kirim foto atau video'); icStk.setAttribute('aria-label', 'Stiker');
+  icAttach.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>';
+  icStk.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-8-8h3a5 5 0 0 1 5 5z"/><path d="M20 12h-4a4 4 0 0 0-4 4v4"/><circle cx="9" cy="10" r=".8"/><circle cx="14" cy="9" r=".8"/></svg>';
+  vForm.insertBefore(icAttach, vTa); vForm.insertBefore(icStk, vTa);
+  var attachIn = document.createElement('input'); attachIn.type = 'file'; attachIn.accept = 'image/*,video/*'; attachIn.className = 'vh'; attachIn.tabIndex = -1; attachIn.setAttribute('aria-hidden', 'true'); view.appendChild(attachIn);
+  icAttach.addEventListener('click', function () { attachIn.click(); });
+  attachIn.addEventListener('change', async function () {
+    var f = attachIn.files && attachIn.files[0]; attachIn.value = ''; if (!f || !ct.thread) return;
+    try {
+      if (/^video\//.test(f.type)) { toast('Memproses video… maksimal 10 detik'); var vd = await transcodeVideo(f); await sendMedia('video', vd.data, vd.ar, vd.dur); }
+      else if (/^image\//.test(f.type)) { var im = await compressImage(f); await sendMedia('image', im.data, im.ar, 0); }
+      else toast('Pilih foto atau video ya.');
+    } catch (e) { toast(e.message || 'Gagal memproses file'); }
+  });
+  /* panel stiker */
+  var spanel = el('div', 'stk-panel'); spanel.hidden = true; view.insertBefore(spanel, vForm);
+  var stkManage = false;
+  async function renderPanel() {
+    spanel.replaceChildren();
+    var h = el('div', 'stk-h'); h.appendChild(el('b', '', 'Stiker saya'));
+    var mg = el('button', 'stk-mg', stkManage ? 'Selesai' : 'Kelola'); mg.type = 'button'; mg.addEventListener('click', function () { stkManage = !stkManage; renderPanel(); }); h.appendChild(mg); spanel.appendChild(h);
+    var grid = el('div', 'stk-grid'), add = el('button', 'stk-add', '+'); add.type = 'button'; add.setAttribute('aria-label', 'Bikin stiker dari galeri'); add.addEventListener('click', function () { stkFile.click(); }); grid.appendChild(add);
+    var all = []; try { all = await stkAll(); } catch (e) {}
+    all.forEach(function (st) {
+      var b = el('button', 'stk-it'); b.type = 'button'; var im = new Image(); im.src = st.data; im.alt = 'Stiker'; b.appendChild(im);
+      if (stkManage) { b.appendChild(el('i', 'stk-x', '×')); b.addEventListener('click', async function () { await stkRemove(st.id); renderPanel(); }); }
+      else b.addEventListener('click', function () { spanel.hidden = true; sendMedia('sticker', st.data, 1, 0); });
+      grid.appendChild(b);
+    });
+    if (!all.length) grid.appendChild(el('p', 'stk-empty', 'Belum ada stiker. Ketuk + untuk bikin dari galeri, atau tahan stiker di chat lalu simpan.'));
+    spanel.appendChild(grid);
+  }
+  async function stkRemove(id) { await stkTx('readwrite', function (s) { return s.delete(id); }); }
+  icStk.addEventListener('click', function () { spanel.hidden = !spanel.hidden; if (!spanel.hidden) { stkManage = false; renderPanel(); } });
+  /* pembuat stiker: potong 1:1 otomatis, tambah teks */
+  var stkFile = document.createElement('input'); stkFile.type = 'file'; stkFile.accept = 'image/*'; stkFile.className = 'vh'; stkFile.tabIndex = -1; stkFile.setAttribute('aria-hidden', 'true'); view.appendChild(stkFile);
+  var ed = el('div', 'stk-ed'); ed.hidden = true;
+  ed.innerHTML = '<div class="se-h"><button type="button" class="se-cancel">Batal</button><b>Bikin stiker</b><span style="width:44px"></span></div><div class="se-body"><canvas width="512" height="512"></canvas><p class="se-hint">Gambar otomatis dipotong 1:1. Geser di gambar untuk memindahkan teks.</p><input class="se-txt" maxlength="60" placeholder="Tambah teks (opsional)" aria-label="Teks stiker"><div class="se-row"><div class="se-cols"></div><input class="se-size" type="range" min="24" max="110" value="64" aria-label="Ukuran teks"></div><div class="se-row se-pos"><button type="button" data-p="0.12">Atas</button><button type="button" data-p="0.5">Tengah</button><button type="button" data-p="0.88">Bawah</button></div></div><div class="se-act"><button type="button" class="se-save">Simpan</button><button type="button" class="se-send">Simpan &amp; kirim</button></div>';
+  chatEl.appendChild(ed);
+  var ecv = ed.querySelector('canvas'), eg = ecv.getContext('2d'), etx = ed.querySelector('.se-txt'), esz = ed.querySelector('.se-size');
+  var est = { img: null, color: '#ffffff', x: 0.5, y: 0.88 };
+  ['#ffffff', '#000000', '#ffd400', '#ff3b30', '#34c759', '#0a84ff'].forEach(function (c, i) {
+    var b = el('button', i === 0 ? 'on' : ''); b.type = 'button'; b.style.background = c; b.setAttribute('aria-label', 'Warna teks ' + c);
+    b.addEventListener('click', function () { est.color = c; ed.querySelectorAll('.se-cols button').forEach(function (x) { x.classList.toggle('on', x === b); }); edDraw(); });
+    ed.querySelector('.se-cols').appendChild(b);
+  });
+  function edDraw(target) {
+    var cv = target || ecv, g = target ? target.getContext('2d') : eg, S = cv.width, k = S / 512;
+    g.clearRect(0, 0, S, S);
+    if (!est.img) return;
+    var im = est.img, sd = Math.min(im.width, im.height);
+    g.drawImage(im, (im.width - sd) / 2, (im.height - sd) / 2, sd, sd, 0, 0, S, S);
+    var t = etx.value.trim(); if (!t) return;
+    var size = +esz.value * k; g.font = '900 ' + size + 'px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+    var words = t.split(/\s+/), lines = [], cur = '';
+    words.forEach(function (w) { var tt = cur ? cur + ' ' + w : w; if (cur && g.measureText(tt).width > S * 0.9) { lines.push(cur); cur = w; } else cur = tt; });
+    if (cur) lines.push(cur);
+    var lh = size * 1.12, y0 = Math.min(S - size / 2 - lh * (lines.length - 1), Math.max(size / 2, est.y * S - lh * (lines.length - 1) / 2));
+    g.lineWidth = size / 5; g.strokeStyle = est.color === '#000000' ? '#fff' : '#000';
+    lines.forEach(function (ln, i) { var yy = y0 + i * lh, xx = est.x * S; g.strokeText(ln, xx, yy); g.fillStyle = est.color; g.fillText(ln, xx, yy); });
+  }
+  etx.addEventListener('input', function () { edDraw(); }); esz.addEventListener('input', function () { edDraw(); });
+  ed.querySelectorAll('.se-pos button').forEach(function (b) { b.addEventListener('click', function () { est.y = +b.dataset.p; est.x = 0.5; edDraw(); }); });
+  function edMove(e) { var r = ecv.getBoundingClientRect(); est.x = Math.min(0.95, Math.max(0.05, (e.clientX - r.left) / r.width)); est.y = Math.min(0.97, Math.max(0.03, (e.clientY - r.top) / r.height)); edDraw(); }
+  var edDrag = false;
+  ecv.addEventListener('pointerdown', function (e) { edDrag = true; try { ecv.setPointerCapture(e.pointerId); } catch (x) {} edMove(e); });
+  ecv.addEventListener('pointermove', function (e) { if (edDrag) edMove(e); });
+  ['pointerup', 'pointercancel'].forEach(function (n) { ecv.addEventListener(n, function () { edDrag = false; }); });
+  function edExport() {
+    var sizes = [512, 420, 340];
+    for (var i = 0; i < sizes.length; i++) {
+      var tc = document.createElement('canvas'); tc.width = tc.height = sizes[i]; edDraw(tc);
+      var qs = [0.85, 0.7, 0.55];
+      for (var j = 0; j < qs.length; j++) { var d = tc.toDataURL('image/webp', qs[j]); if (d.indexOf('data:image/webp') !== 0) d = tc.toDataURL('image/png'); if (d.length <= 170000) return d; }
+    }
+    return null;
+  }
+  function edClose() { ed.hidden = true; est.img = null; }
+  ed.querySelector('.se-cancel').addEventListener('click', edClose);
+  ed.querySelector('.se-save').addEventListener('click', async function () { var d = edExport(); if (!d) { toast('Gambar terlalu detail, coba yang lain.'); return; } await stkSaveUi(d); edClose(); });
+  ed.querySelector('.se-send').addEventListener('click', async function () { var d = edExport(); if (!d) { toast('Gambar terlalu detail, coba yang lain.'); return; } try { await stkSave(d); } catch (e) { toast(e.message); } edClose(); spanel.hidden = true; if (ct.thread) sendMedia('sticker', d, 1, 0); });
+  stkFile.addEventListener('change', async function () {
+    var f = stkFile.files && stkFile.files[0]; stkFile.value = ''; if (!f) return;
+    try { est.img = await loadBitmap(f); est.x = 0.5; est.y = 0.88; etx.value = ''; ed.hidden = false; edDraw(); } catch (e) { toast('Gambar tidak bisa dibuka'); }
+  });
+
+  /* ---------- foto profil ---------- */
+  var phMem = {}, phBusy = {};
+  function phGet(uid) { if (!(uid in phMem)) { try { phMem[uid] = JSON.parse(localStorage.getItem('fz-ph-' + uid) || 'null'); } catch (e) { phMem[uid] = null; } } return phMem[uid]; }
+  function phSet(uid, o) { phMem[uid] = o; try { if (o) localStorage.setItem('fz-ph-' + uid, JSON.stringify(o)); else localStorage.removeItem('fz-ph-' + uid); } catch (e) {} }
+  function phPaint(div) { var uid = div.dataset.uid, p = uid && phGet(uid); if (p && p.data) { div.style.backgroundImage = 'url("' + p.data + '")'; div.classList.add('has'); } else { div.style.backgroundImage = ''; div.classList.remove('has'); } }
+  function phRepaint() { document.querySelectorAll('.ct-av[data-uid]').forEach(phPaint); try { paintOwnAv(); } catch (e) {} }
+  async function phEnsure(uid, pv) {
+    var cur = phGet(uid);
+    if (!pv) { if (cur) { phSet(uid, null); phRepaint(); } return; }
+    if ((cur && cur.pv === pv) || phBusy[uid]) return; phBusy[uid] = 1;
+    try { var d = await capi({ op: 'getphoto', id: uid }); phSet(uid, d.data ? { pv: d.pv, data: d.data } : null); phRepaint(); } catch (e) {} finally { phBusy[uid] = 0; }
+  }
+  function mkAv(c, cls) { var d = el('div', 'ct-av' + (cls ? ' ' + cls : ''), (dname(c)[0] || '?').toUpperCase()); if (c.status === 'ok') { d.dataset.uid = c.id; phPaint(d); } return d; }
+  function paintOwnAv() {
+    var av = $('#acct-av'), p = phGet(myUid()); if (!av) return;
+    if (p && p.data) { av.replaceChildren(); var im = new Image(); im.alt = ''; im.src = p.data; im.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit'; av.appendChild(im); }
+    $('#acct-photo-del').hidden = !(p && p.data);
+  }
+  var _ra = renderAcctPage; renderAcctPage = function () { _ra(); paintOwnAv(); };
+  async function squarePhoto(file) {
+    var bmp = await loadBitmap(file), sd = Math.min(bmp.width, bmp.height);
+    for (var sz = 256, k = 0; k < 3; sz -= 64, k++) {
+      var cv = document.createElement('canvas'); cv.width = cv.height = sz;
+      cv.getContext('2d').drawImage(bmp, (bmp.width - sd) / 2, (bmp.height - sd) / 2, sd, sd, 0, 0, sz, sz);
+      var d = cv.toDataURL('image/jpeg', 0.8); if (d.length <= 44000) return d;
+    }
+    throw new Error('Foto terlalu detail, coba yang lain.');
+  }
+  $('#acct-photo').addEventListener('click', function () { $('#acct-photo-in').click(); });
+  $('#acct-photo-in').addEventListener('change', async function () {
+    var f = this.files && this.files[0]; this.value = ''; if (!f) return;
+    try { var d = await squarePhoto(f), r = await capi({ op: 'setphoto', data: d }); phSet(myUid(), { pv: r.pv, data: d }); phRepaint(); toast('Foto profil diganti'); } catch (e) { toast(e.message || 'Gagal mengganti foto'); }
+  });
+  $('#acct-photo-del').addEventListener('click', async function () {
+    try { await capi({ op: 'setphoto', data: '' }); phSet(myUid(), null); renderAcctPage(); phRepaint(); toast('Foto profil dihapus'); } catch (e) { toast(e.message); }
+  });
+  /* menu titik tiga di layar obrolan, pengaturan */
+  var setS = el('div', 'ctsheet'); setS.hidden = true;
+  setS.innerHTML = '<div class="ct-head"><button type="button" class="back">‹ Kembali</button><strong>Pengaturan</strong><span style="width:40px"></span></div><div class="set-body"></div>';
+  chatEl.appendChild(setS);
+  setS.querySelector('.back').addEventListener('click', function () { setS.hidden = true; });
+  function setRow(b, title, desc, label, fn) {
+    var r = el('div', 'set-row'), d = el('div'); d.appendChild(el('b', '', title)); d.appendChild(document.createTextNode(desc));
+    var x = el('button', 'ct-btn pri', label); x.type = 'button'; x.addEventListener('click', fn); r.appendChild(d); r.appendChild(x); b.appendChild(r);
+  }
+  function openSettings() {
+    var b = setS.querySelector('.set-body'); b.replaceChildren();
+    b.appendChild(pushCard());
+    setRow(b, 'Suara Faisal', 'Pilih suara dan atur balasan otomatis lewat VN.', 'Atur', function () { setS.hidden = true; hideHome(); $('#btn-voice').click(); });
+    setRow(b, 'Tema', 'Ganti tampilan terang atau gelap.', 'Ganti', function () { $('#theme').click(); });
+    setRow(b, 'Kontak', 'Nomor kamu dan daftar teman.', 'Buka', function () { setS.hidden = true; ctLink.click(); });
+    setS.hidden = false;
+  }
+  var hm = $('#home-menu'), hmBtn = $('#home-more');
+  function hmItem(label, fn) { var b = el('button', '', label); b.type = 'button'; b.addEventListener('click', function () { hm.hidden = true; hmBtn.setAttribute('aria-expanded', 'false'); fn(); }); hm.appendChild(b); }
+  hmItem('Pesan berbintang', showStarred); hmItem('Akun saya', openAcct); hmItem('Pengaturan', openSettings);
+  hmBtn.addEventListener('click', function (e) { e.stopPropagation(); hm.hidden = !hm.hidden; hmBtn.setAttribute('aria-expanded', hm.hidden ? 'false' : 'true'); });
+  homeEl.addEventListener('click', function () { hm.hidden = true; hmBtn.setAttribute('aria-expanded', 'false'); });
+  $('#home-q').addEventListener('input', renderPm);
+  function showHome() {
+    try { if (ct.thread) closeThread(); } catch (e) {}
+    sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; info.hidden = true; closeSheets(); closeDrawer(); hm.hidden = true;
+    homeEl.hidden = false; renderPm(); ctRefresh();
+  }
   renderPm();
   setInterval(function () { if (!chatEl.hidden && !document.hidden) { ctSync(); if (ctOn() && !ct.thread) ctRefresh(); } }, 15000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden && ctOn() && !chatEl.hidden) ctRefresh(); });
@@ -3489,6 +3849,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   /* ---------- awal ---------- */
   showCompare(SAMPLE.before, SAMPLE.after, 'sample', false);
   updateActions();
+  $('#btn-home').addEventListener('click', function () { showHome(); });
+  openChat();
 })();
 </script>
 </body>
