@@ -766,6 +766,62 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .emo-grid button:hover { background: var(--surface-2); }
 .stk-fav { position: absolute; top: 2px; right: 4px; font-size: 12px; color: #ffd400; }
 .pt-log { background-image: radial-gradient(rgba(255,255,255,.035) 1.2px, transparent 1.3px); background-size: 22px 22px; }
+
+.gav { background: linear-gradient(135deg, #5b7cff, #8a5bff); color: #fff; border-radius: 16px; }
+.pm .by { display: block; margin-bottom: 2px; font: 700 12px var(--f-body); color: var(--accent); }
+.pick { position: fixed; inset: 0; z-index: 98; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.65); }
+.pick-box { width: min(420px, 100%); max-height: 86vh; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 18px; background: #12171f; color: var(--fg); border: 1px solid var(--line); }
+.pick-box h3 { margin: 0; font: 800 18px var(--f-display); }
+.pick-box input[type=text] { padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--fg); font: 400 16px var(--f-body); }
+.pick-list { overflow-y: auto; display: flex; flex-direction: column; min-height: 60px; }
+.pick-list label { display: flex; align-items: center; gap: 12px; padding: 9px 4px; cursor: pointer; border-radius: 10px; }
+.pick-list label:hover { background: var(--surface-2); }
+.pick-list input { width: 20px; height: 20px; accent-color: var(--accent); }
+.pick-act { display: flex; gap: 10px; }
+.pick-act button { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); font: 700 15px var(--f-body); cursor: pointer; }
+.pick-act .pri { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.sec-h { display: flex; align-items: center; justify-content: space-between; padding: 14px 14px 4px; }
+.sec-h b { font: 800 18px var(--f-display); }
+.sec-h button { border: 0; background: var(--accent-soft); color: var(--accent); padding: 7px 12px; border-radius: 999px; font: 700 13px var(--f-body); cursor: pointer; }
+.st-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 14px; border: 0; background: none; color: var(--fg); text-align: left; cursor: pointer; border-radius: 12px; }
+.st-row:hover { background: var(--surface-2); }
+.st-row .ct-av { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+.st-row.seen .ct-av { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--line); }
+.st-row b { display: block; font: 600 16px var(--f-body); }
+.st-row span { font-size: 13px; color: var(--muted); }
+.st-acts { display: flex; gap: 8px; padding: 6px 14px 4px; }
+.st-acts button { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); font: 700 14px var(--f-body); cursor: pointer; }
+.sview { position: fixed; inset: 0; z-index: 97; background: #000; display: flex; flex-direction: column; color: #fff; user-select: none; }
+.sv-bars { display: flex; gap: 4px; padding: calc(10px + env(safe-area-inset-top, 0px)) 10px 6px; }
+.sv-bars i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.3); overflow: hidden; }
+.sv-bars i b { display: block; height: 100%; width: 0; background: #fff; }
+.sv-head { display: flex; align-items: center; gap: 10px; padding: 4px 12px 8px; }
+.sv-head strong { flex: 1; font: 700 15px var(--f-body); }
+.sv-head small { display: block; font: 500 12px var(--f-body); opacity: .75; }
+.sv-head button { border: 0; background: none; color: #fff; font-size: 26px; cursor: pointer; padding: 4px 10px; }
+.sv-body { flex: 1; min-height: 0; display: grid; place-items: center; text-align: center; padding: 18px; position: relative; }
+.sv-body img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.sv-body .t { font: 700 26px/1.3 var(--f-display); overflow-wrap: anywhere; }
+.sv-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 18px calc(18px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(transparent, rgba(0,0,0,.65)); font-size: 16px; }
+.sv-del { position: absolute; right: 14px; top: 8px; z-index: 2; border: 0; border-radius: 10px; padding: 8px 14px; background: rgba(255,255,255,.18); color: #fff; font: 700 13px var(--f-body); cursor: pointer; }
+.scomp { position: fixed; inset: 0; z-index: 97; display: flex; flex-direction: column; color: #fff; }
+.scomp .sc-top { display: flex; justify-content: space-between; align-items: center; padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 6px; }
+.scomp .sc-top button { border: 0; background: rgba(0,0,0,.35); color: #fff; padding: 9px 16px; border-radius: 999px; font: 700 14px var(--f-body); cursor: pointer; }
+.scomp .sc-mid { flex: 1; min-height: 0; display: grid; place-items: center; padding: 14px; }
+.scomp textarea { width: 100%; max-height: 100%; background: none; border: 0; color: #fff; text-align: center; font: 700 28px/1.3 var(--f-display); resize: none; outline: none; }
+.scomp textarea::placeholder { color: rgba(255,255,255,.6); }
+.scomp .sc-mid img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.scomp .sc-bot { padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,.35); }
+.scomp .sc-cols { display: flex; gap: 10px; justify-content: center; }
+.scomp .sc-cols button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); cursor: pointer; padding: 0; }
+.scomp .sc-cols button.on { border-color: #fff; box-shadow: 0 0 0 2px rgba(0,0,0,.4); }
+.scomp .sc-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.scomp .sc-row select { flex: 1 1 0; min-width: 0; }
+.scomp .sc-row .send { flex: 1 1 0; }
+.scomp .sc-row input { flex: 1 1 100%; padding: 11px 14px; border-radius: 999px; border: 0; background: rgba(255,255,255,.18); color: #fff; font: 400 16px var(--f-body); }
+.scomp .sc-row input::placeholder { color: rgba(255,255,255,.6); }
+.scomp .sc-row select, .scomp .sc-row button { padding: 11px 14px; border-radius: 999px; border: 0; background: rgba(255,255,255,.18); color: #fff; font: 700 14px var(--f-body); }
+.scomp .sc-row .send { background: var(--accent); color: var(--on-accent); }
 </style>
 </head>
 <body>
@@ -1139,7 +1195,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     </div>
     <div class="hp hp-upd" hidden>
       <div class="home-top"><strong>Pembaruan</strong><div class="ht-r"></div></div>
-      <div class="home-list"><div class="soon"><b>Status dan Grup</b><p>Status 24 jam dan grup obrolan lagi disiapkan. Sementara itu kamu bisa ngobrol dengan Faisal AI dan teman lewat tab Chat.</p></div></div>
+      <div class="home-list"></div>
     </div>
     <div class="hp hp-feat" hidden>
       <div class="home-top"><strong>Fitur</strong><div class="ht-r"><button type="button" id="feat-more" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div></div>
@@ -3368,11 +3424,11 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function isIn(n, id) { return lsGet(setKey(n), []).indexOf(id) >= 0; }
   function toggleIn(n, id) { var a = lsGet(setKey(n), []), i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); lsSet(setKey(n), a); return i < 0; }
   var homeFilter = 'all', showArc = false;
+  function allChats() { return (ct.contacts || []).filter(function (c) { return c.status === 'ok'; }).concat(ctOn() ? (ct.groups || []) : []); }
   function renderChips() {
     var box = $('#home-chips'); if (!box) return; box.replaceChildren();
-    var fr = ctOn() ? ct.contacts.filter(function (c) { return c.status === 'ok'; }) : [];
-    var unread = fr.filter(unreadOf).length;
-    [['all', 'Semua', 0], ['unread', 'Belum dibaca', unread], ['fav', 'Favorit', 0], ['grup', 'Grup', 0], ['kom', 'Komunitas', 0]].forEach(function (f) {
+    var all = allChats(), unread = all.filter(unreadOf).length;
+    [['all', 'Semua', 0], ['unread', 'Belum dibaca', unread], ['fav', 'Favorit', 0], ['grup', 'Grup', (ct.groups || []).length], ['kom', 'Komunitas', 0]].forEach(function (f) {
       var b = el('button', homeFilter === f[0] && !showArc ? 'on' : '', f[1]); b.type = 'button';
       if (f[2]) b.appendChild(el('small', '', String(f[2])));
       b.addEventListener('click', function () { homeFilter = f[0]; showArc = false; renderPm(); });
@@ -3382,7 +3438,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function pmRow(c) {
     var act = ct.thread && ct.thread.id === c.id;
     var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
-    var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : ''));
+    var pre = c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : (c.group && c.lastMsg.by ? gBy(c.lastMsg.from, c.lastMsg.by) + ': ' : '')) + c.lastMsg.text : '';
+    var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', pre));
     b.appendChild(mkAv(c)); b.appendChild(t2);
     var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
     b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
@@ -3391,7 +3448,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function renderPm() {
     var box = $('#pm-box'); if (!box) return; box.replaceChildren(); renderChips();
     var q = (($('#home-q') || {}).value || '').trim().toLowerCase();
-    var friends = ctOn() ? ct.contacts.filter(function (c) { return c.status === 'ok'; }) : [];
+    var friends = allChats();
     var arcN = friends.filter(function (c) { return isIn('arc', c.id); }).length;
     function byTime(a, b) { return ((b.lastMsg && b.lastMsg.ts) || 0) - ((a.lastMsg && a.lastMsg.ts) || 0); }
     var rows = [];
@@ -3402,7 +3459,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       rows = friends.filter(function (c) { return !isIn('arc', c.id); });
       if (homeFilter === 'unread') rows = rows.filter(unreadOf);
       else if (homeFilter === 'fav') rows = rows.filter(function (c) { return isIn('fav', c.id); });
-      else if (homeFilter === 'grup' || homeFilter === 'kom') rows = [];
+      else if (homeFilter === 'grup') rows = rows.filter(function (c) { return c.group; });
+      else if (homeFilter === 'kom') rows = [];
       else if (!q) rows = rows.filter(function (c) { return c.lastMsg || (ct.thread && ct.thread.id === c.id); });
     }
     if (q) rows = rows.filter(function (c) { return dname(c).toLowerCase().indexOf(q) >= 0; });
@@ -3421,18 +3479,18 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       ar.addEventListener('click', function () { showArc = true; renderPm(); }); box.appendChild(ar);
     }
     rows.forEach(function (c) { box.appendChild(pmRow(c)); });
-    if (!rows.length && !(homeFilter === 'all' && !showArc && !q)) box.appendChild(el('p', 'home-empty', homeFilter === 'grup' ? 'Fitur grup lagi disiapkan.' : homeFilter === 'kom' ? 'Fitur komunitas lagi disiapkan.' : homeFilter === 'fav' ? 'Belum ada favorit. Buka info kontak lalu pilih Tambah ke favorit.' : homeFilter === 'unread' ? 'Tidak ada pesan yang belum dibaca.' : q ? 'Tidak ada obrolan yang cocok.' : 'Kosong.'));
+    if (!rows.length && !(homeFilter === 'all' && !showArc && !q)) box.appendChild(el('p', 'home-empty', homeFilter === 'grup' ? 'Belum ada grup. Buka tab Status & Grup untuk bikin grup.' : homeFilter === 'kom' ? 'Fitur komunitas lagi disiapkan.' : homeFilter === 'fav' ? 'Belum ada favorit. Buka info kontak lalu pilih Tambah ke favorit.' : homeFilter === 'unread' ? 'Tidak ada pesan yang belum dibaca.' : q ? 'Tidak ada obrolan yang cocok.' : 'Kosong.'));
     else if (homeFilter === 'all' && !showArc && !q && !rows.length) box.appendChild(el('p', 'home-empty', 'Ketuk tombol pesan di kanan bawah untuk tambah teman lewat nomor.'));
   }
   function updBadge() {
-    var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; });
+    var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; }); (ct.groups || []).forEach(function (g) { if (unreadOf(g)) n++; });
     ctBadge.hidden = !n; ctBadge.textContent = String(n);
     var nb = $('#nav-badge'); if (nb) { nb.hidden = !n; nb.textContent = String(n); }
   }
   async function ctRefresh() {
     if (!ctOn() || ct.busy) return; ct.busy = true;
-    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet();
-      if (ct.pendingOpen) { var po = ct.contacts.filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
+    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.groups = (d.groups || []).map(gToC); ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet();
+      if (ct.pendingOpen) { var po = ct.contacts.concat(ct.groups).filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
     catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
   }
   function ctSync() { ctLink.hidden = !ctOn() || homeTab !== 'chat'; if (!ctOn()) { ct.contacts = []; sheet.hidden = true; if (ct.thread) closeThread(); } renderPm(); }
@@ -3462,7 +3520,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function fillPm(node) {
     var m = node._m;
     node.replaceChildren(); node.classList.toggle('del', !!m.deleted);
-    if (m.reply && !m.deleted) paintReply(node, { who: pmWho(m.reply.who), text: m.reply.text, go: function () { var t = ct.tids[m.reply.mid]; if (t) { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); t.classList.remove('flashin'); void t.offsetWidth; t.classList.add('flashin'); } } });
+    if (m.by && !m.deleted && ct.thread && ct.thread.group) node.appendChild(el('b', 'by', gBy(m.from, m.by)));
+    if (m.reply && !m.deleted) paintReply(node, { who: (ct.thread && ct.thread.group) ? (m.reply.who === 'me' ? 'Kamu' : (m.reply.by || 'Anggota')) : pmWho(m.reply.who), text: m.reply.text, go: function () { var t = ct.tids[m.reply.mid]; if (t) { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); t.classList.remove('flashin'); void t.offsetWidth; t.classList.add('flashin'); } } });
     node.classList.toggle('stk-msg', m.kind === 'sticker' && !m.deleted);
     if (m.kind && !m.deleted) { var mb = el('div', 'pm-media k-' + m.kind); mb.style.aspectRatio = String(m.kind === 'sticker' ? 1 : (m.ar || 1)); node.appendChild(mb); fillMedia(mb, m); }
     if (m.deleted || m.text) node.appendChild(document.createTextNode(m.deleted ? '🚫 Pesan ini ditarik' : m.text));
@@ -3500,8 +3559,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function clearPmReply() { ct.reply = null; pbar.hidden = true; }
   pbar.querySelector('button').addEventListener('click', clearPmReply);
   function setPmReply(m) {
-    ct.reply = { mid: m.id, text: String(m.text || (m.kind ? kindLabel(m.kind) : '')).slice(0, 120), who: m.from };
-    pbar.querySelector('b').textContent = 'Membalas ' + (m.from === 'me' ? 'dirimu sendiri' : dname(ct.thread));
+    ct.reply = { mid: m.id, text: String(m.text || (m.kind ? kindLabel(m.kind) : '')).slice(0, 120), who: m.from, by: m.from === 'me' ? ((ct.me && ct.me.name) || 'Kamu') : (m.by || dname(ct.thread)) };
+    pbar.querySelector('b').textContent = 'Membalas ' + (m.from === 'me' ? 'dirimu sendiri' : (m.by || dname(ct.thread)));
     pbar.querySelector('span').textContent = ct.reply.text; pbar.hidden = false; vTa.focus();
   }
   function menuPm(node) {
@@ -3547,13 +3606,13 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     try { ct.hidden = JSON.parse(localStorage.getItem('fz-hide-' + myUid() + '-' + c.id) || '{}') || {}; } catch (e) { ct.hidden = {}; }
     ct.cleared = lsGet('fz-clr-' + myUid() + '-' + c.id, 0);
     markSeen(c.id, (c.lastMsg && c.lastMsg.ts) || 0); renderPm();
-    var hav = view.querySelector('.ct-av'); hav.textContent = (dname(c)[0] || '?').toUpperCase(); hav.dataset.uid = c.id; phPaint(hav);
-    view.querySelector('.nm').textContent = dname(c); view.querySelector('.sb').textContent = fmtNum(c.number);
+    var hav = view.querySelector('.ct-av'); hav.textContent = (dname(c)[0] || '?').toUpperCase(); if (c.group) { delete hav.dataset.uid; hav.style.backgroundImage = ''; hav.classList.remove('has'); hav.classList.add('gav'); } else { hav.classList.remove('gav'); hav.dataset.uid = c.id; phPaint(hav); }
+    view.querySelector('.nm').textContent = dname(c); view.querySelector('.sb').textContent = c.group ? ((c.members || []).length + ' anggota') : fmtNum(c.number);
     view.hidden = false; vTa.value = '';
     vLog.appendChild(el('div', 'pt-note', 'Obrolan dengan teman. Jangan bagikan data pribadi ke orang yang belum kamu kenal.'));
     pollThread(true).then(schedulePoll);
   }
-  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; clearPmReply(); try { spanel.hidden = true; info.hidden = true; } catch (e) {} renderPm(); ctRefresh(); }
+  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; clearPmReply(); try { spanel.hidden = true; info.hidden = true; infoG.hidden = true; } catch (e) {} renderPm(); ctRefresh(); }
   view.querySelector('.back').addEventListener('click', closeThread);
   /* halaman info kontak */
   var info = el('div', 'ctsheet'); info.hidden = true; info.style.zIndex = 88;
@@ -3581,7 +3640,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     info.hidden = true; toast('Obrolan dibersihkan di HP ini');
   }
   function openInfo() {
-    var c = ct.thread; if (!c) return; var b = info.querySelector('.info-body'); b.replaceChildren();
+    var c = ct.thread; if (!c) return;
+    if (c.group) { openGroupInfo(c); return; } var b = info.querySelector('.info-body'); b.replaceChildren();
     var av = mkAv(c, 'big'); av.addEventListener('click', function () { var p = phGet(c.id); if (p && p.data) lightbox(p.data); }); b.appendChild(av);
     b.appendChild(el('h3', '', dname(c))); b.appendChild(el('p', 'info-num', fmtNum(c.number)));
     var meds = threadMedia().filter(function (m) { return mediaCache[m.id]; }), all = threadMedia();
@@ -3621,9 +3681,9 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     e.preventDefault(); var c = ct.thread, text = vTa.value.trim(); if (!c || !text) return;
     vTa.value = ''; vTa.style.height = 'auto';
     var rp = ct.reply; clearPmReply();
-    var cid = 'c' + uidn(), node = addPm({ id: cid, from: 'me', text: text, ts: Date.now(), reply: rp ? { mid: rp.mid, text: rp.text, who: rp.who } : undefined }, true); vLog.scrollTop = vLog.scrollHeight;
+    var cid = 'c' + uidn(), node = addPm({ id: cid, from: 'me', text: text, ts: Date.now(), reply: rp ? { mid: rp.mid, text: rp.text, who: rp.who, by: rp.by } : undefined }, true); vLog.scrollTop = vLog.scrollHeight;
     try {
-      var d = await capi({ op: 'send', id: c.id, text: text, cid: cid, reply: rp ? { mid: rp.mid, text: rp.text, who: rp.who } : undefined });
+      var d = await capi({ op: 'send', id: c.id, text: text, cid: cid, reply: rp ? { mid: rp.mid, text: rp.text, who: rp.who, by: rp.by } : undefined });
       node.classList.remove('sending'); ct.lastAct = Date.now(); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast); schedulePoll();
     } catch (x) { node.remove(); delete ct.tids[cid]; vTa.value = text; toast(x.message); }
   });
@@ -3684,7 +3744,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   async function sendMedia(kind, data, ar, dur) {
     var c = ct.thread; if (!c) return;
     var rp = ct.reply; clearPmReply();
-    var rr = rp ? { mid: rp.mid, text: rp.text, who: rp.who } : undefined;
+    var rr = rp ? { mid: rp.mid, text: rp.text, who: rp.who, by: rp.by } : undefined;
     var cid = 'c' + uidn(); mcache(cid, data);
     var node = addPm({ id: cid, from: 'me', text: '', ts: Date.now(), kind: kind, ar: ar, dur: dur, reply: rr }, true); vLog.scrollTop = vLog.scrollHeight;
     try {
@@ -3868,7 +3928,9 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if ((cur && cur.pv === pv) || phBusy[uid]) return; phBusy[uid] = 1;
     try { var d = await capi({ op: 'getphoto', id: uid }); phSet(uid, d.data ? { pv: d.pv, data: d.data } : null); phRepaint(); } catch (e) {} finally { phBusy[uid] = 0; }
   }
-  function mkAv(c, cls) { var d = el('div', 'ct-av' + (cls ? ' ' + cls : ''), (dname(c)[0] || '?').toUpperCase()); if (c.status === 'ok') { d.dataset.uid = c.id; phPaint(d); } return d; }
+  function gBy(id, by) { var c = (ct.contacts || []).filter(function (x) { return x.id === id; })[0]; return c ? dname(c) : (by || 'Anggota'); }
+  function gToC(g) { return { id: g.id, group: true, first: g.name, last: '', number: '', status: 'ok', lastMsg: g.lastMsg, members: g.members, owner: g.owner }; }
+  function mkAv(c, cls) { if (c.group) { var gd = el('div', 'ct-av gav' + (cls ? ' ' + cls : ''), (dname(c)[0] || 'G').toUpperCase()); return gd; } var d = el('div', 'ct-av' + (cls ? ' ' + cls : ''), (dname(c)[0] || '?').toUpperCase()); if (c.status === 'ok') { d.dataset.uid = c.id; phPaint(d); } return d; }
   function paintOwnAv() {
     var av = $('#acct-av'), p = phGet(myUid()); if (!av) return;
     if (p && p.data) { av.replaceChildren(); var im = new Image(); im.alt = ''; im.src = p.data; im.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit'; av.appendChild(im); }
@@ -3924,7 +3986,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     ['chat', 'upd', 'feat'].forEach(function (k) { homeEl.querySelector('.hp-' + k).hidden = k !== t; });
     navBtns.forEach(function (b) { b.classList.toggle('on', b.dataset.tab === t); });
     hm.hidden = true; ctLink.hidden = !ctOn() || t !== 'chat';
-    if (t === 'feat') renderFeat(); if (t === 'chat') renderPm();
+    if (t === 'feat') renderFeat(); if (t === 'chat') renderPm(); if (t === 'upd') { renderUpd(); loadStatus(true); }
   }
   navBtns.forEach(function (b) { b.addEventListener('click', function () { setTab(b.dataset.tab); }); });
   $('#feat-more').addEventListener('click', function (e) { e.stopPropagation(); hm.hidden = !hm.hidden; });
@@ -3983,10 +4045,133 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     pRow(b, 'Tautan', 'link', 'Tambah tautan', 200, 'contoh: instagram.com/namamu');
     profS.hidden = false;
   }
+  /* ---------- pilih teman, grup, status 24 jam ---------- */
+  function pickFriends(o) {
+    var ov = el('div', 'pick'), box = el('div', 'pick-box'); box.appendChild(el('h3', '', o.title));
+    var nm = null; if (o.withName) { nm = el('input'); nm.type = 'text'; nm.maxLength = 40; nm.placeholder = 'Nama grup'; nm.setAttribute('aria-label', 'Nama grup'); box.appendChild(nm); }
+    var list = el('div', 'pick-list'), fr = (ct.contacts || []).filter(function (c) { return c.status === 'ok' && (o.exclude || []).indexOf(c.id) < 0; });
+    fr.forEach(function (c) { var lb = el('label'), cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = c.id; if ((o.preset || []).indexOf(c.id) >= 0) cb.checked = true; lb.appendChild(cb); lb.appendChild(mkAv(c)); lb.appendChild(el('span', '', dname(c))); list.appendChild(lb); });
+    if (!fr.length) list.appendChild(el('p', 'home-empty', 'Belum ada teman yang terhubung. Tambah kontak dulu.'));
+    box.appendChild(list);
+    var act = el('div', 'pick-act'), cn = el('button', '', 'Batal'), ok = el('button', 'pri', o.ok || 'Lanjut'); cn.type = ok.type = 'button';
+    cn.addEventListener('click', function () { ov.remove(); });
+    ok.addEventListener('click', function () {
+      var ids = Array.prototype.map.call(list.querySelectorAll('input:checked'), function (x) { return x.value; });
+      if (o.withName && !nm.value.trim()) { toast('Isi nama grup dulu'); return; }
+      if (!ids.length) { toast('Pilih minimal 1 teman'); return; }
+      ov.remove(); o.cb(ids, nm ? nm.value.trim() : '');
+    });
+    act.appendChild(cn); act.appendChild(ok); box.appendChild(act); ov.appendChild(box); ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); }); chatEl.appendChild(ov);
+  }
+  function newGroup() {
+    pickFriends({ title: 'Grup baru', withName: true, ok: 'Buat grup', cb: async function (ids, name) {
+      try { var d = await capi({ op: 'gcreate', name: name, members: ids }); toast('Grup dibuat'); await ctRefresh(); var g = (ct.groups || []).filter(function (x) { return x.id === d.id; })[0]; if (g) { hideHome(); openThread(g); } } catch (e) { toast(staleOr(e), 5000); }
+    } });
+  }
+  var infoG = el('div', 'ctsheet'); infoG.hidden = true; infoG.style.zIndex = 88;
+  infoG.innerHTML = '<div class="ct-head"><button type="button" class="back">‹ Kembali</button><strong>Info grup</strong><span style="width:40px"></span></div><div class="info-body"></div>';
+  chatEl.appendChild(infoG);
+  infoG.querySelector('.back').addEventListener('click', function () { infoG.hidden = true; });
+  function openGroupInfo(c) {
+    var g = (ct.groups || []).filter(function (x) { return x.id === c.id; })[0] || c; c = g;
+    var b = infoG.querySelector('.info-body'); b.replaceChildren();
+    b.appendChild(mkAv(c, 'big')); b.appendChild(el('h3', '', dname(c))); b.appendChild(el('p', 'info-num', (c.members || []).length + ' anggota'));
+    (c.members || []).forEach(function (m) { var r = el('div', 'info-row'); r.style.cursor = 'default'; r.appendChild(el('span', '', m.id === myUid() ? 'Kamu' : m.name)); if (m.id === c.owner) r.appendChild(el('small', '', 'Pembuat')); b.appendChild(r); });
+    function row(label, fn, cls) { var x = el('button', 'info-row' + (cls ? ' ' + cls : '')); x.type = 'button'; x.appendChild(el('span', '', label)); x.addEventListener('click', fn); b.appendChild(x); return x; }
+    if (c.owner === myUid()) row('Tambah anggota', function () {
+      pickFriends({ title: 'Tambah anggota', exclude: (c.members || []).map(function (m) { return m.id; }), ok: 'Tambahkan', cb: async function (ids) { try { await capi({ op: 'gadd', id: c.id, members: ids }); toast('Anggota ditambahkan'); await ctRefresh(); openGroupInfo(c); } catch (e) { toast(e.message); } } });
+    });
+    function toggle(label, on, fn) { var r = el('button', 'info-row'); r.type = 'button'; r.appendChild(el('span', '', label)); var sw = el('i', 'sw' + (on ? ' on' : '')); r.appendChild(sw); r.addEventListener('click', function () { sw.classList.toggle('on', fn()); }); b.appendChild(r); }
+    toggle('Tambah ke favorit', isIn('fav', c.id), function () { var v = toggleIn('fav', c.id); renderPm(); return v; });
+    toggle('Arsipkan obrolan', isIn('arc', c.id), function () { var v = toggleIn('arc', c.id); renderPm(); toast(v ? 'Obrolan diarsipkan' : 'Arsip dibuka'); return v; });
+    row('Bersihkan obrolan', function () { if (confirm('Bersihkan semua pesan di HP ini?')) { clearChat(c); infoG.hidden = true; } }, 'dng');
+    row('Keluar dari grup', async function () { if (!confirm('Keluar dari grup ' + dname(c) + '?')) return; try { await capi({ op: 'gleave', id: c.id }); infoG.hidden = true; closeThread(); await ctRefresh(); toast('Kamu keluar dari grup'); } catch (e) { toast(e.message); } }, 'dng');
+    infoG.hidden = false;
+  }
+  /* status */
+  var stat = { list: [], mine: [], t: 0 };
+  function seenKey(id) { return 'fz-sseen-' + myUid() + '-' + id; }
+  async function loadStatus(force) {
+    if (!ctOn()) return; if (!force && Date.now() - stat.t < 20000) return; stat.t = Date.now();
+    try { var a = await capi({ op: 'statlist' }), m = await capi({ op: 'statmine' }); stat.list = a.list || []; stat.mine = m.items || []; renderUpd(); } catch (e) {}
+  }
+  function agoOf(ts) { var m = Math.round((Date.now() - ts) / 60000); return m < 1 ? 'Baru saja' : m < 60 ? m + ' menit lalu' : Math.round(m / 60) + ' jam lalu'; }
+  function renderUpd() {
+    var pg = homeEl.querySelector('.hp-upd .home-list'); if (!pg) return; pg.replaceChildren();
+    var h = el('div', 'sec-h'); h.appendChild(el('b', '', 'Status')); pg.appendChild(h);
+    var me = ct.me || {};
+    var mr = el('button', 'st-row'); mr.type = 'button'; mr.appendChild(mkAv({ id: myUid(), status: 'ok', name: me.name || 'Kamu' }));
+    var mt = el('div'); mt.appendChild(el('b', '', 'Status saya')); mt.appendChild(el('span', '', stat.mine.length ? stat.mine.length + ' status aktif · ketuk untuk lihat' : 'Belum ada. Tambah status di bawah.')); mr.appendChild(mt);
+    mr.addEventListener('click', function () { if (stat.mine.length) viewStatus(stat.mine, 'Status saya', true, null); else toast('Belum ada status. Ketuk Tulis atau Foto.'); }); pg.appendChild(mr);
+    var ac = el('div', 'st-acts'), t1 = el('button', '', 'Tulis status'), t2 = el('button', '', 'Foto status'); t1.type = t2.type = 'button';
+    t1.addEventListener('click', function () { composeStatus('text'); }); t2.addEventListener('click', function () { composeStatus('image'); }); ac.appendChild(t1); ac.appendChild(t2); pg.appendChild(ac);
+    var fr = {}; (ct.contacts || []).forEach(function (c) { fr[c.id] = c; });
+    stat.list.sort(function (a, b) { return b.ts - a.ts; }).forEach(function (s2) {
+      var c = fr[s2.id]; if (!c) return;
+      var r = el('button', 'st-row' + (lsGet(seenKey(s2.id), 0) >= s2.ts ? ' seen' : '')); r.type = 'button'; r.appendChild(mkAv(c));
+      var t = el('div'); t.appendChild(el('b', '', dname(c))); t.appendChild(el('span', '', s2.n + ' status · ' + agoOf(s2.ts))); r.appendChild(t);
+      r.addEventListener('click', async function () { try { var d = await capi({ op: 'statget', id: s2.id }); if (!d.items.length) { toast('Status sudah berakhir'); loadStatus(true); return; } viewStatus(d.items, dname(c), false, s2); } catch (e) { toast(e.message); } });
+      pg.appendChild(r);
+    });
+    if (!stat.list.length) pg.appendChild(el('p', 'home-empty', 'Belum ada status dari temanmu.'));
+    var gh = el('div', 'sec-h'); gh.appendChild(el('b', '', 'Grup')); var gb = el('button', '', '+ Grup baru'); gb.type = 'button'; gb.addEventListener('click', newGroup); gh.appendChild(gb); pg.appendChild(gh);
+    (ct.groups || []).forEach(function (g) { var r = el('button', 'st-row'); r.type = 'button'; r.appendChild(mkAv(g)); var t = el('div'); t.appendChild(el('b', '', dname(g))); t.appendChild(el('span', '', (g.members || []).length + ' anggota')); r.appendChild(t); r.addEventListener('click', function () { hideHome(); openThread(g); }); pg.appendChild(r); });
+    if (!(ct.groups || []).length) pg.appendChild(el('p', 'home-empty', 'Belum ada grup. Ketuk + Grup baru, pilih teman, lalu mulai ngobrol bareng.'));
+  }
+  function viewStatus(items, who, mine, s2) {
+    var i = 0, tm = 0, ov = el('div', 'sview'), bars = el('div', 'sv-bars'), body = el('div', 'sv-body');
+    items.forEach(function () { var x = el('i'); x.appendChild(el('b')); bars.appendChild(x); });
+    var hd = el('div', 'sv-head'), nm = el('strong'), xb = el('button', '', '×'); xb.type = 'button'; xb.setAttribute('aria-label', 'Tutup'); hd.appendChild(nm); hd.appendChild(xb);
+    ov.appendChild(bars); ov.appendChild(hd); ov.appendChild(body);
+    function close() { clearTimeout(tm); ov.remove(); if (s2) { lsSet(seenKey(s2.id), s2.ts); renderUpd(); } }
+    function show() {
+      clearTimeout(tm); if (i >= items.length) { close(); return; } if (i < 0) i = 0;
+      var it = items[i]; body.replaceChildren(); nm.replaceChildren(document.createTextNode(who), el('small', '', agoOf(it.ts)));
+      Array.prototype.forEach.call(bars.children, function (x, k) { var f = x.firstChild; f.style.transition = 'none'; f.style.width = k < i ? '100%' : '0'; });
+      var f = bars.children[i].firstChild; void f.offsetWidth; f.style.transition = 'width 5s linear'; f.style.width = '100%';
+      if (it.kind === 'image') { var im = new Image(); im.src = it.data; body.appendChild(im); body.style.background = '#000'; if (it.text) body.appendChild(el('div', 'sv-cap', it.text)); }
+      else { body.style.background = it.bg || '#1b2d73'; body.appendChild(el('div', 't', it.text)); }
+      if (mine) { var dl = el('button', 'sv-del', 'Hapus'); dl.type = 'button'; dl.addEventListener('click', async function (e) { e.stopPropagation(); clearTimeout(tm); if (!confirm('Hapus status ini?')) { tm = setTimeout(next, 3000); return; } try { await capi({ op: 'statdel', sid: it.id }); items.splice(i, 1); stat.mine = items.slice(); loadStatus(true); if (!items.length) { close(); return; } bars.lastChild.remove(); show(); } catch (x) { toast(x.message); } }); body.appendChild(dl); }
+      tm = setTimeout(next, 5000);
+    }
+    function next() { i++; show(); }
+    body.addEventListener('click', function (e) { var r = body.getBoundingClientRect(); if (e.clientX - r.left < r.width / 3) { i--; show(); } else next(); });
+    xb.addEventListener('click', close); chatEl.appendChild(ov); show();
+  }
+  function composeStatus(kind) {
+    var allow = null, bg = '#1b2d73', imgData = '', ov = el('div', 'scomp'), COLS = ['#1b2d73', '#7a2dd1', '#b3261e', '#0b7a4b', '#c26a00', '#222831'];
+    ov.style.background = bg;
+    ov.innerHTML = '<div class="sc-top"><button type="button" class="x">Batal</button><span></span></div><div class="sc-mid"></div><div class="sc-bot"><div class="sc-cols"></div><div class="sc-row"><input class="cap" maxlength="200" placeholder="Tambah keterangan"><select class="aud" aria-label="Siapa yang bisa lihat"><option value="all">Semua kontak</option><option value="pick">Pilih kontak…</option></select><button type="button" class="send">Kirim</button></div></div>';
+    var mid = ov.querySelector('.sc-mid'), cap = ov.querySelector('.cap'), aud = ov.querySelector('.aud'), cols = ov.querySelector('.sc-cols'), ta = null;
+    if (kind === 'text') {
+      cap.hidden = true; ta = document.createElement('textarea'); ta.maxLength = 200; ta.rows = 4; ta.placeholder = 'Tulis status…'; mid.appendChild(ta);
+      COLS.forEach(function (c, k) { var b = el('button', k === 0 ? 'on' : ''); b.type = 'button'; b.style.background = c; b.setAttribute('aria-label', 'Warna ' + c); b.addEventListener('click', function () { bg = c; ov.style.background = c; Array.prototype.forEach.call(cols.children, function (x) { x.classList.toggle('on', x === b); }); }); cols.appendChild(b); });
+      setTimeout(function () { ta.focus(); }, 80);
+    } else { cols.hidden = true; ov.style.background = '#000'; }
+    aud.addEventListener('change', function () {
+      if (aud.value === 'pick') pickFriends({ title: 'Siapa yang bisa lihat?', ok: 'Pilih', preset: allow || [], cb: function (ids) { allow = ids; aud.options[1].textContent = ids.length + ' kontak dipilih'; }, });
+      else allow = null;
+    });
+    ov.querySelector('.x').addEventListener('click', function () { ov.remove(); });
+    var sendB = ov.querySelector('.send');
+    sendB.addEventListener('click', async function () {
+      var o = { op: 'statpost', kind: kind, bg: bg, allow: allow };
+      if (kind === 'text') { o.text = ta.value.trim(); if (!o.text) { toast('Tulis statusnya dulu'); return; } } else { if (!imgData) { toast('Pilih foto dulu'); return; } o.data = imgData; o.text = cap.value.trim(); }
+      sendB.disabled = true;
+      try { await capi(o); ov.remove(); toast('Status terkirim'); loadStatus(true); } catch (e) { sendB.disabled = false; toast(staleOr(e), 5000); }
+    });
+    chatEl.appendChild(ov);
+    if (kind === 'image') {
+      var fi = document.createElement('input'); fi.type = 'file'; fi.accept = 'image/*'; fi.style.display = 'none'; ov.appendChild(fi);
+      fi.addEventListener('change', async function () { var f = fi.files && fi.files[0]; if (!f) { ov.remove(); return; } try { var r = await compressImage(f); imgData = r.data; var im = new Image(); im.src = r.data; mid.appendChild(im); } catch (e) { toast(e.message); ov.remove(); } });
+      fi.click();
+    }
+  }
+  setInterval(function () { if (homeTab === 'upd' && !homeEl.hidden && !document.hidden) loadStatus(false); }, 30000);
   function showHome() {
     setTab('chat');
     try { if (ct.thread) closeThread(); } catch (e) {}
-    sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; info.hidden = true; profS.hidden = true; closeSheets(); closeDrawer(); hm.hidden = true;
+    sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; info.hidden = true; infoG.hidden = true; profS.hidden = true; closeSheets(); closeDrawer(); hm.hidden = true;
     homeEl.hidden = false; renderPm(); ctRefresh();
   }
   renderPm();
