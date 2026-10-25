@@ -11,7 +11,7 @@ self.addEventListener('push', function (e) {
     if (seen) { cs.forEach(function (c) { c.postMessage({ type: 'push' }); }); return; }
     await self.registration.showNotification(d.title || 'Partical Message', {
       body: d.body || 'Ada pesan baru',
-      icon: '/img/logo-192.png', badge: '/img/logo-white.png',
+      icon: '/img/pm-192.png', badge: '/img/pm-white.png',
       tag: d.tag || 'faisal-chat', renotify: true, vibrate: [120, 60, 120],
       data: { url: d.url || '/' }
     });
