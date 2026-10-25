@@ -699,6 +699,73 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   .chat:not(.gated) .drawer, .chat:not(.gated) .scrim { left: 340px; }
   .chat:not(.gated) > .ctsheet, .chat:not(.gated) > .ptview, .chat:not(.gated) > .starsheet, .chat:not(.gated) > .sheet { left: 340px; }
 }
+
+.hp { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.hp[hidden] { display: none; }
+.ht-r { display: flex; gap: 2px; }
+.home-chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 14px 10px; scrollbar-width: none; }
+.home-chips::-webkit-scrollbar { display: none; }
+.home-chips button { flex: none; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--fg); font: 600 13px var(--f-body); cursor: pointer; }
+.home-chips button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.home-chips button small { margin-left: 5px; opacity: .75; font-size: 12px; }
+.home-nav { flex: none; display: flex; border-top: 1px solid var(--line); background: var(--surface); padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)); }
+.home-nav button { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; border: 0; background: none; color: var(--muted); font: 600 12px var(--f-body); cursor: pointer; padding: 2px 0; }
+.home-nav button i { position: relative; width: 56px; height: 30px; border-radius: 16px; display: grid; place-items: center; font-style: normal; }
+.home-nav button.on { color: var(--fg); }
+.home-nav button.on i { background: var(--accent-soft); color: var(--accent); }
+.home-nav em { position: absolute; top: -4px; right: 2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #ff5a5f; color: #fff; font: 700 11px/18px var(--f-body); font-style: normal; text-align: center; }
+.ct-fab { left: auto; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); border-radius: 18px; }
+.soon { margin: 18px 8px; padding: 22px; border: 1px dashed var(--line); border-radius: 16px; text-align: center; }
+.soon b { display: block; font: 700 17px var(--f-display); margin-bottom: 6px; }
+.soon p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.feat-card { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 12px 14px; cursor: pointer; }
+.feat-card .about { max-width: 90%; padding: 7px 14px; border-radius: 16px; background: var(--surface-2); color: var(--muted); font-size: 14px; text-align: center; }
+.feat-card h3 { margin: 0; font: 800 20px var(--f-display); }
+.frow { display: flex; align-items: center; gap: 16px; width: 100%; padding: 14px 12px; border: 0; background: none; color: var(--fg); text-align: left; cursor: pointer; border-radius: 12px; }
+.frow:hover { background: var(--surface-2); }
+.frow svg { flex: none; color: var(--muted); }
+.frow b { display: block; font: 600 16px var(--f-body); }
+.frow span { display: block; margin-top: 2px; font-size: 13px; color: var(--muted); }
+.prof-body { flex: 1; overflow-y: auto; padding: 18px 0 30px; }
+.pav { position: relative; width: 120px; margin: 0 auto 18px; }
+.pav .ct-av { width: 120px; height: 120px; font-size: 48px; }
+.pav button { position: absolute; right: -4px; bottom: -2px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+.prow { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,.05); }
+.prow b { display: block; font: 500 13px var(--f-body); color: var(--muted); margin-bottom: 3px; }
+.prow span { font-size: 16px; }
+.prow span.ph { color: var(--accent); }
+.prow input { width: calc(100% - 96px); padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); font: 400 16px var(--f-body); margin-right: 8px; }
+.info-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(420px, 100%); padding: 14px 12px; border: 0; border-top: 1px solid rgba(255,255,255,.07); background: none; color: var(--fg); font: 600 15px var(--f-body); text-align: left; cursor: pointer; }
+.info-row.dng { color: #ff6b6b; }
+.info-row small { color: var(--muted); font-weight: 500; }
+.info-strip { display: flex; gap: 8px; width: min(420px, 100%); overflow-x: auto; padding: 0 0 10px; }
+.info-strip img { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; flex: none; }
+.sw { flex: none; width: 44px; height: 26px; border-radius: 13px; background: var(--line); position: relative; transition: background .15s; }
+.sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.sw.on { background: var(--accent); }
+.sw.on::after { transform: translateX(18px); }
+.lbx.grid { align-items: stretch; justify-content: flex-start; overflow-y: auto; padding: 14px; gap: 8px; }
+.lbx.grid .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.lbx.grid .g button { aspect-ratio: 1; border: 0; padding: 0; background: #222; cursor: pointer; overflow: hidden; border-radius: 6px; position: relative; }
+.lbx.grid img, .lbx.grid video { width: 100%; height: 100%; object-fit: cover; }
+.lbx.grid .x { align-self: flex-end; border: 0; background: #333; color: #fff; padding: 8px 16px; border-radius: 10px; font: 700 14px var(--f-body); cursor: pointer; }
+.stk-pop { justify-content: flex-end; gap: 0; background: rgba(0,0,0,.6); }
+.stk-sheet { width: 100%; background: #12171f; border-radius: 22px 22px 0 0; padding: 14px 18px calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.stk-sheet .xb { align-self: flex-start; width: 40px; height: 40px; border: 0; background: none; color: var(--fg); font-size: 26px; cursor: pointer; }
+.stk-sheet img { width: min(210px, 52vw); height: min(210px, 52vw); object-fit: contain; border-radius: 10px; background: #fff; }
+.stk-sheet .act { display: flex; align-items: center; gap: 18px; width: 100%; padding: 15px 8px; border: 0; background: none; color: var(--fg); font: 500 17px var(--f-body); text-align: left; cursor: pointer; }
+.stk-sheet .act:hover { background: var(--surface-2); border-radius: 12px; }
+.stk-tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+.stk-tabs button, .stk-seg button { padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--fg); font: 600 13px var(--f-body); cursor: pointer; }
+.stk-tabs button.on, .stk-seg button.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.stk-seg { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+.stk-seg .grow { flex: 1; }
+.stk-new { aspect-ratio: 1; border: 1px solid var(--accent); border-radius: 12px; background: var(--accent-soft); color: var(--accent); font: 700 12px var(--f-body); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+.emo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 4px; }
+.emo-grid button { border: 0; background: none; font-size: 26px; padding: 4px; cursor: pointer; border-radius: 8px; }
+.emo-grid button:hover { background: var(--surface-2); }
+.stk-fav { position: absolute; top: 2px; right: 4px; font-size: 12px; color: #ffd400; }
+.pt-log { background-image: radial-gradient(rgba(255,255,255,.035) 1.2px, transparent 1.3px); background-size: 22px 22px; }
 </style>
 </head>
 <body>
@@ -1064,10 +1131,26 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   <p class="chat-foot">Hanya foto yang kamu kirim lewat tombol foto di sini yang dibaca AI.</p>
 
   <section class="home" id="home" aria-label="Daftar obrolan">
-    <div class="home-top"><strong>Obrolan</strong><button type="button" id="home-more" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div>
+    <div class="hp hp-chat">
+      <div class="home-top"><strong>Practical Message</strong><div class="ht-r"><button type="button" id="home-cam" aria-label="Kirim foto ke Faisal AI"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button><button type="button" id="home-more" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div></div>
+      <div class="home-search"><input id="home-q" type="search" placeholder="Chat Faisal AI" aria-label="Cari chat" autocomplete="off"></div>
+      <div class="home-chips" id="home-chips"></div>
+      <div class="home-list" id="pm-box"></div>
+    </div>
+    <div class="hp hp-upd" hidden>
+      <div class="home-top"><strong>Pembaruan</strong><div class="ht-r"></div></div>
+      <div class="home-list"><div class="soon"><b>Status dan Grup</b><p>Status 24 jam dan grup obrolan lagi disiapkan. Sementara itu kamu bisa ngobrol dengan Faisal AI dan teman lewat tab Chat.</p></div></div>
+    </div>
+    <div class="hp hp-feat" hidden>
+      <div class="home-top"><strong>Fitur</strong><div class="ht-r"><button type="button" id="feat-more" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div></div>
+      <div class="home-list" id="feat-body"></div>
+    </div>
     <div class="home-menu" id="home-menu" hidden></div>
-    <div class="home-search"><input id="home-q" type="search" placeholder="Cari obrolan" aria-label="Cari obrolan" autocomplete="off"></div>
-    <div class="home-list" id="pm-box"></div>
+    <nav class="home-nav" aria-label="Navigasi utama">
+      <button type="button" data-tab="chat" class="on"><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><em id="nav-badge" hidden></em></i><span>Chat</span></button>
+      <button type="button" data-tab="upd"><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg></i><span>Status &amp; Grup</span></button>
+      <button type="button" data-tab="feat"><i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></i><span>Akun anda</span></button>
+    </nav>
   </section>
 
   <div class="scrim" id="scrim" hidden></div>
@@ -1942,7 +2025,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     else if (!homeShown) { homeShown = true; try { if (!window.matchMedia('(min-width: 860px)').matches) showHome(); } catch (e) {} }
     $('#btn-home').hidden = need;
   }
-  var homeShown = false, homeEl = $('#home');
+  var homeShown = false, homeEl = $('#home'), homeTab = 'chat';
   function hideHome() { homeEl.hidden = true; }
   function renderAcct() { updateSub(); if (!$('#acctpage').hidden) renderAcctPage(); }
   function wibTime(iso) {
@@ -2907,7 +2990,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var ctxBack = ctxRoot.querySelector('.ctx-back'), ctxBar = ctxRoot.querySelector('.ctx-bar'), ctxMenu = ctxRoot.querySelector('.ctx-menu'), ctxPick = ctxRoot.querySelector('.ctx-picker'), ctxClone = null;
   var toastEl = document.createElement('div'); toastEl.className = 'ctx-toast'; toastEl.setAttribute('role', 'status'); chatEl.appendChild(toastEl);
   var toastT = 0;
-  function toast(t) { toastEl.textContent = t; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, 1800); }
+  function toast(t, ms) { toastEl.textContent = t; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, ms || 1800); }
 
   /* bar balasan di atas kolom ketik */
   var rbar = document.createElement('div'); rbar.className = 'reply-bar'; rbar.hidden = true;
@@ -3279,10 +3362,52 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   function ctBoot() { ctSync(); ctRefresh(); pushResync(); }
   function wideMode() { return window.matchMedia('(min-width: 860px)').matches && !chatEl.classList.contains('gated'); }
+  function lsGet(k, d) { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function setKey(n) { return 'fz-' + n + '-' + myUid(); }
+  function isIn(n, id) { return lsGet(setKey(n), []).indexOf(id) >= 0; }
+  function toggleIn(n, id) { var a = lsGet(setKey(n), []), i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); lsSet(setKey(n), a); return i < 0; }
+  var homeFilter = 'all', showArc = false;
+  function renderChips() {
+    var box = $('#home-chips'); if (!box) return; box.replaceChildren();
+    var fr = ctOn() ? ct.contacts.filter(function (c) { return c.status === 'ok'; }) : [];
+    var unread = fr.filter(unreadOf).length;
+    [['all', 'Semua', 0], ['unread', 'Belum dibaca', unread], ['fav', 'Favorit', 0], ['grup', 'Grup', 0], ['kom', 'Komunitas', 0]].forEach(function (f) {
+      var b = el('button', homeFilter === f[0] && !showArc ? 'on' : '', f[1]); b.type = 'button';
+      if (f[2]) b.appendChild(el('small', '', String(f[2])));
+      b.addEventListener('click', function () { homeFilter = f[0]; showArc = false; renderPm(); });
+      box.appendChild(b);
+    });
+  }
+  function pmRow(c) {
+    var act = ct.thread && ct.thread.id === c.id;
+    var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
+    var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : ''));
+    b.appendChild(mkAv(c)); b.appendChild(t2);
+    var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
+    b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
+    return b;
+  }
   function renderPm() {
-    var box = $('#pm-box'); if (!box) return; box.replaceChildren();
+    var box = $('#pm-box'); if (!box) return; box.replaceChildren(); renderChips();
     var q = (($('#home-q') || {}).value || '').trim().toLowerCase();
-    if (!q || 'faisal ai'.indexOf(q) >= 0) {
+    var friends = ctOn() ? ct.contacts.filter(function (c) { return c.status === 'ok'; }) : [];
+    var arcN = friends.filter(function (c) { return isIn('arc', c.id); }).length;
+    function byTime(a, b) { return ((b.lastMsg && b.lastMsg.ts) || 0) - ((a.lastMsg && a.lastMsg.ts) || 0); }
+    var rows = [];
+    if (showArc) {
+      var bk = el('button', 'ct-item pmrow'); bk.type = 'button'; bk.appendChild(el('b', '', '‹  Diarsipkan')); bk.addEventListener('click', function () { showArc = false; renderPm(); }); box.appendChild(bk);
+      rows = friends.filter(function (c) { return isIn('arc', c.id); });
+    } else {
+      rows = friends.filter(function (c) { return !isIn('arc', c.id); });
+      if (homeFilter === 'unread') rows = rows.filter(unreadOf);
+      else if (homeFilter === 'fav') rows = rows.filter(function (c) { return isIn('fav', c.id); });
+      else if (homeFilter === 'grup' || homeFilter === 'kom') rows = [];
+      else if (!q) rows = rows.filter(function (c) { return c.lastMsg || (ct.thread && ct.thread.id === c.id); });
+    }
+    if (q) rows = rows.filter(function (c) { return dname(c).toLowerCase().indexOf(q) >= 0; });
+    rows.sort(byTime);
+    if (!showArc && homeFilter === 'all' && (!q || 'faisal ai'.indexOf(q) >= 0)) {
       var f = el('button', 'ct-item pmrow' + (!ct.thread ? ' on' : '')); f.type = 'button';
       var av = el('img', 'pm-av'); av.src = 'img/faisal-192.jpg'; av.alt = '';
       var tx = el('div', 'ct-tx'); tx.appendChild(el('b', '', 'Faisal AI')); tx.appendChild(el('span', '', 'Asisten AI · selalu di atas'));
@@ -3290,25 +3415,19 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       f.addEventListener('click', function () { if (ct.thread) closeThread(); sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; hideHome(); });
       box.appendChild(f);
     }
-    var rows = 0;
-    if (ctOn()) {
-      ct.contacts.filter(function (c) { return c.status === 'ok' && (q ? dname(c).toLowerCase().indexOf(q) >= 0 : (c.lastMsg || (ct.thread && ct.thread.id === c.id))); }).sort(function (a, b) { return ((b.lastMsg && b.lastMsg.ts) || Date.now()) - ((a.lastMsg && a.lastMsg.ts) || Date.now()); }).forEach(function (c) {
-        rows++;
-        var act = ct.thread && ct.thread.id === c.id;
-        var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
-        var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : ''));
-        b.appendChild(mkAv(c)); b.appendChild(t2);
-        var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
-        b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
-        box.appendChild(b);
-      });
+    if (!showArc && homeFilter === 'all' && !q && arcN) {
+      var ar = el('button', 'ct-item pmrow'); ar.type = 'button';
+      var at = el('div', 'ct-tx'); at.appendChild(el('b', '', 'Diarsipkan')); ar.appendChild(at); ar.appendChild(el('small', '', String(arcN)));
+      ar.addEventListener('click', function () { showArc = true; renderPm(); }); box.appendChild(ar);
     }
-    if (q && !box.children.length) box.appendChild(el('p', 'home-empty', 'Tidak ada obrolan yang cocok.'));
-    else if (!q && !rows) box.appendChild(el('p', 'home-empty', 'Ketuk tombol orang di kiri bawah untuk tambah teman lewat nomor.'));
+    rows.forEach(function (c) { box.appendChild(pmRow(c)); });
+    if (!rows.length && !(homeFilter === 'all' && !showArc && !q)) box.appendChild(el('p', 'home-empty', homeFilter === 'grup' ? 'Fitur grup lagi disiapkan.' : homeFilter === 'kom' ? 'Fitur komunitas lagi disiapkan.' : homeFilter === 'fav' ? 'Belum ada favorit. Buka info kontak lalu pilih Tambah ke favorit.' : homeFilter === 'unread' ? 'Tidak ada pesan yang belum dibaca.' : q ? 'Tidak ada obrolan yang cocok.' : 'Kosong.'));
+    else if (homeFilter === 'all' && !showArc && !q && !rows.length) box.appendChild(el('p', 'home-empty', 'Ketuk tombol pesan di kanan bawah untuk tambah teman lewat nomor.'));
   }
   function updBadge() {
     var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; });
     ctBadge.hidden = !n; ctBadge.textContent = String(n);
+    var nb = $('#nav-badge'); if (nb) { nb.hidden = !n; nb.textContent = String(n); }
   }
   async function ctRefresh() {
     if (!ctOn() || ct.busy) return; ct.busy = true;
@@ -3316,7 +3435,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       if (ct.pendingOpen) { var po = ct.contacts.filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
     catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
   }
-  function ctSync() { ctLink.hidden = !ctOn(); if (!ctOn()) { ct.contacts = []; sheet.hidden = true; if (ct.thread) closeThread(); } renderPm(); }
+  function ctSync() { ctLink.hidden = !ctOn() || homeTab !== 'chat'; if (!ctOn()) { ct.contacts = []; sheet.hidden = true; if (ct.thread) closeThread(); } renderPm(); }
   ctLink.addEventListener('click', function () { setS.hidden = true; sheet.hidden = false; renderSheet(); ctRefresh(); });
   $('#btn-menu').addEventListener('click', function () { ctSync(); ctRefresh(); });
   sheet.querySelector('.back').addEventListener('click', function () { sheet.hidden = true; });
@@ -3353,6 +3472,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function addPm(m, sending) {
     if (m.id && ct.tids[m.id]) { var ex = ct.tids[m.id]; if (ex.classList.contains('sending') && !sending) { ex.classList.remove('sending'); } return ex; }
     if (ct.hidden && ct.hidden[m.id]) return null;
+    if (ct.cleared && m.ts <= ct.cleared) return null;
     var emp = document.getElementById('pt-empty'); if (emp) emp.remove();
     var d = el('div', 'pm ' + m.from + (sending ? ' sending' : '') + (ct.anim ? ' pop' : '')); d._m = m; fillPm(d);
     if (ct.anim && m.from === 'them') { try { if (navigator.vibrate && !document.hidden) navigator.vibrate(15); } catch (x) {} }
@@ -3425,6 +3545,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function openThread(c) {
     ct.thread = c; ct.tlast = 0; ct.rts = 0; ct.tids = {}; ct.anim = false; ct.lastAct = Date.now(); ct.polling = false; vLog.replaceChildren(); vMenu.hidden = true; clearPmReply();
     try { ct.hidden = JSON.parse(localStorage.getItem('fz-hide-' + myUid() + '-' + c.id) || '{}') || {}; } catch (e) { ct.hidden = {}; }
+    ct.cleared = lsGet('fz-clr-' + myUid() + '-' + c.id, 0);
     markSeen(c.id, (c.lastMsg && c.lastMsg.ts) || 0); renderPm();
     var hav = view.querySelector('.ct-av'); hav.textContent = (dname(c)[0] || '?').toUpperCase(); hav.dataset.uid = c.id; phPaint(hav);
     view.querySelector('.nm').textContent = dname(c); view.querySelector('.sb').textContent = fmtNum(c.number);
@@ -3439,11 +3560,42 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   info.innerHTML = '<div class="ct-head"><button type="button" class="back">‹ Kembali</button><strong>Info kontak</strong><span style="width:40px"></span></div><div class="info-body"></div>';
   chatEl.appendChild(info);
   info.querySelector('.back').addEventListener('click', function () { info.hidden = true; });
+  function threadMedia() {
+    return Object.keys(ct.tids).map(function (k) { return ct.tids[k]._m; }).filter(function (m) { return m && m.kind && !m.deleted; }).sort(function (a, b) { return b.ts - a.ts; });
+  }
+  function mediaGrid(list) {
+    var o = el('div', 'lbx grid'), x = el('button', 'x', 'Tutup'); x.type = 'button'; x.addEventListener('click', function () { o.remove(); }); o.appendChild(x);
+    var g = el('div', 'g');
+    list.forEach(function (m) {
+      var d = mediaCache[m.id]; if (!d) return;
+      var bt = el('button'); bt.type = 'button';
+      if (m.kind === 'video') { var v = document.createElement('video'); v.src = d; v.muted = true; v.preload = 'metadata'; bt.appendChild(v); } else { var im = new Image(); im.src = d; bt.appendChild(im); }
+      bt.addEventListener('click', function () { if (m.kind === 'video') { var w = el('div', 'lbx'), vv = document.createElement('video'); vv.src = d; vv.controls = true; vv.autoplay = true; vv.playsInline = true; vv.style.maxWidth = '94vw'; vv.style.maxHeight = '80vh'; w.appendChild(vv); w.addEventListener('click', function (e) { if (e.target === w) w.remove(); }); chatEl.appendChild(w); } else lightbox(d); });
+      g.appendChild(bt);
+    });
+    o.appendChild(g); chatEl.appendChild(o);
+  }
+  function clearChat(c) {
+    var t = Math.max(ct.tlast || 0, Date.now() - 1); ct.cleared = t; lsSet('fz-clr-' + myUid() + '-' + c.id, t);
+    Object.keys(ct.tids).forEach(function (id) { var n = ct.tids[id]; if (n._m && n._m.ts <= t) { n.remove(); delete ct.tids[id]; } });
+    info.hidden = true; toast('Obrolan dibersihkan di HP ini');
+  }
   function openInfo() {
     var c = ct.thread; if (!c) return; var b = info.querySelector('.info-body'); b.replaceChildren();
     var av = mkAv(c, 'big'); av.addEventListener('click', function () { var p = phGet(c.id); if (p && p.data) lightbox(p.data); }); b.appendChild(av);
     b.appendChild(el('h3', '', dname(c))); b.appendChild(el('p', 'info-num', fmtNum(c.number)));
-    function act(label, fn, cls) { var x = el('button', 'ct-btn' + (cls ? ' ' + cls : ''), label); x.type = 'button'; x.addEventListener('click', fn); b.appendChild(x); }
+    var meds = threadMedia().filter(function (m) { return mediaCache[m.id]; }), all = threadMedia();
+    var mr = el('button', 'info-row'); mr.type = 'button'; mr.appendChild(el('span', '', 'Media dan stiker')); mr.appendChild(el('small', '', all.length + '  ›'));
+    mr.addEventListener('click', function () { if (meds.length) mediaGrid(meds); else toast('Belum ada media di obrolan ini'); }); b.appendChild(mr);
+    if (meds.length) { var st = el('div', 'info-strip'); meds.slice(0, 8).forEach(function (m) { if (m.kind === 'video') return; var im = new Image(); im.src = mediaCache[m.id]; st.appendChild(im); }); if (st.children.length) b.appendChild(st); }
+    function toggle(label, on, fn) {
+      var r = el('button', 'info-row'); r.type = 'button'; r.appendChild(el('span', '', label)); var sw = el('i', 'sw' + (on ? ' on' : '')); r.appendChild(sw);
+      r.addEventListener('click', function () { var v = fn(); sw.classList.toggle('on', v); }); b.appendChild(r);
+    }
+    toggle('Tambah ke favorit', isIn('fav', c.id), function () { var v = toggleIn('fav', c.id); renderPm(); return v; });
+    toggle('Arsipkan obrolan', isIn('arc', c.id), function () { var v = toggleIn('arc', c.id); renderPm(); toast(v ? 'Obrolan diarsipkan' : 'Arsip dibuka'); return v; });
+    var cl = el('button', 'info-row dng'); cl.type = 'button'; cl.appendChild(el('span', '', 'Bersihkan obrolan')); cl.addEventListener('click', function () { if (confirm('Bersihkan semua pesan di HP ini? Pesan di HP temanmu tidak ikut hilang.')) clearChat(c); }); b.appendChild(cl);
+    function act(label, fn, cls) { var x = el('button', 'info-row' + (cls ? ' ' + cls : '')); x.type = 'button'; x.appendChild(el('span', '', label)); x.addEventListener('click', fn); b.appendChild(x); }
     act('Ubah nama', function () {
       ctDialog({ title: 'Ubah nama', number: c.number, lockNumber: true, first: c.first, last: c.last, save: async function (f, l) {
         await capi({ op: 'rename', id: c.id, first: f, last: l }); c.first = f; c.last = l; view.querySelector('.nm').textContent = dname(c); await ctRefresh(); openInfo();
@@ -3452,7 +3604,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     act('Laporkan', async function () {
       var why = prompt('Kenapa kamu laporkan orang ini? (singkat saja)'); if (why === null) return;
       try { await capi({ op: 'report', id: c.id, reason: why }); toast('Laporan terkirim. Terima kasih.'); } catch (x) { toast(x.message); }
-    });
+    }, 'dng');
     act('Blokir', async function () { if (!confirm('Blokir ' + dname(c) + '? Dia nggak bisa kirim pesan lagi.')) return; try { await capi({ op: 'block', id: c.id }); closeThread(); toast('Diblokir'); } catch (x) { toast(x.message); } }, 'dng');
     act('Hapus kontak', async function () { if (!confirm('Hapus kontak ini?')) return; try { await capi({ op: 'remove', id: c.id }); closeThread(); toast('Kontak dihapus'); } catch (x) { toast(x.message); } }, 'dng');
     info.hidden = false;
@@ -3478,6 +3630,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   /* ---------- lampiran di chat teman: foto, video, stiker ---------- */
   var mediaCache = {}, mediaKeys = [];
   function mcache(id, d) { if (!mediaCache[id]) mediaKeys.push(id); mediaCache[id] = d; if (mediaKeys.length > 50) delete mediaCache[mediaKeys.shift()]; }
+  var STALE = 'Server belum yang terbaru. Upload ulang api/contacts.js (folder api) ke GitHub lalu redeploy. Cek: buka alamat-webmu/api/contacts, harus muncul contacts_version 6.';
+  function staleOr(e) { var m = String((e && e.message) || ''); return /Pesan kosong|Perintah tidak dikenal|belum terhubung/.test(m) ? STALE : (m || 'Gagal'); }
   function kindLabel(k) { return k === 'sticker' ? 'Stiker' : k === 'video' ? 'Video' : 'Foto'; }
   async function getMedia(m) {
     if (mediaCache[m.id]) return mediaCache[m.id];
@@ -3505,21 +3659,26 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function stkTx(mode, fn) { return stkOpen().then(function (db) { return new Promise(function (ok, no) { var t = db.transaction('st', mode), rq = fn(t.objectStore('st')); t.oncomplete = function () { ok(rq && rq.result); }; t.onerror = t.onabort = function () { no(t.error); }; }); }); }
   function stkAll() { return stkTx('readonly', function (s) { return s.getAll(); }).then(function (a) { return (a || []).sort(function (x, y) { return y.ts - x.ts; }); }); }
   function hashStr(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 's' + (h >>> 0).toString(36) + s.length.toString(36); }
-  async function stkSave(data) {
-    var id = hashStr(data), all = await stkAll();
-    if (all.some(function (x) { return x.id === id; })) return false;
+  async function stkPut(rec) { await stkTx('readwrite', function (s2) { return s2.put(rec); }); }
+  async function stkSave(data, fav) {
+    var id = hashStr(data), all = await stkAll(), ex = all.filter(function (x) { return x.id === id; })[0];
+    if (ex) { if (fav && !ex.fav) { ex.fav = true; await stkPut(ex); return 'fav'; } return false; }
     if (all.length >= 80) throw new Error('Menu stiker penuh (80). Hapus beberapa dulu.');
-    await stkTx('readwrite', function (s) { return s.put({ id: id, data: data, ts: Date.now() }); }); return true;
+    await stkPut({ id: id, data: data, ts: Date.now(), used: Date.now(), fav: !!fav }); return true;
   }
-  async function stkSaveUi(data) {
-    try { var ok = await stkSave(data); toast(ok ? 'Stiker disimpan ke menu stikermu' : 'Stiker ini sudah ada di menumu'); if (!spanel.hidden) renderPanel(); } catch (e) { toast(e.message || 'Gagal menyimpan'); }
+  async function stkSaveUi(data, fav) {
+    try { var ok = await stkSave(data, fav); toast(fav ? 'Ditambah ke favorit' : (ok ? 'Stiker disimpan ke paket stikermu' : 'Stiker ini sudah ada di paketmu')); if (!spanel.hidden) renderPanel(); } catch (e) { toast(e.message || 'Gagal menyimpan'); }
   }
+  async function stkTouch(data) { try { var id = hashStr(data), all = await stkAll(), ex = all.filter(function (x) { return x.id === id; })[0]; if (ex) { ex.used = Date.now(); await stkPut(ex); } } catch (e) {} }
   function stkPopup(data) {
-    var o = el('div', 'stk-pop'), i = new Image(); i.src = data; o.appendChild(i);
-    var a = el('div', 'acts'), sv = el('button', 'pri', 'Simpan stiker'), cl2 = el('button', '', 'Tutup'); sv.type = cl2.type = 'button';
-    sv.addEventListener('click', function () { stkSaveUi(data); o.remove(); }); cl2.addEventListener('click', function () { o.remove(); });
-    a.appendChild(sv); a.appendChild(cl2); o.appendChild(a);
-    o.addEventListener('click', function (e) { if (e.target === o) o.remove(); }); chatEl.appendChild(o);
+    var o = el('div', 'stk-pop'), sh = el('div', 'stk-sheet'), xb = el('button', 'xb', '×'); xb.type = 'button'; xb.setAttribute('aria-label', 'Tutup');
+    var i = new Image(); i.src = data; i.alt = 'Stiker'; sh.appendChild(xb); sh.appendChild(i);
+    function act(icon, label, fn) { var b = el('button', 'act'); b.type = 'button'; b.innerHTML = ico(icon) + '<span></span>'; b.querySelector('span').textContent = label; b.addEventListener('click', function () { o.remove(); fn(); }); sh.appendChild(b); }
+    act('<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/>', 'Tambah ke favorit', function () { stkSaveUi(data, true); });
+    act('<rect x="4" y="4" width="13" height="13" rx="3"/><path d="M20 9v10a1 1 0 0 1-1 1H9M10.5 10.5h3M12 9v3"/>', 'Tambah ke paket stiker', function () { stkSaveUi(data, false); });
+    act('<path d="M4 20h4L19 9l-4-4L4 16z"/>', 'Edit', function () { var im = new Image(); im.onload = function () { est.img = im; est.x = 0.5; est.y = 0.88; etx.value = ''; ed.hidden = false; edDraw(); }; im.src = data; });
+    xb.addEventListener('click', function () { o.remove(); }); o.addEventListener('click', function (e) { if (e.target === o) o.remove(); });
+    o.appendChild(sh); chatEl.appendChild(o);
   }
   /* kirim lampiran */
   async function sendMedia(kind, data, ar, dur) {
@@ -3531,10 +3690,25 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     try {
       var d = await capi({ op: 'send', id: c.id, text: '', kind: kind, data: data, ar: ar, dur: dur, cid: cid, reply: rr });
       node.classList.remove('sending'); ct.lastAct = Date.now(); if (d.msg && d.msg.ts > ct.tlast) ct.tlast = d.msg.ts; markSeen(c.id, ct.tlast); schedulePoll();
-    } catch (x) { node.remove(); delete ct.tids[cid]; toast(x.message); }
+    } catch (x) { node.remove(); delete ct.tids[cid]; toast(staleOr(x), 6000); }
   }
-  function loadBitmap(file) {
-    return createImageBitmap(file).catch(function () { return new Promise(function (ok, no) { var u = URL.createObjectURL(file), i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { no(new Error('Gambar tidak bisa dibuka')); }; i.src = u; }); });
+  function imgFromBlob(blob) {
+    return new Promise(function (ok, no) { var u = URL.createObjectURL(blob), i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { URL.revokeObjectURL(u); no(new Error('decode')); }; i.src = u; });
+  }
+  function loadHeic2any() {
+    return new Promise(function (ok, no) {
+      if (window.heic2any) { ok(window.heic2any); return; }
+      var sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+      sc.onload = function () { window.heic2any ? ok(window.heic2any) : no(new Error('x')); }; sc.onerror = function () { no(new Error('x')); }; document.head.appendChild(sc);
+    });
+  }
+  async function loadBitmap(file) {
+    try { return await createImageBitmap(file); } catch (e) {}
+    try { return await imgFromBlob(file); } catch (e) {}
+    if (/hei[cf]|avif/i.test((file.type || '') + ' ' + (file.name || ''))) {
+      try { var h = await loadHeic2any(), out = await h({ blob: file, toType: 'image/jpeg', quality: 0.85 }); return await imgFromBlob(Array.isArray(out) ? out[0] : out); } catch (e) {}
+    }
+    throw new Error('Format fotonya belum bisa dibuka di browser ini. Coba foto lain atau screenshot dulu.');
   }
   async function compressImage(file) {
     var bmp = await loadBitmap(file), w = bmp.width, h = bmp.height, sc = Math.min(1, 960 / Math.max(w, h)), cv = document.createElement('canvas');
@@ -3596,23 +3770,39 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   });
   /* panel stiker */
   var spanel = el('div', 'stk-panel'); spanel.hidden = true; view.insertBefore(spanel, vForm);
-  var stkManage = false;
+  var stkManage = false, stkTab = 'stk', stkSeg = 'recent';
+  var EMOJIS = Array.from('😀😁😂🤣😊😍😘😎🤔😅😭😡😴🥳😇🙃😉😋🤗🙄😬🤯😱🥺😢🤝👍👎👏🙏💪👀🔥✨💯❤️💔🎉🎂🍕🍔☕🌹🌞🌙⭐🐶🐱🙈😜🤪😏😒😞😤🥰😆');
   async function renderPanel() {
     spanel.replaceChildren();
-    var h = el('div', 'stk-h'); h.appendChild(el('b', '', 'Stiker saya'));
-    var mg = el('button', 'stk-mg', stkManage ? 'Selesai' : 'Kelola'); mg.type = 'button'; mg.addEventListener('click', function () { stkManage = !stkManage; renderPanel(); }); h.appendChild(mg); spanel.appendChild(h);
-    var grid = el('div', 'stk-grid'), add = el('button', 'stk-add', '+'); add.type = 'button'; add.setAttribute('aria-label', 'Bikin stiker dari galeri'); add.addEventListener('click', function () { stkFile.click(); }); grid.appendChild(add);
+    var tabs = el('div', 'stk-tabs');
+    [['emo', 'Emoji'], ['stk', 'Stiker']].forEach(function (t) { var b = el('button', stkTab === t[0] ? 'on' : '', t[1]); b.type = 'button'; b.addEventListener('click', function () { stkTab = t[0]; renderPanel(); }); tabs.appendChild(b); });
+    spanel.appendChild(tabs);
+    if (stkTab === 'emo') {
+      var eg2 = el('div', 'emo-grid');
+      EMOJIS.forEach(function (e2) { var b = el('button', '', e2); b.type = 'button'; b.addEventListener('click', function () { var p = vTa.selectionStart == null ? vTa.value.length : vTa.selectionStart; vTa.value = vTa.value.slice(0, p) + e2 + vTa.value.slice(vTa.selectionEnd == null ? p : vTa.selectionEnd); vTa.focus(); try { vTa.setSelectionRange(p + e2.length, p + e2.length); } catch (x) {} }); eg2.appendChild(b); });
+      spanel.appendChild(eg2); return;
+    }
+    var seg = el('div', 'stk-seg');
+    [['recent', 'Terbaru'], ['fav', 'Favorit'], ['all', 'Semua']].forEach(function (t) { var b = el('button', stkSeg === t[0] ? 'on' : '', t[1]); b.type = 'button'; b.addEventListener('click', function () { stkSeg = t[0]; renderPanel(); }); seg.appendChild(b); });
+    seg.appendChild(el('span', 'grow'));
+    var mg = el('button', stkManage ? 'on' : '', stkManage ? 'Selesai' : 'Kelola'); mg.type = 'button'; mg.addEventListener('click', function () { stkManage = !stkManage; renderPanel(); }); seg.appendChild(mg);
+    spanel.appendChild(seg);
+    var grid = el('div', 'stk-grid'), add = el('button', 'stk-new'); add.type = 'button'; add.setAttribute('aria-label', 'Buat stiker dari galeri');
+    add.innerHTML = ico('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M18 3v3M16.5 4.5h3"/>') + '<span>Buat stiker</span>'; add.addEventListener('click', function () { stkFile.click(); }); grid.appendChild(add);
     var all = []; try { all = await stkAll(); } catch (e) {}
+    if (stkSeg === 'fav') all = all.filter(function (x) { return x.fav; });
+    else if (stkSeg === 'recent') all = all.slice().sort(function (x, y) { return (y.used || y.ts) - (x.used || x.ts); });
     all.forEach(function (st) {
       var b = el('button', 'stk-it'); b.type = 'button'; var im = new Image(); im.src = st.data; im.alt = 'Stiker'; b.appendChild(im);
+      if (st.fav) b.appendChild(el('i', 'stk-fav', '★'));
       if (stkManage) { b.appendChild(el('i', 'stk-x', '×')); b.addEventListener('click', async function () { await stkRemove(st.id); renderPanel(); }); }
-      else b.addEventListener('click', function () { spanel.hidden = true; sendMedia('sticker', st.data, 1, 0); });
+      else b.addEventListener('click', function () { spanel.hidden = true; stkTouch(st.data); sendMedia('sticker', st.data, 1, 0); });
       grid.appendChild(b);
     });
-    if (!all.length) grid.appendChild(el('p', 'stk-empty', 'Belum ada stiker. Ketuk + untuk bikin dari galeri, atau tahan stiker di chat lalu simpan.'));
+    if (!all.length) grid.appendChild(el('p', 'stk-empty', stkSeg === 'fav' ? 'Belum ada stiker favorit. Ketuk stiker di chat lalu pilih Tambah ke favorit.' : 'Belum ada stiker. Ketuk Buat stiker, atau ketuk stiker di chat lalu simpan.'));
     spanel.appendChild(grid);
   }
-  async function stkRemove(id) { await stkTx('readwrite', function (s) { return s.delete(id); }); }
+  async function stkRemove(id) { await stkTx('readwrite', function (s2) { return s2.delete(id); }); }
   icStk.addEventListener('click', function () { spanel.hidden = !spanel.hidden; if (!spanel.hidden) { stkManage = false; renderPanel(); } });
   /* pembuat stiker: potong 1:1 otomatis, tambah teks */
   var stkFile = document.createElement('input'); stkFile.type = 'file'; stkFile.accept = 'image/*'; stkFile.className = 'vh'; stkFile.tabIndex = -1; stkFile.setAttribute('aria-hidden', 'true'); view.appendChild(stkFile);
@@ -3660,7 +3850,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function edClose() { ed.hidden = true; est.img = null; }
   ed.querySelector('.se-cancel').addEventListener('click', edClose);
   ed.querySelector('.se-save').addEventListener('click', async function () { var d = edExport(); if (!d) { toast('Gambar terlalu detail, coba yang lain.'); return; } await stkSaveUi(d); edClose(); });
-  ed.querySelector('.se-send').addEventListener('click', async function () { var d = edExport(); if (!d) { toast('Gambar terlalu detail, coba yang lain.'); return; } try { await stkSave(d); } catch (e) { toast(e.message); } edClose(); spanel.hidden = true; if (ct.thread) sendMedia('sticker', d, 1, 0); });
+  ed.querySelector('.se-send').addEventListener('click', async function () { var d = edExport(); if (!d) { toast('Gambar terlalu detail, coba yang lain.'); return; } try { await stkSave(d); await stkTouch(d); } catch (e) { toast(e.message); } edClose(); spanel.hidden = true; if (ct.thread) sendMedia('sticker', d, 1, 0); });
   stkFile.addEventListener('change', async function () {
     var f = stkFile.files && stkFile.files[0]; stkFile.value = ''; if (!f) return;
     try { est.img = await loadBitmap(f); est.x = 0.5; est.y = 0.88; etx.value = ''; ed.hidden = false; edDraw(); } catch (e) { toast('Gambar tidak bisa dibuka'); }
@@ -3687,17 +3877,19 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var _ra = renderAcctPage; renderAcctPage = function () { _ra(); paintOwnAv(); };
   async function squarePhoto(file) {
     var bmp = await loadBitmap(file), sd = Math.min(bmp.width, bmp.height);
-    for (var sz = 256, k = 0; k < 3; sz -= 64, k++) {
-      var cv = document.createElement('canvas'); cv.width = cv.height = sz;
-      cv.getContext('2d').drawImage(bmp, (bmp.width - sd) / 2, (bmp.height - sd) / 2, sd, sd, 0, 0, sz, sz);
-      var d = cv.toDataURL('image/jpeg', 0.8); if (d.length <= 44000) return d;
+    var steps = [[256, 0.82], [256, 0.6], [192, 0.7], [160, 0.55], [128, 0.5], [96, 0.45]];
+    for (var k = 0; k < steps.length; k++) {
+      var sz = steps[k][0], cv = document.createElement('canvas'); cv.width = cv.height = sz;
+      var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, sz, sz);
+      g.drawImage(bmp, (bmp.width - sd) / 2, (bmp.height - sd) / 2, sd, sd, 0, 0, sz, sz);
+      var d = cv.toDataURL('image/jpeg', steps[k][1]); if (d.length <= 60000) return d;
     }
     throw new Error('Foto terlalu detail, coba yang lain.');
   }
   $('#acct-photo').addEventListener('click', function () { $('#acct-photo-in').click(); });
   $('#acct-photo-in').addEventListener('change', async function () {
     var f = this.files && this.files[0]; this.value = ''; if (!f) return;
-    try { var d = await squarePhoto(f), r = await capi({ op: 'setphoto', data: d }); phSet(myUid(), { pv: r.pv, data: d }); phRepaint(); toast('Foto profil diganti'); } catch (e) { toast(e.message || 'Gagal mengganti foto'); }
+    try { var d = await squarePhoto(f), r = await capi({ op: 'setphoto', data: d }); phSet(myUid(), { pv: r.pv, data: d }); phRepaint(); toast('Foto profil diganti'); } catch (e) { toast(staleOr(e), 6000); }
   });
   $('#acct-photo-del').addEventListener('click', async function () {
     try { await capi({ op: 'setphoto', data: '' }); phSet(myUid(), null); renderAcctPage(); phRepaint(); toast('Foto profil dihapus'); } catch (e) { toast(e.message); }
@@ -3725,9 +3917,76 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   hmBtn.addEventListener('click', function (e) { e.stopPropagation(); hm.hidden = !hm.hidden; hmBtn.setAttribute('aria-expanded', hm.hidden ? 'false' : 'true'); });
   homeEl.addEventListener('click', function () { hm.hidden = true; hmBtn.setAttribute('aria-expanded', 'false'); });
   $('#home-q').addEventListener('input', renderPm);
+  /* ---------- navigasi bawah, halaman Fitur, Profil ---------- */
+  var navBtns = homeEl.querySelectorAll('.home-nav button');
+  function setTab(t) {
+    homeTab = t;
+    ['chat', 'upd', 'feat'].forEach(function (k) { homeEl.querySelector('.hp-' + k).hidden = k !== t; });
+    navBtns.forEach(function (b) { b.classList.toggle('on', b.dataset.tab === t); });
+    hm.hidden = true; ctLink.hidden = !ctOn() || t !== 'chat';
+    if (t === 'feat') renderFeat(); if (t === 'chat') renderPm();
+  }
+  navBtns.forEach(function (b) { b.addEventListener('click', function () { setTab(b.dataset.tab); }); });
+  $('#feat-more').addEventListener('click', function (e) { e.stopPropagation(); hm.hidden = !hm.hidden; });
+  $('#home-cam').addEventListener('click', function () { hideHome(); var pb = $('#chat-photo-btn'); if (pb) pb.click(); });
+  function ico(p) { return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>'; }
+  function featRow(box, icon, title, sub, fn) {
+    var r = el('button', 'frow'); r.type = 'button'; r.innerHTML = ico(icon) + '<div><b></b><span></span></div>';
+    r.querySelector('b').textContent = title; r.querySelector('span').textContent = sub; r.addEventListener('click', fn); box.appendChild(r);
+  }
+  function renderFeat() {
+    var b = $('#feat-body'); if (!b) return; b.replaceChildren();
+    var me = ct.me || {};
+    var card = el('div', 'feat-card'); card.addEventListener('click', openProfile);
+    card.appendChild(mkAv({ id: myUid(), status: 'ok', name: me.name || 'Kamu' }, 'big'));
+    card.appendChild(el('h3', '', me.name || 'Atur namamu')); card.appendChild(el('div', 'about', me.about || 'Atur isi Tentang'));
+    b.appendChild(card);
+    featRow(b, '<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/>', 'Langganan', 'Jelajahi keuntungan premium', openAcct);
+    featRow(b, '<rect x="3" y="5" width="12" height="10" rx="1.5"/><rect x="17" y="9" width="4" height="8" rx="1"/><path d="M6 19h6"/>', 'Perangkat tertaut', 'Masuk dengan akun yang sama di HP lain', function () { toast('Masuk dengan akun yang sama di perangkat lain. Obrolan Faisal AI ikut tersinkron.', 4000); });
+    featRow(b, '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>', 'Akun', 'Notifikasi, nomor kontak, ganti nomor', function () { ctLink.click(); });
+    featRow(b, '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', 'Privasi', 'Akun diblokir dan laporan', function () { ctLink.click(); });
+    featRow(b, '<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/>', 'Daftar', 'Kelola orang di kontakmu', function () { ctLink.click(); });
+    featRow(b, '<path d="M4 5h16v11H9l-5 4z"/>', 'Chat', 'Riwayat obrolan Faisal AI, hasil foto', function () { hideHome(); openDrawer(); });
+    featRow(b, '<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>', 'Tampilan', 'Tema terang atau gelap', function () { $('#theme').click(); });
+    featRow(b, '<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/>', 'Pengaturan', 'Notifikasi dan suara Faisal', openSettings);
+  }
+  var profS = el('div', 'ctsheet'); profS.hidden = true; profS.style.zIndex = 89;
+  profS.innerHTML = '<div class="ct-head"><button type="button" class="back">‹ Kembali</button><strong>Profil</strong><span style="width:40px"></span></div><div class="prof-body"></div>';
+  chatEl.appendChild(profS);
+  profS.querySelector('.back').addEventListener('click', function () { profS.hidden = true; if (homeTab === 'feat') renderFeat(); });
+  function pRow(b, label, key, ph, max, hint) {
+    ct.me = ct.me || {};
+    var r = el('div', 'prow'), lb = el('b', '', label), val = ct.me[key] || '', vl = el('span', val ? '' : 'ph', val || ph);
+    r.appendChild(lb); r.appendChild(vl);
+    r.addEventListener('click', function () {
+      if (r.querySelector('input')) return;
+      r.replaceChildren(lb); var inp = el('input'); inp.maxLength = max; inp.value = ct.me[key] || ''; inp.placeholder = hint || ph;
+      var sv = el('button', 'ct-btn pri', 'Simpan'); sv.type = 'button'; r.appendChild(inp); r.appendChild(sv); inp.focus();
+      inp.addEventListener('click', function (e) { e.stopPropagation(); });
+      sv.addEventListener('click', async function (e) {
+        e.stopPropagation(); var o = { op: 'profile' }; o[key] = inp.value;
+        try { await capi(o); ct.me[key] = inp.value.trim(); toast('Tersimpan'); } catch (x) { toast(staleOr(x), 5000); }
+        openProfile();
+      });
+    });
+    b.appendChild(r);
+  }
+  function openProfile() {
+    var b = profS.querySelector('.prof-body'); b.replaceChildren(); ct.me = ct.me || {};
+    var pv = el('div', 'pav'); pv.appendChild(mkAv({ id: myUid(), status: 'ok', name: ct.me.name || 'Kamu' }, 'big'));
+    var cb = el('button'); cb.type = 'button'; cb.setAttribute('aria-label', 'Ganti foto profil'); cb.innerHTML = ico('<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>');
+    cb.addEventListener('click', function () { $('#acct-photo-in').click(); }); pv.appendChild(cb); b.appendChild(pv);
+    pRow(b, 'Nama', 'name', 'Atur namamu', 24); pRow(b, 'Tentang', 'about', 'Atur isi Tentang', 140);
+    var un = el('div', 'prow'); un.appendChild(el('b', '', 'Nama pengguna')); un.appendChild(el('span', 'ph', 'Segera hadir')); un.style.opacity = '.6'; b.appendChild(un);
+    var ph = el('div', 'prow'); ph.appendChild(el('b', '', 'Nomor kontak')); ph.appendChild(el('span', '', fmtNum(ct.me.number || '') || '-'));
+    ph.addEventListener('click', function () { copyText(ct.me.number || '').then(function () { toast('Nomor disalin'); }, function () {}); }); b.appendChild(ph);
+    pRow(b, 'Tautan', 'link', 'Tambah tautan', 200, 'contoh: instagram.com/namamu');
+    profS.hidden = false;
+  }
   function showHome() {
+    setTab('chat');
     try { if (ct.thread) closeThread(); } catch (e) {}
-    sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; info.hidden = true; closeSheets(); closeDrawer(); hm.hidden = true;
+    sheet.hidden = true; starSheet.hidden = true; setS.hidden = true; info.hidden = true; profS.hidden = true; closeSheets(); closeDrawer(); hm.hidden = true;
     homeEl.hidden = false; renderPm(); ctRefresh();
   }
   renderPm();
@@ -3850,6 +4109,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   showCompare(SAMPLE.before, SAMPLE.after, 'sample', false);
   updateActions();
   $('#btn-home').addEventListener('click', function () { showHome(); });
+  $('#home-more').setAttribute('aria-controls', 'home-menu');
   openChat();
 })();
 </script>
