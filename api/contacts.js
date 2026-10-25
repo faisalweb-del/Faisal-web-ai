@@ -93,7 +93,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 7, fitur: ['lampiran', 'stiker', 'foto-profil', 'grup', 'status'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 8, fitur: ['lampiran', 'stiker', 'foto-profil', 'grup', 'status'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   const user = await L.requireUser(req, res);
@@ -285,10 +285,17 @@ module.exports = async function handler(req, res) {
     }
     if (op === 'statmine') {
       const now = Date.now(), q = await SC(me).collection('items').where('exp', '>', now).orderBy('exp', 'asc').limit(10).get();
-      return res.status(200).json({ items: q.docs.map((d) => { const x = d.data(); return { id: x.id, kind: x.kind, text: x.text, bg: x.bg, data: x.data, ts: x.ts, exp: x.exp, shared: x.allow ? x.allow.length : 0 }; }) });
+      const vc = await Promise.all(q.docs.map((d) => d.ref.collection('v').get().then((r) => r.size).catch(() => 0)));
+      return res.status(200).json({ items: q.docs.map((d, i) => { const x = d.data(); return { id: x.id, kind: x.kind, text: x.text, bg: x.bg, data: x.data, ts: x.ts, exp: x.exp, shared: x.allow ? x.allow.length : 0, views: vc[i] }; }) });
+    }
+    if (op === 'statviews') {
+      const sid = String(b.sid || ''); if (!/^s[a-f0-9]{12}$/.test(sid)) return L.bad(res, 400, 'Tidak valid.');
+      const vs = await SC(me).collection('items').doc(sid).collection('v').get();
+      return res.status(200).json({ views: vs.docs.map((d) => ({ id: d.id, ts: (d.data() || {}).ts || 0 })).sort((a, c) => c.ts - a.ts).slice(0, 200) });
     }
     if (op === 'statdel') {
       const sid = String(b.sid || ''); if (!/^s[a-f0-9]{12}$/.test(sid)) return L.bad(res, 400, 'Tidak valid.');
+      try { const vv = await SC(me).collection('items').doc(sid).collection('v').get(); await Promise.all(vv.docs.map((d) => d.ref.delete())); } catch (e) {}
       await SC(me).collection('items').doc(sid).delete();
       const sm = await SC(me).get(); if (sm.exists) await SC(me).set({ items: (sm.data().items || []).filter((x) => x.sid !== sid) });
       return res.status(200).json({ ok: true });
@@ -311,6 +318,7 @@ module.exports = async function handler(req, res) {
       if (!ce.exists || ce.data().status !== 'ok' || (await bl(pid).doc(me).get()).exists) return L.bad(res, 403, 'Tidak bisa dilihat.');
       const now = Date.now(), q = await SC(pid).collection('items').where('exp', '>', now).orderBy('exp', 'asc').limit(10).get();
       const items = q.docs.map((d) => d.data()).filter((x) => !x.allow || x.allow.includes(me)).map((x) => ({ id: x.id, kind: x.kind, text: x.text, bg: x.bg, data: x.data, ts: x.ts }));
+      if (b.view !== false) await Promise.all(items.map((x) => SC(pid).collection('items').doc(x.id).collection('v').doc(me).set({ ts: now }).catch(() => {})));
       return res.status(200).json({ items });
     }
 
