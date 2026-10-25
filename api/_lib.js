@@ -1,7 +1,7 @@
 // Fungsi bersama untuk server Faisal AI: cek login (Firebase) dan kuota pemakaian (Firestore).
 // Semua rahasia ada di environment variable Vercel, tidak pernah dikirim ke browser.
 // Batas per paket. Kata dihitung dari balasan AI saja. Foto reset tiap 00.00 WIB, kata reset 3 jam setelah mulai terpakai.
-const PLANS = { free: { words: 700, photos: 4 }, pro: { words: 3200, photos: 50 } };
+const PLANS = { free: { words: 100, photos: 4, tts: 1, tts_sec: 10 }, pro: { words: 3200, photos: 50, tts: 15, tts_sec: 20 } };
 const LIMITS = PLANS.free;
 const WORD_WINDOW = 3 * 60 * 60 * 1000;
 const DAY = 24 * 60 * 60 * 1000;
@@ -83,11 +83,12 @@ function wibDay(ms) {
 
 // Menerapkan reset otomatis: foto reset tiap 00.00 WIB, kata reset 3 jam setelah mulai terpakai, Pro kembali ke Free kalau sudah habis masa aktif.
 function touch(r, now) {
-  r = Object.assign({ plan: 'free', words: 0, win_start: null, photos: 0, photo_day: wibDay(now), pro_until: null, ever_pro: false }, r || {});
+  r = Object.assign({ plan: 'free', words: 0, win_start: null, photos: 0, photo_day: wibDay(now), tts: 0, tts_day: wibDay(now), pro_until: null, ever_pro: false }, r || {});
   delete r.blocked_until; delete r.last_at;
   if (r.plan === 'pro' && r.pro_until && now >= r.pro_until) r.plan = 'free';
   if (r.plan !== 'pro') r.plan = 'free';
   if (r.photo_day !== wibDay(now)) { r.photos = 0; r.photo_day = wibDay(now); }
+  if (r.tts_day !== wibDay(now)) { r.tts = 0; r.tts_day = wibDay(now); }
   if (r.win_start && now - r.win_start >= WORD_WINDOW) { r.words = 0; r.win_start = null; }
   return r;
 }
@@ -100,6 +101,7 @@ function view(r) {
     plan: r.plan, words: r.words, words_max: lim.words,
     blocked_until: ok ? null : resetAt, reset_at: resetAt,
     photos: r.photos, photos_max: lim.photos, chat_ok: ok,
+    tts: r.tts || 0, tts_max: lim.tts, tts_sec: lim.tts_sec,
     pro_until: r.plan === 'pro' && r.pro_until ? new Date(r.pro_until).toISOString() : null,
     ever_pro: !!r.ever_pro,
   };
@@ -124,6 +126,11 @@ async function rpc(name, args) {
     } else if (name === 'faisal_use_photo') {
       let ok = false;
       if (r.photos < (PLANS[r.plan] || PLANS.free).photos) { r.photos += 1; ok = true; }
+      out = { ok, usage: view(r) };
+    } else if (name === 'faisal_use_tts' || name === 'faisal_refund_tts') {
+      let ok = true;
+      if (name === 'faisal_use_tts') { if ((r.tts || 0) < (PLANS[r.plan] || PLANS.free).tts) r.tts = (r.tts || 0) + 1; else ok = false; }
+      else r.tts = Math.max(0, (r.tts || 0) - 1);
       out = { ok, usage: view(r) };
     } else if (name === 'admin_set') {
       if (args.plan === 'pro') {
