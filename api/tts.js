@@ -55,15 +55,15 @@ module.exports = async function handler(req, res) {
 
   let text = String((req.body && req.body.text) || '').replace(/\s+/g, ' ').trim().slice(0, MAX_CHARS);
   if (!text) return L.bad(res, 400, 'Teks kosong.');
-  // jatah suara per hari: Free 1x (maks 10 detik), Pro 15x. Dihitung sebelum suara dibuat, dikembalikan kalau gagal.
+  // jatah suara: Free 2x per 3 jam (maks 7 detik), Pro 15x per hari. Dihitung sebelum suara dibuat, dikembalikan kalau gagal.
   let lim = L.PLANS.free, quotaTaken = false, usageNow = null;
   if (user) {
     const q = await L.rpc('faisal_use_tts', { p_user: user.id });
     plan = q.usage.plan; lim = L.PLANS[plan] || L.PLANS.free;
-    if (!q.ok) return L.bad(res, 429, plan === 'pro' ? 'Jatah suara hari ini (' + lim.tts + ' kali) sudah habis. Reset jam 00.00 WIB.' : 'Jatah suara Free (1 kali per hari) sudah dipakai. Reset jam 00.00 WIB. Mau lebih banyak? Lihat paket Pro.', { code: 'tts_limit', usage: q.usage });
+    if (!q.ok) return L.bad(res, 429, plan === 'pro' ? 'Jatah suara hari ini (' + lim.tts + ' kali) sudah habis. Reset jam 00.00 WIB.' : 'Jatah suara Free (2 kali per 3 jam) sudah dipakai. ' + (q.usage.tts_reset_at ? 'Reset jam ' + L.wib(q.usage.tts_reset_at) + '. ' : '') + 'Mau lebih banyak? Lihat paket Pro.', { code: 'tts_limit', usage: q.usage });
     quotaTaken = true; usageNow = q.usage;
   }
-  text = text.slice(0, plan === 'pro' ? MAX_CHARS : 130);
+  text = text.slice(0, plan === 'pro' ? MAX_CHARS : 100);
   const refund = async () => { if (quotaTaken) { quotaTaken = false; try { await L.rpc('faisal_refund_tts', { p_user: user.id }); } catch (e) {} } };
   const voice = VOICES.includes(req.body.voice) ? req.body.voice : VOICES[0];
   const style = String(req.body.style || '').slice(0, 60).replace(/[^\p{L}\p{N} ,.-]/gu, '');
