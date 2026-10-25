@@ -1,4 +1,4 @@
-// Service worker Faisal AI: menampilkan notifikasi pesan baru saat web ditutup atau di latar belakang.
+// Service worker Partical Message: menampilkan notifikasi pesan baru saat web ditutup atau di latar belakang.
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
 self.addEventListener('push', function (e) {
@@ -9,9 +9,9 @@ self.addEventListener('push', function (e) {
     var cs = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     var seen = cs.some(function (c) { return c.visibilityState === 'visible'; });
     if (seen) { cs.forEach(function (c) { c.postMessage({ type: 'push' }); }); return; }
-    await self.registration.showNotification(d.title || 'Faisal AI', {
+    await self.registration.showNotification(d.title || 'Partical Message', {
       body: d.body || 'Ada pesan baru',
-      icon: '/img/faisal-192.jpg', badge: '/img/faisal-192.jpg',
+      icon: '/img/logo-192.png', badge: '/img/logo-white.png',
       tag: d.tag || 'faisal-chat', renotify: true, vibrate: [120, 60, 120],
       data: { url: d.url || '/' }
     });

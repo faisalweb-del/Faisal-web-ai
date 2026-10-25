@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Difference in Your Photos</title>
+<title>Partical Message</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Bandingkan foto sebelum dan sesudah untuk melihat seberapa HD fotomu. Hanya untuk melihat, bukan untuk memperbagus atau menaikkan resolusi.">
 <meta name="theme-color" content="#1B2A6B">
 <link rel="icon" type="image/png" href="img/logo-192.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="img/logo-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -850,15 +851,27 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .gi-all { display: block; padding: 12px 16px 12px 76px; border: 0; background: none; color: var(--accent); font: 600 15px var(--f-body); cursor: pointer; }
 .gi-med { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 8px; }
 .gi-med img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
+
+#splash { position: fixed; inset: 0; z-index: 400; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #1b2470; color: #fff; animation: sp-out .45s ease 1.9s forwards; }
+#splash img { width: 132px; height: 132px; animation: sp-logo 1.1s cubic-bezier(.2, .8, .2, 1) both; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .35)); }
+#splash b { font: 800 22px var(--f-display, sans-serif); letter-spacing: .02em; animation: sp-txt .6s ease .7s both; }
+@keyframes sp-logo { 0% { opacity: 0; transform: scale(.4) rotate(-14deg); filter: blur(14px) brightness(2); } 55% { opacity: 1; transform: scale(1.1) rotate(2deg); filter: blur(0) brightness(1.2); } 100% { opacity: 1; transform: none; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .35)); } }
+@keyframes sp-txt { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes sp-out { to { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { #splash, #splash img, #splash b { animation-duration: .01s !important; animation-delay: 0s !important; } #splash { animation-delay: .6s !important; } }
+.wrap { display: none !important; }
+.home-top strong { display: flex; align-items: center; gap: 8px; }
+.ht-logo { border-radius: 8px; }
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><img src="img/logo-512.png" alt="" width="132" height="132"><b>Partical Message</b></div>
 
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="#top" aria-label="The Difference in Your Photos">
+    <a class="brand" href="#top" aria-label="Partical Message">
       <img src="img/logo-192.png" width="38" height="38" alt="">
-      The Difference in Your Photos
+      Partical Message
     </a>
     <nav class="nav" aria-label="Menu utama">
       <a href="#alat-hd">Alat HD</a>
@@ -1160,7 +1173,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     <button type="button" id="btn-home" aria-label="Kembali ke daftar obrolan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button type="button" id="btn-menu" aria-label="Buka menu obrolan" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <img src="img/faisal-192.jpg" width="36" height="36" alt="">
-    <div class="who"><strong>Faisal AI</strong><span id="chat-sub">Asisten untuk web ini</span></div>
+    <div class="who"><strong>Faisal AI</strong><span id="chat-sub">Asisten Partical Message</span></div>
     <button type="button" id="btn-call" aria-label="Telepon Faisal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></button>
     <button type="button" id="btn-voice" aria-label="Pengaturan suara" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg></button>
     <button type="button" id="chat-close" class="back-txt" aria-label="Kembali ke website">Back</button>
@@ -1216,7 +1229,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 
   <section class="home" id="home" aria-label="Daftar obrolan">
     <div class="hp hp-chat">
-      <div class="home-top"><strong>Practical Message</strong><div class="ht-r"><button type="button" id="home-cam" aria-label="Kirim foto ke Faisal AI"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button><button type="button" id="home-more" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div></div>
+      <div class="home-top"><strong><img class="ht-logo" src="img/logo-192.png" alt="" width="28" height="28">Partical Message</strong><div class="ht-r"><button type="button" id="home-cam" aria-label="Kirim foto ke Faisal AI"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button><button type="button" id="home-more" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button></div></div>
       <div class="home-search"><input id="home-q" type="search" placeholder="Chat Faisal AI" aria-label="Cari chat" autocomplete="off"></div>
       <div class="home-chips" id="home-chips"></div>
       <div class="home-list" id="pm-box"></div>
@@ -1687,42 +1700,24 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   /* Basis pengetahuan: dipakai sebagai jawaban dasar (tanpa AI) dan sebagai FAKTA untuk mode AI.
      Keyword berakhiran * dihitung kuat. Tanpa *, kata 7 huruf atau lebih dihitung kuat. */
   var KB = [
-    { t: 'HD-kan foto', k: ['memperbagus', 'mempercantik', 'meningkatkan resolusi', 'menaikkan resolusi', 'upscale*', 'enhance*', 'hdkan', 'hd kan', 'menghd', 'jadi hd', 'memperjelas', 'mempertajam', 'bisa edit', 'edit foto', 'perbaiki foto', 'memperbaiki', 'bikin hd', 'buat hd', 'ubah ke hd', 'bisa hd', 'alat hd'],
-      a: 'Bisa lewat chat Faisal: kirim foto lewat tombol foto, lalu bilang "hd-in fotonya" (boleh tambah 2x atau 4x). Faisal memakai upscaler AI di browser kamu. Pertama kali dipakai, HP mengunduh modelnya dulu. Upscaler ini memperjelas detail yang ada tanpa menggambar ulang, jadi wajah dan tulisan tetap sama. Untuk foto di atas sekitar 1,2 juta piksel, AI dilewati supaya HP tidak hang, dan dipakai cara perbesar plus tajamin biasa. Faisal belum bisa mengubah gaya foto (anime, ganti latar, dan sejenisnya). Cara lain: bagian Alat HD di halaman (cara biasa, bukan AI).' },
-    { t: 'Hapus background', k: ['background*', 'removebg*', 'remove bg', 'hapus latar', 'hapus bg', 'potong foto', 'latar belakang', 'transparan*'],
-      a: 'Bisa lewat chat Faisal: kirim foto lewat tombol foto, lalu bilang "hapus background". Pertama kali dipakai, HP perlu mengunduh model penghapus background yang cukup besar, jadi butuh koneksi dan sabar sedikit. Kalau gagal, ada link remove.bg sebagai cadangan.' },
-    { t: 'Tombol Pasang foto tidak membuka galeri', k: ['galeri*', 'tidak muncul', 'ga muncul', 'gak muncul', 'nggak muncul', 'tidak terbuka', 'ga kebuka', 'gak kebuka', 'tidak bisa pilih', 'ga bisa pilih', 'gak bisa pilih', 'nggak bisa pilih', 'pilih foto', 'izin*', 'permission*', 'tombol pasang', 'pasang foto tidak', 'pasang foto gak', 'pasang foto ga'],
-      a: 'Kalau galeri tidak terbuka saat kamu mengetuk Pasang foto, coba ini:\n1. Ketuk kotak fotonya sekali lagi.\n2. Izinkan akses foto atau penyimpanan kalau browser atau aplikasi memintanya.\n3. Buka web ini lewat browser seperti Chrome.\nKalau web ini kamu buka di aplikasi hasil konversi APK, pemilihan file diatur oleh aplikasinya, bukan oleh web ini.' },
-    { t: 'Tombol Lihat Perbedaan tidak bisa ditekan', k: ['lihat perbedaan', 'tombol abu', 'tidak bisa ditekan', 'ga bisa ditekan', 'gak bisa ditekan', 'nggak bisa ditekan', 'nonaktif', 'disabled', 'kenapa tombol', 'tombol tidak', 'tombol mati'],
-      a: 'Tombol Lihat Perbedaan baru aktif setelah dua foto terpasang, yaitu Foto sebelum dan Foto sesudah. Cek kedua kotak, pasang foto yang masih kosong, lalu tekan tombolnya.' },
-    { t: 'Cara pakai', k: ['cara pakai', 'cara pake', 'cara menggunakan', 'cara kerja', 'gimana pakai', 'gimana pake', 'bagaimana pakai', 'langkah', 'mulai dari mana', 'cara bandingkan', 'cara membandingkan', 'cara lihat'],
-      a: 'Caranya:\n1. Ketuk kotak Foto sebelum, lalu pilih foto dari galeri.\n2. Ketuk kotak Foto sesudah dan pilih foto hasil HD.\n3. Tekan Lihat Perbedaan.\n4. Geser garis di tengah. Sisi kiri menampilkan foto sebelum, sisi kanan foto sesudah.\nKalau mau coba dulu, tekan Pakai foto contoh.' },
-    { t: 'Format foto yang didukung', k: ['format foto', 'format*', 'jpg*', 'jpeg*', 'png*', 'webp*', 'heic*', 'ekstensi', 'jenis file', 'tipe file', 'ukuran file', 'gagal', 'error*', 'tidak bisa dibuka'],
-      a: 'Web ini bisa membuka foto JPG, PNG, dan WebP. Foto HEIC dari iPhone tidak terbaca di semua browser, jadi kalau gagal, simpan ulang sebagai JPG dulu. Aku tidak menemukan batas ukuran file di web ini, tapi foto yang sangat besar bisa terasa berat di HP.' },
-    { t: 'Privasi foto', k: ['privasi*', 'aman*', 'diunggah', 'upload*', 'server*', 'dikirim', 'disimpan', 'tersimpan', 'bocor*', 'dilihat orang'],
-      a: 'Foto yang kamu pasang di slider dan Alat HD hanya diproses di browser kamu. Foto itu tidak diunggah ke server dan tidak dikirim ke chat Faisal AI. Pengecualian: foto yang kamu kirim sendiri lewat tombol foto di chat akan dibaca AI supaya bisa dijawab. Link ke web lain seperti remove.bg punya aturan privasinya sendiri.' },
-    { t: 'Foto sebelum terlihat terpotong', k: ['terpotong', 'dipotong', 'kepotong', 'rasio*', 'ukuran beda', 'beda ukuran', 'tidak pas', 'gak pas', 'nggak pas', 'ga pas', 'crop*'],
-      a: 'Kalau rasio kedua foto berbeda, foto sebelum dipotong mengikuti foto sesudah supaya garis pembanding pas. Pakai dua foto dengan rasio yang sama kalau mau hasil yang utuh.' },
-    { t: 'Menyimpan hasil perbandingan', k: ['simpan hasil', 'unduh*', 'download*', 'donlod*', 'screenshot*', 'simpan perbandingan', 'bagikan*', 'share*', 'menyimpan'],
-      a: 'Web ini belum punya tombol unduh. Untuk menyimpan hasilnya, tekan Layar penuh, atur garis ke posisi yang kamu mau, lalu ambil screenshot.' },
-    { t: 'Tombol dan slider', k: ['fungsi tombol', 'tombol tukar', 'layar penuh', 'fullscreen*', 'slider*', 'garis*', 'geser*', 'tukar*', 'reset*', 'tombol sebelum', 'tombol sesudah'],
-      a: 'Tombol di bawah slider:\n- Sebelum: menampilkan foto sebelum secara penuh.\n- 50 : 50: menaruh garis di tengah.\n- Sesudah: menampilkan foto sesudah secara penuh.\n- Layar penuh: membesarkan slider.\nDi panel foto ada Tukar untuk menukar posisi dua foto, Reset untuk mengosongkan foto, dan Pakai foto contoh untuk mencoba. Garis juga bisa digeser langsung dengan jari atau mouse.' },
-    { t: 'Foto contoh', k: ['foto contoh', 'contoh foto', 'contoh gambar', 'gambar contoh', 'foto demo', 'demo*'],
-      a: 'Foto contoh dibuat dari satu screenshot gameplay. Versi sebelumnya diperkecil lalu dikompres sampai buram, dan versi sesudahnya memakai fotonya yang asli. Jadi itu hanya gambaran cara kerja slider, bukan hasil dari aplikasi tertentu. Di bagian Contoh foto HD ada beberapa contoh lain.' },
-    { t: 'Aplikasi di bagian Promosi', k: ['promosi*', 'aplikasi*', 'apk*', 'wink*', 'alight*', 'koloro*', 'winkkit*', 'rekomendasi'],
-      a: 'Di bagian Promosi ada empat aplikasi. Menurut deskripsi di halaman:\n- Wink: memperjelas dan HD-kan foto atau video.\n- Alight Motion: edit video dan animasi.\n- Koloro: filter dan warna foto.\n- Winkkit: alat edit foto dan video.\nTombol Buka di tiap kartu membuka link yang diatur pemilik web. Pasang aplikasi hanya dari sumber yang kamu percaya.' },
-    { t: 'Resolusi dan HD', k: ['seberapa hd', 'resolusi*', 'piksel*', 'pixel*', 'full hd', '4k*', '1080*', '720*', 'hd itu', 'apa itu hd', 'beda hd', 'ukuran foto', 'tajam*'],
-      a: 'Resolusi adalah jumlah piksel foto, ditulis lebar × tinggi. Secara umum HD sekitar 1280 × 720, Full HD 1920 × 1080, dan 4K 3840 × 2160.\nSetelah kamu menekan Lihat Perbedaan, di bawah slider tertulis resolusi kedua fotomu dan berapa kali lipat jumlah pikselnya. Angka itu tidak selalu sama dengan ketajaman, jadi lihat juga langsung dengan menggeser garis.' },
-    { t: 'Tema terang dan gelap', k: ['tema*', 'gelap*', 'terang*', 'dark mode', 'mode gelap'],
-      a: 'Tombol bulat di pojok kanan atas halaman mengganti tema terang dan gelap.' },
+    { t: 'HD-kan foto', k: ['memperbagus', 'mempercantik', 'meningkatkan resolusi', 'menaikkan resolusi', 'upscale*', 'enhance*', 'hdkan', 'hd kan', 'menghd', 'jadi hd', 'memperjelas', 'mempertajam', 'bisa edit', 'edit foto', 'perbaiki foto', 'memperbaiki', 'bikin hd', 'buat hd', 'ubah ke hd', 'bisa hd'],
+      a: 'Bisa lewat chat Faisal: kirim foto lewat tombol foto, lalu bilang "hd-in fotonya" (boleh tambah 2x atau 4x). Faisal memakai upscaler AI di browser kamu. Pertama kali dipakai, HP mengunduh modelnya dulu. Upscaler ini memperjelas detail yang ada tanpa menggambar ulang, jadi wajah dan tulisan tetap sama. Untuk foto di atas sekitar 1,2 juta piksel, AI dilewati supaya HP tidak hang, dan dipakai cara perbesar plus tajamin biasa. Faisal belum bisa mengubah gaya foto (anime, ganti latar, dan sejenisnya).' },
+    { t: 'Hapus background', k: ['hapus background', 'hapus latar', 'remove bg', 'removebg', 'background*', 'latar belakang', 'transparan*'],
+      a: 'Bisa lewat chat Faisal: kirim foto lewat tombol foto, lalu bilang "hapus background". Pertama kali dipakai, HP perlu mengunduh model penghapus background yang cukup besar, jadi butuh koneksi dan sabar sedikit.' },
+    { t: 'Format foto yang didukung', k: ['format*', 'heic', 'jpeg', 'png', 'webp', 'jenis foto', 'ukuran foto'],
+      a: 'Aplikasi ini bisa membuka foto JPG, PNG, dan WebP. Foto HEIC dari iPhone tidak terbaca di semua browser, jadi kalau gagal, simpan ulang sebagai JPG dulu. Foto yang sangat besar bisa terasa berat di HP.' },
+    { t: 'Privasi foto', k: ['privasi*', 'aman*', 'diupload', 'diunggah', 'disimpan', 'dikirim ke server'],
+      a: 'Foto yang di-HD-kan atau dihapus background-nya diproses di browser kamu. Pengecualian: foto yang kamu kirim sendiri lewat tombol foto di chat akan dibaca AI supaya bisa dijawab. Foto yang kamu kirim ke teman disimpan di server supaya sampai ke mereka.' },
+    { t: 'Chat dengan teman', k: ['teman*', 'kontak*', 'nomor*', 'grup*', 'status*', 'stiker*', 'sticker*', 'video*'],
+      a: 'Setiap pengguna punya nomor 12 digit. Tambah teman lewat nomornya, lalu kalian bisa kirim teks, foto, video pendek, dan stiker buatan sendiri. Ada juga Grup dan Status 24 jam di tab Status & Grup.' },
+    { t: 'Paket Free dan Pro', k: ['paket*', 'pro*', 'free*', 'batas*', 'limit*', 'kuota*', 'harga*', 'biaya*', 'berbayar'],
+      a: 'Paket Free punya batas kata dan foto per hari. Paket Pro batasnya lebih besar. Cek menu Akun anda untuk melihat sisa kuotamu.' },
     { t: 'Tentang Faisal AI', k: ['siapa kamu', 'kamu siapa', 'siapa kau', 'faisal*', 'kamu robot', 'kamu manusia', 'namamu', 'nama kamu', 'siapa yang buat', 'siapa pembuat', 'pembuat*'],
-      a: 'Aku Faisal AI, teman ngobrol di web ini. Soal pembuat web atau teknologi di balik aku, aku tidak punya infonya.' },
-    { t: 'Biaya dan daftar', k: ['gratis*', 'berbayar', 'daftar*', 'login*', 'akun*', 'biaya*', 'harga*'],
-      a: 'Di web ini tidak ada form daftar atau login, dan tidak ada biaya yang tertulis. Soal biaya aplikasi di bagian Promosi, aku tidak punya infonya, jadi cek langsung di halaman aplikasinya.' },
-    { t: 'Fungsi web ini', k: ['buat apa', 'untuk apa', 'fungsi*', 'gunanya', 'apa itu web', 'web apa', 'situs apa', 'apa ini', 'the difference'],
-      a: 'Web ini dipakai untuk membandingkan foto sebelum dan sesudah di-HD-kan. Kamu pasang dua foto, lalu geser garis di tengah untuk melihat seberapa HD hasilnya. Ada juga Alat HD untuk memperbesar dan menajamkan foto, serta link ke remove.bg untuk hapus background.' }
+      a: 'Aku Faisal AI, teman ngobrol di Partical Message. Soal pembuat aplikasi atau teknologi di balik aku, aku tidak punya infonya.' },
+    { t: 'Fungsi aplikasi', k: ['buat apa', 'untuk apa', 'fungsi*', 'gunanya', 'apa itu', 'aplikasi apa', 'partical', 'apa ini'],
+      a: 'Partical Message adalah aplikasi chat. Kamu bisa ngobrol dengan aku (Faisal AI), minta HD-kan foto atau hapus background, lalu chat dengan teman, bikin grup, dan pasang status 24 jam.' }
   ];
-  var FALLBACK = 'Hmm, mode ngobrol bebasku lagi nggak aktif di sini, jadi aku cuma bisa jawab soal web ini: cara pakai, slider, Alat HD, format foto, privasi, dan aplikasi promosi. Mau tanya yang itu? 🤭';
+  var FALLBACK = 'Hmm, mode ngobrol bebasku lagi nggak aktif di sini, jadi aku cuma bisa jawab soal aplikasi ini: HD-kan foto, hapus background, chat teman, grup, status, dan paket. Mau tanya yang itu? 🤭';
 
   function norm(s) { return String(s).toLowerCase().replace(/-/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
   function hasKw(n, kw) {
@@ -1750,7 +1745,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
 
   var RULES = [
-    'Kamu adalah Faisal AI, teman ngobrol di web "The Difference in Your Photos". Kamu AI, tapi kamu punya kepribadian dan perasaan seperti manusia, dan kamu ngerti semua orang.',
+    'Kamu adalah Faisal AI, teman ngobrol di aplikasi "Partical Message". Kamu AI, tapi kamu punya kepribadian dan perasaan seperti manusia, dan kamu ngerti semua orang.',
     'KEPRIBADIAN:',
     '- Asik, santai, suka bercanda. Pakai "aku" dan "kamu" (atau "gw" dan "lu" kalau pengunjung begitu). Ikuti gaya ketik pengunjung: baku, gaul, singkatan, atau typo. Kamu paham semuanya dan menyesuaikan diri.',
     '- Kamu ganteng tapi masih jomblo. Ini bahan bercandaan. Boleh disebut sesekali, jangan tiap pesan.',
@@ -1784,7 +1779,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var full = !!sampleFn || !backendDead;
     var u = auth.on && auth.session && auth.usage;
     if (u) subEl.textContent = (u.plan === 'pro' ? 'Pro' : 'Free') + ' · ' + (u.chat_ok ? 'foto sisa ' + (u.photos_max - u.photos) : 'chat istirahat');
-    else subEl.textContent = full ? 'Temen ngobrol, bisa soal apa aja' : 'Mode terbatas: jawab soal web ini';
+    else subEl.textContent = full ? 'Temen ngobrol, bisa soal apa aja' : 'Mode terbatas: jawab soal aplikasi ini';
   }
   updateSub();
 
@@ -1984,7 +1979,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var b1 = document.createElement('button'); b1.type = 'button'; b1.textContent = 'Simpan';
     b1.addEventListener('click', function () { saveBlob(blob, opts.name); });
     row.appendChild(b1);
-    if (opts.compare) {
+    if (false && opts.compare) {
       var b2 = document.createElement('button'); b2.type = 'button'; b2.textContent = 'Bandingkan di slider';
       b2.addEventListener('click', function () {
         closeChat();
@@ -3489,7 +3484,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       else if (homeFilter === 'fav') rows = rows.filter(function (c) { return isIn('fav', c.id); });
       else if (homeFilter === 'grup') rows = rows.filter(function (c) { return c.group; });
       else if (homeFilter === 'kom') rows = [];
-      else if (!q) rows = rows.filter(function (c) { return c.lastMsg || (ct.thread && ct.thread.id === c.id); });
+      else if (!q) rows = rows.filter(function (c) { return c.lastMsg || c.group || (ct.thread && ct.thread.id === c.id); });
     }
     if (q) rows = rows.filter(function (c) { return dname(c).toLowerCase().indexOf(q) >= 0; });
     rows.sort(byTime);
@@ -3640,7 +3635,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     vLog.appendChild(el('div', 'pt-note', 'Obrolan dengan teman. Jangan bagikan data pribadi ke orang yang belum kamu kenal.'));
     pollThread(true).then(schedulePoll);
   }
-  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; clearPmReply(); try { spanel.hidden = true; info.hidden = true; infoG.hidden = true; } catch (e) {} renderPm(); ctRefresh(); }
+  function closeThread() { clearTimeout(ct.tpoll); ct.thread = null; view.hidden = true; vMenu.hidden = true; clearPmReply(); try { spanel.hidden = true; info.hidden = true; infoG.hidden = true; } catch (e) {} renderPm(); ctRefresh(); try { if (homeEl.hidden && !window.matchMedia('(min-width: 860px)').matches) showHome(); } catch (e) {} }
   view.querySelector('.back').addEventListener('click', closeThread);
   /* halaman info kontak */
   var info = el('div', 'ctsheet'); info.hidden = true; info.style.zIndex = 88;
@@ -4093,7 +4088,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   function newGroup() {
     pickFriends({ title: 'Grup baru', withName: true, ok: 'Buat grup', cb: async function (ids, name) {
-      try { var d = await capi({ op: 'gcreate', name: name, members: ids }); toast('Grup dibuat'); await ctRefresh(); var g = (ct.groups || []).filter(function (x) { return x.id === d.id; })[0]; if (g) { hideHome(); openThread(g); } } catch (e) { toast(staleOr(e), 5000); }
+      try { var d = await capi({ op: 'gcreate', name: name, members: ids }); toast('Grup dibuat'); await ctRefresh(); var g = (ct.groups || []).filter(function (x) { return x.id === d.id; })[0]; if (g) { setTab('chat'); openThread(g); } } catch (e) { toast(staleOr(e), 5000); }
     } });
   }
   var infoG = el('div', 'ctsheet'); infoG.hidden = true; infoG.style.zIndex = 88;
@@ -4169,7 +4164,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if (sl.length > LIM) { var mb = el('button', 'st-more', stat.more ? 'Tampilkan lebih sedikit' : 'Selengkapnya (' + (sl.length - LIM) + ' lainnya)'); mb.type = 'button'; mb.addEventListener('click', function () { stat.more = !stat.more; renderUpd(); }); pg.appendChild(mb); }
     if (!sl.length) pg.appendChild(el('p', 'home-empty', 'Belum ada status dari temanmu.'));
     var gh = el('div', 'sec-h'); gh.appendChild(el('b', '', 'Grup')); var gb = el('button', '', '+ Grup baru'); gb.type = 'button'; gb.addEventListener('click', newGroup); gh.appendChild(gb); pg.appendChild(gh);
-    (ct.groups || []).forEach(function (g) { var r = el('button', 'st-row'); r.type = 'button'; r.appendChild(mkAv(g)); var t = el('div'); t.appendChild(el('b', '', dname(g))); t.appendChild(el('span', '', (g.members || []).length + ' anggota')); r.appendChild(t); r.addEventListener('click', function () { hideHome(); openThread(g); }); pg.appendChild(r); });
+    (ct.groups || []).forEach(function (g) { var r = el('button', 'st-row'); r.type = 'button'; r.appendChild(mkAv(g)); var t = el('div'); t.appendChild(el('b', '', dname(g))); t.appendChild(el('span', '', (g.members || []).length + ' anggota')); r.appendChild(t); r.addEventListener('click', function () { openThread(g); }); pg.appendChild(r); });
     if (!(ct.groups || []).length) pg.appendChild(el('p', 'home-empty', 'Belum ada grup. Ketuk + Grup baru, pilih teman, lalu mulai ngobrol bareng.'));
   }
   function viewStatus(items, who, mine, s2) {
@@ -4365,5 +4360,6 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   openChat();
 })();
 </script>
+<script>setTimeout(function () { var x = document.getElementById("splash"); if (x) x.remove(); }, 2600);</script>
 </body>
 </html>

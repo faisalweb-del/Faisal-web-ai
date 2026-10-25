@@ -1,0 +1,14 @@
+{
+  "name": "Partical Message",
+  "short_name": "Partical",
+  "description": "Chat dengan Faisal AI dan teman: foto, video, stiker, grup, dan status.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1b2470",
+  "theme_color": "#1b2470",
+  "icons": [
+    { "src": "img/logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
