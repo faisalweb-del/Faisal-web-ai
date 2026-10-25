@@ -1181,7 +1181,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   <div class="login" id="login" hidden>
     <img src="img/faisal-192.jpg" width="64" height="64" alt="">
     <h3>Masuk dulu ya</h3>
-    <p>Akun gratis langsung jadi <strong>Free user</strong>: 4 foto per hari (reset jam 00.00 WIB), 100 kata balasan Faisal (reset tiap 3 jam), dan 1 kali suara Faisal per hari (maksimal 10 detik). Mau lebih banyak? Ada paket Pro.</p>
+    <p>Akun gratis langsung jadi <strong>Free user</strong>: 4 foto per hari (reset jam 00.00 WIB), 300 kata balasan Faisal dan 2 kali suara Faisal (maksimal 7 detik), keduanya reset tiap 3 jam. Mau lebih banyak? Ada paket Pro.</p>
     <button type="button" class="btn" id="login-google" hidden>Lanjut dengan Google</button>
     <form id="login-form" autocomplete="on">
       <label for="login-email">Email</label>
@@ -1282,7 +1282,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       <div class="plans">
         <article class="plan" id="plan-free">
           <header><h4>Paket Free</h4><span class="own" id="own-free">Dimiliki</span></header>
-          <ul><li>4 foto per hari (kirim foto, HD-in, hapus background)</li><li>100 kata balasan Faisal</li><li>1 kali suara Faisal (teks ke suara) per hari, maksimal 10 detik</li><li>Kata reset tiap 3 jam, foto dan suara reset jam 00.00 WIB</li></ul>
+          <ul><li>4 foto per hari (kirim foto, HD-in, hapus background)</li><li>300 kata balasan Faisal</li><li>2 kali suara Faisal (teks ke suara), maksimal 7 detik</li><li>Kata dan suara reset tiap 3 jam, foto reset jam 00.00 WIB</li></ul>
           <p class="price">Gratis</p>
         </article>
         <article class="plan pro" id="plan-pro">
@@ -2487,13 +2487,13 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var us = auth.usage, isPro = !!(us && us.plan === 'pro'), now = $('#acct-now'); now.replaceChildren();
     if (us) {
       now.appendChild(usageRow('Foto hari ini', us.photos, us.photos_max, 'Reset otomatis jam 00.00 WIB'));
-      if (us.tts_max) now.appendChild(usageRow('Suara Faisal hari ini', us.tts || 0, us.tts_max, (us.plan === 'pro' ? 'Tiap suara maks sekitar 20 detik. ' : 'Tiap suara maks 10 detik. ') + 'Reset jam 00.00 WIB'));
+      if (us.tts_max) now.appendChild(usageRow(us.plan === 'pro' ? 'Suara Faisal hari ini' : 'Suara Faisal', us.tts || 0, us.tts_max, (us.plan === 'pro' ? 'Tiap suara maks sekitar 20 detik. Reset jam 00.00 WIB' : 'Tiap suara maks 7 detik. ' + (us.tts_reset_at ? 'Reset jam ' + wibTime(us.tts_reset_at) : 'Reset 3 jam setelah mulai terpakai'))));
       now.appendChild(usageRow('Kata dari Faisal', us.words, us.words_max, us.chat_ok ? (us.reset_at ? 'Reset jam ' + wibTime(us.reset_at) : 'Reset 3 jam setelah mulai terpakai') : 'Habis. Bisa lagi jam ' + wibTime(us.blocked_until)));
     }
     $('#own-pro').hidden = !isPro;
     var pr = $('#pro-price'); pr.replaceChildren();
-    if (us && us.ever_pro) pr.appendChild(document.createTextNode('Rp15.000'));
-    else { var sx = document.createElement('s'); sx.textContent = 'Rp15.000'; pr.appendChild(sx); pr.appendChild(document.createTextNode('Rp5.000')); var sm = document.createElement('small'); sm.textContent = 'Diskon untuk pembeli pertama'; pr.appendChild(sm); }
+    if (us && us.ever_pro) pr.appendChild(document.createTextNode('Rp35.000'));
+    else { var sx = document.createElement('s'); sx.textContent = 'Rp35.000'; pr.appendChild(sx); pr.appendChild(document.createTextNode('Rp30.000')); var sm = document.createElement('small'); sm.textContent = 'Diskon untuk pembeli pertama'; pr.appendChild(sm); }
     var pu = $('#pro-until'); pu.hidden = !(isPro && us.pro_until); if (!pu.hidden) pu.textContent = 'Aktif sampai ' + fmtDate(us.pro_until);
     var buy = $('#buy-pro');
     buy.textContent = isPro ? 'Perpanjang lewat WhatsApp' : 'Beli lewat WhatsApp';
@@ -4031,6 +4031,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     featRow(b, '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>', 'Akun', 'Notifikasi, nomor kontak, ganti nomor', function () { ctLink.click(); });
     featRow(b, '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', 'Privasi', 'Akun diblokir dan laporan', function () { ctLink.click(); });
     featRow(b, '<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/>', 'Daftar', 'Kelola orang di kontakmu', function () { ctLink.click(); });
+    featRow(b, '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', 'Tentang aplikasi', 'Partical Message versi ' + (window.__apkVer || 'web') + ' · ketuk untuk cek update', function () { window.__checkUpdate(true); });
     featRow(b, '<path d="M4 5h16v11H9l-5 4z"/>', 'Chat', 'Riwayat obrolan Faisal AI, hasil foto', function () { hideHome(); openDrawer(); });
     featRow(b, '<circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>', 'Tampilan', 'Tema terang atau gelap', function () { $('#theme').click(); });
     featRow(b, '<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/>', 'Pengaturan', 'Notifikasi dan suara Faisal', openSettings);
@@ -4361,5 +4362,33 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 })();
 </script>
 <script>setTimeout(function () { var x = document.getElementById("splash"); if (x) x.remove(); }, 2600);</script>
+<script>
+/* info update aplikasi: versi APK dibaca dari ?apk=1.0 di start_url, versi terbaru dari version.json */
+(function () {
+  var cur = '';
+  try { var q = new URLSearchParams(location.search).get('apk'); if (q && /^[0-9.]{1,12}$/.test(q)) localStorage.setItem('fz-apk', q); cur = localStorage.getItem('fz-apk') || ''; } catch (e) {}
+  window.__apkVer = cur;
+  function cmp(a, b) { a = String(a).split('.'); b = String(b).split('.'); for (var i = 0; i < Math.max(a.length, b.length); i++) { var x = parseInt(a[i] || 0, 10), y = parseInt(b[i] || 0, 10); if (x !== y) return x < y ? -1 : 1; } return 0; }
+  function show(d) {
+    var ov = document.createElement('div'); ov.className = 'pick'; var box = document.createElement('div'); box.className = 'pick-box';
+    var h = document.createElement('h3'); h.textContent = 'Update tersedia'; box.appendChild(h);
+    var p = document.createElement('p'); p.style.margin = '0'; p.style.color = 'var(--muted)'; p.textContent = 'Versi ' + d.latest + ' sudah rilis. Kamu memakai versi ' + cur + '.'; box.appendChild(p);
+    if (d.notes && d.notes.length) { var t = document.createElement('b'); t.textContent = 'Yang baru:'; box.appendChild(t); var ul = document.createElement('ul'); ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px'; d.notes.slice(0, 12).forEach(function (n) { var li = document.createElement('li'); li.textContent = String(n).slice(0, 120); ul.appendChild(li); }); box.appendChild(ul); }
+    var act = document.createElement('div'); act.className = 'pick-act';
+    if (!d.force) { var no = document.createElement('button'); no.type = 'button'; no.textContent = 'Nanti'; no.addEventListener('click', function () { ov.remove(); }); act.appendChild(no); }
+    var go = document.createElement('button'); go.type = 'button'; go.className = 'pri'; go.textContent = 'Update'; go.addEventListener('click', function () { window.open(d.download || location.origin, '_blank', 'noopener'); }); act.appendChild(go);
+    box.appendChild(act); ov.appendChild(box); document.body.appendChild(ov);
+  }
+  window.__checkUpdate = async function (manual) {
+    try {
+      var r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' }); var d = await r.json();
+      if (!d || !d.latest) throw new Error('x');
+      if (cur && cmp(cur, d.latest) < 0) { show(d); return; }
+      if (manual) { var m = document.createElement('div'); m.className = 'ctx-toast on'; m.textContent = cur ? 'Kamu sudah memakai versi terbaru (' + cur + ').' : 'Kamu memakai versi web, selalu yang terbaru.'; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 3000); }
+    } catch (e) { if (manual) { var m2 = document.createElement('div'); m2.className = 'ctx-toast on'; m2.textContent = 'Tidak bisa cek update sekarang.'; document.body.appendChild(m2); setTimeout(function () { m2.remove(); }, 3000); } }
+  };
+  setTimeout(function () { window.__checkUpdate(false); }, 2800);
+})();
+</script>
 </body>
 </html>

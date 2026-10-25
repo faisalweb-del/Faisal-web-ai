@@ -2,7 +2,7 @@
   "name": "Partical Message",
   "short_name": "Partical",
   "description": "Chat dengan Faisal AI dan teman: foto, video, stiker, grup, dan status.",
-  "start_url": "/",
+  "start_url": "/?apk=1.0",
   "scope": "/",
   "display": "standalone",
   "background_color": "#1b2470",
