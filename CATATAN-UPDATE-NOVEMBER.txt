@@ -1,0 +1,34 @@
+UPDATE NOVEMBER (versi 1.1) - folder kerja
+Isi folder ini = aplikasi versi 1.1. Folder asli "kirim" (versi 1.0) tidak diubah.
+
+FILE YANG BERUBAH / BARU (upload ke GitHub, timpa yang lama):
+- index.html
+- sw.js
+- version.json
+- api/contacts.js   (diganti)
+- api/channels.js   (BARU)
+- img/centang-green.png dan img/centang-blue.png   (BARU, taruh di folder img)
+
+FITUR 1.1:
+[x] Social spotlight (tab ke-4): 1 saluran per orang, hanya pemilik yang kirim pesan
+[x] Saluran: deskripsi, tanggal dibuat, ganti foto, polling, pertanyaan (tombol ?), reaksi, ikuti/berhenti, cari
+[x] Pemilik saja yang bisa lihat daftar pengikut dan jawaban pertanyaan
+[x] Saluran bisa kirim teks, foto, stiker, video, musik
+[x] Grup: deskripsi, tanggal dibuat, ganti foto (hanya admin)
+[x] Foto/video layar penuh + tombol kembali + menu titik tiga (simpan, salin teks, posting di status)
+[x] Posting ke status dari saluran: nama saluran tampil di bawah nama, bisa diketuk ke saluran
+[x] Wallpaper chat kustom (tersimpan hanya di HP sendiri)
+[x] Online / terakhir online, jam di tiap pesan, centang (jam, 1, 2 putih, 2 hijau)
+[x] Notifikasi per kontak dengan tombol Jawab pesan dan Tandai sudah dibaca (centang putih jadi hijau tanpa buka aplikasi). Ketuk 1x tidak membuka aplikasi, ketuk 2x baru buka. Tergantung HP/Android: kolom balas langsung hanya muncul di Chrome Android yang mendukung, lainnya membuka chat
+[x] Menu Verifikasi kepercayaan (centang hijau) -> chat langsung ke developer 452858264974, tanpa persetujuan, kontak Developer tersimpan otomatis
+[x] Centang biru di nama developer (akun y8068553@gmail.com, harus login Google terverifikasi minimal sekali agar dikenali)
+[x] Centang hijau Premium (Rp15.000/bulan): tombol Dapatkan verifikasi -> formulir -> terkirim otomatis ke chat developer, status Ditinjau. Balasan developer mengubah status: kata 'disetujui' = Disetujui, 'tidak disetujui'/'ditolak' = Tidak disetujui, 'lunas'/'aktif' (setelah disetujui) = centang hijau aktif 30 hari. Developer cukup membalas di chat biasa.
+[x] Akun Dummy (nomor 222226666123) hanya muncul untuk developer (email y8068553@gmail.com, harus pernah login Google terverifikasi). Ketik di chat Dummy: 'paket pro buat email@gmail.com' (tambah '60 hari' kalau mau lebih lama), 'paket free buat email@gmail.com', atau 'cek email@gmail.com'. Langsung diproses dan Dummy membalas. Email harus sudah terdaftar di web.
+[x] Paket Pro aktif 1 bulan, Rp35.000 per bulan; tombol beli membuka chat developer
+[x] Status: penghalang transparan anti unduh, butuh internet, yang sudah dilihat pindah ke bawah
+
+CARA RILIS:
+1. Upload file di atas ke GitHub, tunggu Vercel selesai deploy.
+2. Cek: buka alamat-webmu/api/contacts -> harus ada contacts_version 12, dan alamat-webmu/api/channels -> channels_version 1.
+3. Buat APK 1.1 di PWABuilder (versi 1.1, start URL /?apk=1.1), unggah ke APKPure.
+4. Isi "download" di version.json dengan link APK 1.1 setelah tersedia.

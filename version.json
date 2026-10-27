@@ -1,6 +1,19 @@
 {
-  "latest": "1.0",
+  "latest": "1.1",
   "download": "",
   "force": false,
-  "notes": []
+  "notes": [
+    "Social spotlight: saluran dengan polling, pertanyaan, reaksi, ikuti dan cari",
+    "Grup: deskripsi, tanggal dibuat, dan foto grup (admin)",
+    "Foto dan video layar penuh dengan menu simpan, salin teks, dan posting di status",
+    "Status dari saluran dengan label nama saluran, dan status video",
+    "Wallpaper chat kustom dari galeri (hanya di HP kamu)",
+    "Online dan terakhir online, centang pesan, jam menunggu internet",
+    "Status tidak bisa diunduh dan butuh internet",
+    "Notifikasi: Jawab pesan dan Tandai sudah dibaca langsung dari notifikasi",
+    "Verifikasi kepercayaan: chat langsung ke developer, centang biru untuk developer",
+    "Paket Pro aktif 1 bulan, Rp35.000 per bulan",
+    "Centang hijau Premium: formulir pengajuan, status Ditinjau/Disetujui/Tidak disetujui, Rp15.000 per bulan",
+    "Akun Dummy khusus developer: ketik 'paket pro buat email' langsung diproses"
+  ]
 }
