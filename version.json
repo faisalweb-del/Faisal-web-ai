@@ -14,6 +14,10 @@
     "Verifikasi kepercayaan: chat langsung ke developer, centang biru untuk developer",
     "Paket Pro aktif 1 bulan, Rp35.000 per bulan",
     "Centang hijau Premium: formulir pengajuan, status Ditinjau/Disetujui/Tidak disetujui, Rp15.000 per bulan",
-    "Akun Dummy khusus developer: ketik 'paket pro buat email' langsung diproses"
+    "Akun Dummy khusus developer: ketik 'paket pro buat email' langsung diproses",
+    "Kontak: tampilan Pilih kontak (Grup baru, Kontak baru), simpan kontak langsung tanpa persetujuan",
+    "Kode QR untuk tambah kontak: tampilkan dan pindai",
+    "Ganti nomor dihapus; nomor hanya dilihat di Akun anda",
+    "Centang hijau dan biru tampil juga di daftar chat dan kontak"
   ]
 }

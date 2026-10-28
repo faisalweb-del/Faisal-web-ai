@@ -847,6 +847,13 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .gi-act i { flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font: 700 22px var(--f-body); font-style: normal; }
 .gi-mem .ct-av { width: 46px; height: 46px; flex: none; }
 .gi-mem span { flex: 1; min-width: 0; }
+.ct-item.act { cursor: pointer; border-bottom: 0; padding: 12px 6px; } .ct-ci { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: #2e9e4f; color: #fff; flex: none; } .ct-lb { flex: 1; font-weight: 600; } .ct-qrb { border: 0; background: transparent; color: var(--fg); padding: 8px; cursor: pointer; }
+.ct-head small.cnt { display: block; font: 500 12px var(--f-body); color: var(--muted); }
+.qr-tabs { display: flex; gap: 8px; padding: 10px 12px; } .qr-tabs button { flex: 1; padding: 10px; border: 0; border-radius: 10px; background: rgba(255,255,255,.06); color: var(--fg); font: 600 14px var(--f-body); cursor: pointer; } .qr-tabs button.on { background: var(--accent); color: var(--on-accent); }
+.qr-pane { flex: 1; overflow-y: auto; padding: 8px 16px calc(24px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: center; gap: 12px; } .qr-pane[hidden] { display: none; }
+.qr-card { background: #1a2130; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; } .qr-card canvas { width: min(70vw, 280px); height: auto; border-radius: 8px; } .qr-card span { color: var(--muted); }
+.qr-note { color: var(--muted); font-size: 13px; text-align: center; margin: 0; max-width: 340px; } .qr-act { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; } .qr-vid { width: min(86vw, 340px); aspect-ratio: 1; object-fit: cover; border-radius: 18px; background: #000; }
+.prof-vb { display: flex; flex-direction: column; align-items: center; gap: 2px; margin: -4px 0 10px; } .prof-vb span { font-size: 12px; color: var(--muted); }
 .vfb { width: 1.05em; height: 1.05em; margin-left: 5px; vertical-align: -0.16em; flex: none; display: inline-block; }
 .vf-box { text-align: center; align-items: center; padding: 8px 4px; } .vf-box .vf-st { display: flex; flex-direction: column; gap: 6px; align-items: center; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.06); font-size: 14px; } .vf-badge { padding: 3px 12px; border-radius: 99px; background: #3a6df0; color: #fff; } .vs-active, .vs-approved { background: #2e9e4f !important; } .vs-rejected, .vs-expired { background: #c0392b !important; } .vs-review { background: #d9a31a !important; color: #1a1400 !important; }
 .vf-req { text-align: left; width: 100%; } .vf-req ul { margin: 4px 0 8px; padding-left: 20px; color: var(--muted); } .vf-req p { text-align: left; } .vf-warn { font-size: 13px; }
@@ -3396,7 +3403,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function vfb() { var i = document.createElement('img'); i.src = 'img/centang-blue.png'; i.alt = 'Developer terverifikasi'; i.className = 'vfb'; return i; }
   function vgb() { var i = document.createElement('img'); i.src = 'img/centang-green.png'; i.alt = 'Terverifikasi'; i.className = 'vfb'; return i; }
   function nmb(b, c) { if (c && c.vf) b.appendChild(vfb()); else if (c && c.vg) b.appendChild(vgb()); return b; }
-  function dname(c) { var n = ((c.first || '') + ' ' + (c.last || '')).trim(); return n || c.name || 'Pengguna baru'; }
+  function dname(c) { var n = ((c.first || '') + ' ' + (c.last || '')).trim(); return n || c.name || fmtNum(c.number) || 'Pengguna baru'; }
   function seenMap() { try { return JSON.parse(localStorage.getItem('fz-seen-' + myUid()) || '{}') || {}; } catch (e) { return {}; } }
   function markSeen(id, ts) { try { var m = seenMap(); if (!m[id] || m[id] < ts) { m[id] = ts; localStorage.setItem('fz-seen-' + myUid(), JSON.stringify(m)); } } catch (e) {} }
   function unreadOf(c) { return !!(c.lastMsg && c.lastMsg.from !== myUid() && c.lastMsg.ts > (seenMap()[c.id] || 0)); }
@@ -3409,7 +3416,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var ctBadge = ctLink.querySelector('.ct-badge');
 
   var sheet = el('div', 'ctsheet'); sheet.hidden = true;
-  sheet.innerHTML = '<div class="ct-head"><button type="button" class="back" aria-label="Kembali">‹ Kembali</button><strong>Kontak</strong><button type="button" class="pri add">+ Tambah</button></div><div class="ct-body"></div>';
+  sheet.innerHTML = '<div class="ct-head"><button type="button" class="back" aria-label="Kembali">‹</button><strong>Pilih kontak<small class="cnt"></small></strong></div><div class="ct-body"></div>';
   chatEl.appendChild(sheet);
   var sBody = sheet.querySelector('.ct-body');
   var view = el('div', 'ptview'); view.hidden = true;
@@ -3420,7 +3427,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   var dlg = el('div', 'ct-dlg'); dlg.hidden = true; chatEl.appendChild(dlg);
 
   function ctDialog(opts) {
-    dlg.innerHTML = '<form novalidate><h3></h3><label>Nama awal</label><input name="f" maxlength="24" autocomplete="off"><label>Nama akhir</label><input name="l" maxlength="24" autocomplete="off"><label>Nomor</label><input name="n" inputmode="numeric" maxlength="14" autocomplete="off" placeholder="0000 0000 0000"><p class="err" role="alert"></p><div class="btns"><button type="button" class="ct-btn cancel">Batal</button><button type="submit" class="ct-btn pri">Simpan</button></div></form>';
+    dlg.innerHTML = '<form novalidate><h3></h3><label>Nama awal (boleh kosong, nanti tampil nomor)</label><input name="f" maxlength="24" autocomplete="off"><label>Nama akhir</label><input name="l" maxlength="24" autocomplete="off"><label>Nomor</label><input name="n" inputmode="numeric" maxlength="14" autocomplete="off" placeholder="0000 0000 0000"><p class="err" role="alert"></p><div class="btns"><button type="button" class="ct-btn cancel">Batal</button><button type="submit" class="ct-btn pri">Simpan</button></div></form>';
     var f = dlg.querySelector('form'), er = dlg.querySelector('.err');
     f.querySelector('h3').textContent = opts.title;
     f.n.value = fmtNum(opts.number || ''); if (opts.lockNumber) { f.n.readOnly = true; }
@@ -3430,7 +3437,6 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     f.addEventListener('submit', async function (e) {
       e.preventDefault(); er.textContent = '';
       var first = f.f.value.trim(), last = f.l.value.trim(), num = f.n.value.replace(/\D/g, '');
-      if (!first) { er.textContent = 'Isi nama awal dulu.'; return; }
       if (!opts.lockNumber && !numOk(num)) { er.textContent = 'Nomornya tidak valid. Cek lagi 12 digitnya.'; return; }
       var btn = f.querySelector('.pri'); btn.disabled = true;
       try { await opts.save(first, last, num); dlg.hidden = true; } catch (x) { er.textContent = x.message; }
@@ -3439,73 +3445,39 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     dlg.hidden = false; setTimeout(function () { try { f.f.focus(); } catch (e) {} }, 50);
   }
 
+  var ICO_GRP = '<circle cx="9" cy="8" r="3.5"/><path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><circle cx="17.5" cy="9" r="2.8"/><path d="M18 15a4 4 0 0 1 4 4v2"/>', ICO_ADD = '<path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="8" r="3.5"/><path d="M19 8v6M16 11h6"/>', ICO_QR = '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4"/>';
+  function circRow(icon, label, fn, qr) {
+    var b = el('div', 'ct-item act'); b.setAttribute('role', 'button'); b.tabIndex = 0;
+    var c = el('div', 'ct-ci'); c.innerHTML = ico(icon); b.appendChild(c); b.appendChild(el('b', 'ct-lb', label));
+    if (qr) { var q = el('button', 'ct-qrb'); q.type = 'button'; q.setAttribute('aria-label', 'Kode QR'); q.innerHTML = ico(ICO_QR); q.addEventListener('click', function (e) { e.stopPropagation(); openQr('mine'); }); b.appendChild(q); }
+    b.addEventListener('click', fn); b.addEventListener('keydown', function (e) { if (e.key === 'Enter') fn(); });
+    sBody.appendChild(b);
+  }
+  function addContactDialog(num) {
+    ctDialog({ title: 'Kontak baru', number: num || '', lockNumber: !!num, save: async function (f, l, n) {
+      var d = await capi({ op: 'add', first: f, last: l, number: n });
+      toast(d.already ? 'Nomor itu sudah ada di kontakmu' : 'Kontak disimpan. Langsung bisa chat.'); await ctRefresh();
+      var c = (ct.contacts || []).filter(function (x) { return x.id === d.id; })[0]; if (c) { sheet.hidden = true; try { qrs.hidden = true; stopCam(); } catch (e) {} openThread(c); }
+    } });
+  }
   function renderSheet() {
     sBody.replaceChildren();
-    var me = ct.me || { number: '', name: '' };
-    var card = el('div', 'ct-card');
-    card.appendChild(el('div', '', 'Nomor kamu')); card.lastChild.style.cssText = 'font-size:12px;color:var(--muted);font-weight:600';
-    card.appendChild(el('div', 'num', fmtNum(me.number) || '…'));
-    var r1 = el('div', 'row2');
-    var cp = el('button', 'ct-btn', 'Salin'); cp.type = 'button';
-    cp.addEventListener('click', function () { copyText(me.number).then(function () { toast('Nomor disalin'); }, function () { toast('Gagal menyalin'); }); });
-    var nn = el('button', 'ct-btn', 'Ganti nomor'); nn.type = 'button';
-    nn.addEventListener('click', async function () {
-      if (!confirm('Ganti nomormu? Nomor lama nggak bisa dipakai lagi buat orang baru. Kontak yang sudah terhubung tetap aman.')) return;
-      try { var d = await capi({ op: 'newnumber' }); ct.me.number = d.number; renderSheet(); toast('Nomor diganti'); } catch (e) { toast(e.message); }
-    });
-    r1.appendChild(cp); r1.appendChild(nn); card.appendChild(r1);
-    var r2 = el('div', 'row2'); r2.style.marginTop = '10px';
-    var ni = el('input'); ni.maxLength = 24; ni.placeholder = 'Nama tampilan (dilihat saat kirim permintaan)'; ni.value = me.name || ''; ni.setAttribute('aria-label', 'Nama tampilan');
-    var ns = el('button', 'ct-btn pri', 'Simpan'); ns.type = 'button';
-    ns.addEventListener('click', async function () { try { await capi({ op: 'profile', name: ni.value }); ct.me.name = ni.value.trim(); toast('Nama disimpan'); } catch (e) { toast(e.message); } });
-    r2.appendChild(ni); r2.appendChild(ns); card.appendChild(r2);
-    card.appendChild(el('div', 'ct-empty', 'Bagikan nomor ini hanya ke orang yang kamu kenal.')); card.lastChild.style.cssText = 'text-align:left;padding:10px 0 0;font-size:12px';
-    sBody.appendChild(card);
-    sBody.appendChild(pushCard());
-
-    var incoming = ct.contacts.filter(function (c) { return c.status === 'in'; });
-    var oks = ct.contacts.filter(function (c) { return c.status === 'ok'; }).sort(function (a, b) { return ((b.lastMsg && b.lastMsg.ts) || b.created) - ((a.lastMsg && a.lastMsg.ts) || a.created); });
-    var outs = ct.contacts.filter(function (c) { return c.status === 'out'; });
-    if (incoming.length) {
-      sBody.appendChild(el('div', 'ct-h', 'Permintaan masuk'));
-      incoming.forEach(function (c) {
-        var row = el('div', 'ct-item static'); var av = mkAv(c); var tx = el('div', 'ct-tx');
-        tx.appendChild(el('b', '', c.name || 'Pengguna baru')); tx.appendChild(el('span', '', 'Nomor ' + fmtNum(c.number)));
-        row.appendChild(av); row.appendChild(tx);
-        var ac = el('div', 'ct-acts');
-        var ok = el('button', 'ct-btn pri', 'Terima'); ok.type = 'button';
-        ok.addEventListener('click', function () {
-          ctDialog({ title: 'Terima kontak', number: c.number, lockNumber: true, first: c.name || '', save: async function (f, l) { await capi({ op: 'accept', id: c.id, first: f, last: l }); toast('Kontak diterima'); await ctRefresh(); } });
-        });
-        var no = el('button', 'ct-btn', 'Tolak'); no.type = 'button';
-        no.addEventListener('click', async function () { try { await capi({ op: 'decline', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
-        var bk = el('button', 'ct-btn dng', 'Blokir'); bk.type = 'button';
-        bk.addEventListener('click', async function () { if (!confirm('Blokir nomor ini?')) return; try { await capi({ op: 'block', id: c.id }); await ctRefresh(); toast('Diblokir'); } catch (e) { toast(e.message); } });
-        ac.appendChild(ok); ac.appendChild(no); ac.appendChild(bk); row.appendChild(ac); sBody.appendChild(row);
-      });
-    }
-    sBody.appendChild(el('div', 'ct-h', 'Kontak'));
-    if (!oks.length) sBody.appendChild(el('div', 'ct-empty', 'Belum ada kontak yang terhubung. Tekan "+ Tambah" lalu masukkan nomor temanmu.'));
+    var oks = ct.contacts.filter(function (c) { return c.status === 'ok'; }).sort(function (a, b) { return dname(a).toLowerCase() < dname(b).toLowerCase() ? -1 : 1; });
+    sheet.querySelector('.cnt').textContent = oks.length + ' kontak';
+    circRow(ICO_GRP, 'Grup baru', function () { newGroup(); });
+    circRow(ICO_ADD, 'Kontak baru', function () { addContactDialog(); }, true);
+    circRow(ICO_QR, 'Kode QR (tampilkan dan pindai)', function () { openQr('mine'); });
+    sBody.appendChild(el('div', 'ct-h', 'Daftar kontak'));
+    if (!oks.length) sBody.appendChild(el('div', 'ct-empty', 'Belum ada kontak. Tekan "Kontak baru" atau pindai kode QR temanmu.'));
     oks.forEach(function (c) {
       var b = el('button', 'ct-item'); b.type = 'button';
       var tx = el('div', 'ct-tx'); tx.appendChild(nmb(el('b', '', dname(c)), c));
-      tx.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : 'Belum ada pesan'));
+      tx.appendChild(el('span', '', c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : '') + c.lastMsg.text : fmtNum(c.number)));
       b.appendChild(mkAv(c)); b.appendChild(tx);
       if (unreadOf(c)) b.appendChild(el('span', 'ct-dot'));
       b.addEventListener('click', function () { openThread(c); });
       sBody.appendChild(b);
     });
-    if (outs.length) {
-      sBody.appendChild(el('div', 'ct-h', 'Menunggu diterima'));
-      outs.forEach(function (c) {
-        var row = el('div', 'ct-item static'); var tx = el('div', 'ct-tx');
-        tx.appendChild(nmb(el('b', '', dname(c)), c)); tx.appendChild(el('span', '', fmtNum(c.number)));
-        row.appendChild(mkAv(c)); row.appendChild(tx);
-        var x = el('button', 'ct-btn', 'Batalkan'); x.type = 'button';
-        x.addEventListener('click', async function () { try { await capi({ op: 'remove', id: c.id }); await ctRefresh(); } catch (e) { toast(e.message); } });
-        row.appendChild(x); sBody.appendChild(row);
-      });
-    }
     if (ct.blocked.length) {
       sBody.appendChild(el('div', 'ct-h', 'Diblokir'));
       ct.blocked.forEach(function (c) {
@@ -3588,7 +3560,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var act = ct.thread && ct.thread.id === c.id;
     var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
     var pre = c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : (c.group && c.lastMsg.by ? gBy(c.lastMsg.from, c.lastMsg.by) + ': ' : '')) + c.lastMsg.text : '';
-    var t2 = el('div', 'ct-tx'); t2.appendChild(el('b', '', dname(c))); t2.appendChild(el('span', '', pre));
+    var t2 = el('div', 'ct-tx'); t2.appendChild(nmb(el('b', '', dname(c)), c)); t2.appendChild(el('span', '', pre));
     b.appendChild(mkAv(c)); b.appendChild(t2);
     var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
     b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
@@ -3638,7 +3610,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   async function ctRefresh() {
     if (!ctOn() || ct.busy) return; ct.busy = true;
-    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.groups = (d.groups || []).map(gToC); ct.groups.forEach(function (g) { phEnsure(g.id, g.pv || 0); }); ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet();
+    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.groups = (d.groups || []).map(gToC); ct.groups.forEach(function (g) { phEnsure(g.id, g.pv || 0); }); ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet(); try { if (homeTab === 'feat') renderFeat(); } catch (e2) {}
+      if (ct.pendingAdd) { var pn = ct.pendingAdd; ct.pendingAdd = null; if (numOk(pn) && !(ct.me && ct.me.number === pn)) { if (chatEl.hidden) openChat(); addContactDialog(pn); } }
       if (ct.pendingOpen) { var po = ct.contacts.concat(ct.groups).filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
     catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
   }
@@ -3646,12 +3619,71 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   ctLink.addEventListener('click', function () { setS.hidden = true; sheet.hidden = false; renderSheet(); ctRefresh(); });
   $('#btn-menu').addEventListener('click', function () { ctSync(); ctRefresh(); });
   sheet.querySelector('.back').addEventListener('click', function () { sheet.hidden = true; });
-  sheet.querySelector('.add').addEventListener('click', function () {
-    ctDialog({ title: 'Tambah kontak', save: async function (f, l, n) {
-      var d = await capi({ op: 'add', first: f, last: l, number: n });
-      toast(d.status === 'ok' ? 'Kontak terhubung' : 'Permintaan dikirim. Chat bisa dimulai setelah diterima.'); await ctRefresh();
-    } });
-  });
+  /* kode QR: tampilkan kodemu dan pindai kode teman */
+  var qrs = el('div', 'ctsheet'); qrs.hidden = true; qrs.style.zIndex = 90;
+  qrs.innerHTML = '<div class="ct-head"><button type="button" class="back" aria-label="Kembali">‹</button><strong>Kode QR</strong></div><div class="qr-tabs"><button type="button" data-q="mine" class="on">Kode saya</button><button type="button" data-q="scan">Pindai</button></div><div class="qr-pane qr-mine"></div><div class="qr-pane qr-scan" hidden></div>';
+  chatEl.appendChild(qrs);
+  var qrStream = null, qrTimer = 0;
+  function stopCam() { clearInterval(qrTimer); qrTimer = 0; if (qrStream) { qrStream.getTracks().forEach(function (t) { t.stop(); }); qrStream = null; } var v = qrs.querySelector('video'); if (v) v.srcObject = null; }
+  function myAddUrl() { return location.origin + '/?add=' + ((ct.me && ct.me.number) || ''); }
+  function parseAdd(t) { t = String(t || ''); var m = /[?&]add=(\d{12})/.exec(t) || /^\s*(\d{4}\s?\d{4}\s?\d{4})\s*$/.exec(t); var n = m ? m[1].replace(/\D/g, '') : ''; return numOk(n) ? n : ''; }
+  function gotAdd(n) {
+    if (n === (ct.me && ct.me.number)) { toast('Itu kode QR milikmu sendiri'); return; }
+    stopCam(); addContactDialog(n);
+  }
+  function drawQr(box) {
+    box.replaceChildren(); var me = ct.me || {};
+    var card = el('div', 'qr-card'); var cv = document.createElement('canvas'); cv.width = cv.height = 280; card.appendChild(cv);
+    card.appendChild(el('b', '', me.name || 'Kamu')); card.appendChild(el('span', '', fmtNum(me.number) || ''));
+    box.appendChild(card);
+    box.appendChild(el('p', 'qr-note', 'Tunjukkan kode ini ke temanmu. Setelah dipindai, kamu langsung tersimpan di kontaknya. Jangan tunjukkan ke orang yang tidak kamu kenal.'));
+    var row = el('div', 'qr-act'), cp = el('button', 'btn', 'Salin tautan'), sh = el('button', 'btn', 'Bagikan'); cp.type = sh.type = 'button';
+    cp.addEventListener('click', function () { copyText(myAddUrl()).then(function () { toast('Tautan disalin'); }, function () { toast('Gagal menyalin'); }); });
+    sh.addEventListener('click', function () { if (navigator.share) navigator.share({ title: 'Partical Message', text: 'Simpan nomorku di Partical Message', url: myAddUrl() }).catch(function () {}); else cp.click(); });
+    row.appendChild(cp); row.appendChild(sh); box.appendChild(row);
+    loadScript('qr.js').then(function () {
+      var m = window.pmQR(myAddUrl()), n = m.length, q = 3, sz = Math.floor(280 / (n + 2 * q)), off = Math.floor((280 - sz * n) / 2), x = cv.getContext('2d');
+      x.fillStyle = '#fff'; x.fillRect(0, 0, 280, 280); x.fillStyle = '#000';
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (m[r][c]) x.fillRect(off + c * sz, off + r * sz, sz, sz);
+    }, function () { card.insertBefore(el('p', 'qr-note', 'Kode belum bisa dibuat. Cek internet lalu buka lagi.'), cv); cv.remove(); });
+  }
+  function drawScan(box) {
+    box.replaceChildren(); stopCam();
+    var supported = 'BarcodeDetector' in window;
+    var vid = document.createElement('video'); vid.setAttribute('playsinline', ''); vid.muted = true; vid.className = 'qr-vid';
+    var st = el('p', 'qr-note', supported ? 'Arahkan kamera ke kode QR temanmu.' : 'HP ini belum mendukung pemindai di dalam aplikasi. Pakai kamera bawaan HP untuk memindai kode temanmu, atau ketik nomornya.');
+    if (supported) box.appendChild(vid); box.appendChild(st);
+    var row = el('div', 'qr-act'), gal = el('button', 'btn', 'Pilih dari galeri'), man = el('button', 'btn', 'Ketik nomor'); gal.type = man.type = 'button';
+    var fi = document.createElement('input'); fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true;
+    gal.addEventListener('click', function () { if (!supported) { toast('Pemindai belum didukung di HP ini'); return; } fi.click(); });
+    man.addEventListener('click', function () { stopCam(); addContactDialog(); });
+    fi.addEventListener('change', async function () {
+      var f = fi.files && fi.files[0]; fi.value = ''; if (!f) return;
+      try { var bm = await createImageBitmap(f), r = await new BarcodeDetector({ formats: ['qr_code'] }).detect(bm), n = r.length ? parseAdd(r[0].rawValue) : ''; if (n) gotAdd(n); else toast('Kode QR tidak ditemukan atau bukan kode Partical'); } catch (e) { toast('Gagal membaca gambar'); }
+    });
+    row.appendChild(gal); row.appendChild(man); box.appendChild(row); box.appendChild(fi);
+    if (!supported) return;
+    if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { st.textContent = 'Kamera tidak bisa dipakai di sini. Ketik nomor atau pilih dari galeri.'; return; }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }).then(function (str) {
+      if (qrs.hidden) { str.getTracks().forEach(function (t) { t.stop(); }); return; }
+      qrStream = str; vid.srcObject = str; vid.play().catch(function () {});
+      var det = new BarcodeDetector({ formats: ['qr_code'] }), busy = false;
+      qrTimer = setInterval(async function () {
+        if (busy || vid.readyState < 2) return; busy = true;
+        try { var r = await det.detect(vid); if (r.length) { var n = parseAdd(r[0].rawValue); if (n) gotAdd(n); else st.textContent = 'Kode QR itu bukan kode Partical Message.'; } } catch (e) {}
+        busy = false;
+      }, 350);
+    }, function () { st.textContent = 'Izin kamera ditolak. Aktifkan izin kamera, atau ketik nomor.'; });
+  }
+  function qrTab(t) {
+    qrs.querySelectorAll('.qr-tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.q === t); });
+    var mine = qrs.querySelector('.qr-mine'), scan = qrs.querySelector('.qr-scan'); mine.hidden = t !== 'mine'; scan.hidden = t !== 'scan';
+    if (t === 'mine') { stopCam(); drawQr(mine); } else drawScan(scan);
+  }
+  function openQr(t) { qrs.hidden = false; qrTab(t || 'mine'); if (!(ct.me && ct.me.number)) ctRefresh().then(function () { if (!qrs.hidden && t !== 'scan') qrTab('mine'); }); }
+  qrs.querySelector('.back').addEventListener('click', function () { qrs.hidden = true; stopCam(); });
+  qrs.querySelectorAll('.qr-tabs button').forEach(function (b) { b.addEventListener('click', function () { qrTab(b.dataset.q); }); });
+  var qpa = /[?&]add=(\d{12})/.exec(location.search); if (qpa) { ct.pendingAdd = qpa[1]; try { history.replaceState(null, '', location.pathname + location.search.replace(/([?&])add=\d+&?/, '$1').replace(/[?&]$/, '') + location.hash); } catch (e) {} }
 
   /* ruang chat dengan satu teman */
   function pmWho(w) { return w === 'me' ? 'Kamu' : dname(ct.thread || {}); }
@@ -4118,7 +4150,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     setRow(b, 'Tema', 'Ganti tampilan terang atau gelap.', 'Ganti', function () { $('#theme').click(); });
     setRow(b, 'Wallpaper chat', wpHas() ? 'Wallpaper kustom aktif. Hanya terlihat di HP ini.' : 'Pakai foto dari galerimu sebagai latar chat. Hanya terlihat di HP ini, tidak dilihat orang lain.', wpHas() ? 'Ganti' : 'Pilih', wpPick);
     if (wpHas()) setRow(b, 'Hapus wallpaper', 'Kembali ke latar bawaan.', 'Hapus', function () { wpClear(); openSettings(); });
-    setRow(b, 'Kontak', 'Nomor kamu dan daftar teman.', 'Buka', function () { setS.hidden = true; ctLink.click(); });
+    setRow(b, 'Kontak', 'Daftar teman, kontak baru, dan kode QR.', 'Buka', function () { setS.hidden = true; ctLink.click(); });
     setS.hidden = false;
   }
   var hm = $('#home-menu'), hmBtn = $('#home-more');
@@ -4134,7 +4166,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     ['chat', 'upd', 'feat', 'spot'].forEach(function (k) { homeEl.querySelector('.hp-' + k).hidden = k !== t; });
     navBtns.forEach(function (b) { b.classList.toggle('on', b.dataset.tab === t); });
     hm.hidden = true; ctLink.hidden = !ctOn() || t !== 'chat';
-    if (t === 'feat') renderFeat(); if (t === 'chat') renderPm(); if (t === 'upd') { renderUpd(); loadStatus(true); } if (t === 'spot') { renderSpot(); loadSpot(true); }
+    if (t === 'feat') { renderFeat(); ctRefresh(); } if (t === 'chat') renderPm(); if (t === 'upd') { renderUpd(); loadStatus(true); } if (t === 'spot') { renderSpot(); loadSpot(true); }
   }
   navBtns.forEach(function (b) { b.addEventListener('click', function () { setTab(b.dataset.tab); }); });
   $('#feat-more').addEventListener('click', function (e) { e.stopPropagation(); hm.hidden = !hm.hidden; });
@@ -4186,7 +4218,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     featRow(b, '', 'Verifikasi kepercayaan', (vfLabel() ? 'Status: ' + vfLabel()[0] : 'Dapatkan centang hijau Premium'), openVerif); b.lastChild.querySelector('svg').replaceWith(Object.assign(document.createElement('img'), { src: 'img/centang-green.png', alt: '' }));
     featRow(b, '<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/>', 'Langganan', 'Jelajahi keuntungan premium', openAcct);
     featRow(b, '<rect x="3" y="5" width="12" height="10" rx="1.5"/><rect x="17" y="9" width="4" height="8" rx="1"/><path d="M6 19h6"/>', 'Perangkat tertaut', 'Masuk dengan akun yang sama di HP lain', function () { toast('Masuk dengan akun yang sama di perangkat lain. Obrolan Faisal AI ikut tersinkron.', 4000); });
-    featRow(b, '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>', 'Akun', 'Notifikasi, nomor kontak, ganti nomor', function () { ctLink.click(); });
+    featRow(b, '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>', 'Akun', 'Nomor kontak, foto, nama, kode QR', openProfile);
     featRow(b, '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', 'Privasi', 'Akun diblokir dan laporan', function () { ctLink.click(); });
     featRow(b, '<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/>', 'Daftar', 'Kelola orang di kontakmu', function () { ctLink.click(); });
     featRow(b, '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', 'Tentang aplikasi', 'Partical Message versi ' + (window.__apkVer || 'web') + ' · ketuk untuk cek update', function () { window.__checkUpdate(true); });
@@ -4220,10 +4252,12 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var pv = el('div', 'pav'); pv.appendChild(mkAv({ id: myUid(), status: 'ok', name: ct.me.name || 'Kamu' }, 'big'));
     var cb = el('button'); cb.type = 'button'; cb.setAttribute('aria-label', 'Ganti foto profil'); cb.innerHTML = ico('<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>');
     cb.addEventListener('click', function () { $('#acct-photo-in').click(); }); pv.appendChild(cb); b.appendChild(pv);
+    if (ct.me.vf || ct.me.vg) { var vb = el('div', 'prof-vb'); vb.appendChild(nmb(el('b', '', ct.me.name || 'Kamu'), ct.me)); vb.appendChild(el('span', '', ct.me.vf ? 'Developer terverifikasi' : 'Terverifikasi')); b.appendChild(vb); }
     pRow(b, 'Nama', 'name', 'Atur namamu', 24); pRow(b, 'Tentang', 'about', 'Atur isi Tentang', 140);
     var un = el('div', 'prow'); un.appendChild(el('b', '', 'Nama pengguna')); un.appendChild(el('span', 'ph', 'Segera hadir')); un.style.opacity = '.6'; b.appendChild(un);
     var ph = el('div', 'prow'); ph.appendChild(el('b', '', 'Nomor kontak')); ph.appendChild(el('span', '', fmtNum(ct.me.number || '') || '-'));
     ph.addEventListener('click', function () { copyText(ct.me.number || '').then(function () { toast('Nomor disalin'); }, function () {}); }); b.appendChild(ph);
+    var qr = el('div', 'prow'); qr.appendChild(el('b', '', 'Kode QR')); qr.appendChild(el('span', '', 'Tampilkan atau pindai')); qr.addEventListener('click', function () { openQr('mine'); }); b.appendChild(qr);
     pRow(b, 'Tautan', 'link', 'Tambah tautan', 200, 'contoh: instagram.com/namamu');
     profS.hidden = false;
   }
@@ -5134,24 +5168,29 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 (function () {
   var cur = '';
   try { var q = new URLSearchParams(location.search).get('apk'); if (q && /^[0-9.]{1,12}$/.test(q)) localStorage.setItem('fz-apk', q); cur = localStorage.getItem('fz-apk') || ''; } catch (e) {}
-  window.__apkVer = cur;
   function cmp(a, b) { a = String(a).split('.'); b = String(b).split('.'); for (var i = 0; i < Math.max(a.length, b.length); i++) { var x = parseInt(a[i] || 0, 10), y = parseInt(b[i] || 0, 10); if (x !== y) return x < y ? -1 : 1; } return 0; }
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ''; localStorage.setItem(k, v); } catch (e) {} return ''; }
+  function best() { var a = ls('fz-upd-ack'); return a && cmp(cur || '0', a) < 0 ? a : cur; } /* versi yang sudah ditekan "Update" dianggap terpasang */
+  window.__apkVer = best();
   function show(d) {
-    var ov = document.createElement('div'); ov.className = 'pick'; var box = document.createElement('div'); box.className = 'pick-box';
-    var h = document.createElement('h3'); h.textContent = 'Update tersedia'; box.appendChild(h);
-    var p = document.createElement('p'); p.style.margin = '0'; p.style.color = 'var(--muted)'; p.textContent = 'Versi ' + d.latest + ' sudah rilis. Kamu memakai versi ' + cur + '.'; box.appendChild(p);
-    if (d.notes && d.notes.length) { var t = document.createElement('b'); t.textContent = 'Yang baru:'; box.appendChild(t); var ul = document.createElement('ul'); ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px'; d.notes.slice(0, 12).forEach(function (n) { var li = document.createElement('li'); li.textContent = String(n).slice(0, 120); ul.appendChild(li); }); box.appendChild(ul); }
+    var ov = document.createElement('div'); ov.className = 'pick'; var box = document.createElement('div'); box.className = 'pick-box'; box.style.color = '#eef1fa'; box.style.background = '#12171f';
+    var h = document.createElement('h3'); h.textContent = 'Update tersedia'; h.style.color = '#fff'; box.appendChild(h);
+    var sc = document.createElement('div'); sc.style.cssText = 'overflow-y:auto;min-height:0;flex:1 1 auto;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain'; box.appendChild(sc);
+    var p = document.createElement('p'); p.style.margin = '0'; p.style.color = '#aab4cc'; p.textContent = 'Versi ' + d.latest + ' sudah rilis. Kamu memakai versi ' + (best() || 'lama') + '.'; sc.appendChild(p);
+    if (d.notes && d.notes.length) { var t = document.createElement('b'); t.textContent = 'Yang baru:'; sc.appendChild(t); var ul = document.createElement('ul'); ul.style.cssText = 'margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;color:#dfe5f5'; d.notes.slice(0, 20).forEach(function (n) { var li = document.createElement('li'); li.textContent = String(n).slice(0, 120); ul.appendChild(li); }); sc.appendChild(ul); }
     var act = document.createElement('div'); act.className = 'pick-act';
-    if (!d.force) { var no = document.createElement('button'); no.type = 'button'; no.textContent = 'Nanti'; no.addEventListener('click', function () { ov.remove(); }); act.appendChild(no); }
-    var go = document.createElement('button'); go.type = 'button'; go.className = 'pri'; go.textContent = 'Update'; go.addEventListener('click', function () { window.open(d.download || location.origin, '_blank', 'noopener'); }); act.appendChild(go);
+    if (!d.force) { var no = document.createElement('button'); no.type = 'button'; no.textContent = 'Nanti'; no.addEventListener('click', function () { ls('fz-upd-later', String(Date.now())); ov.remove(); }); act.appendChild(no); }
+    var go = document.createElement('button'); go.type = 'button'; go.className = 'pri'; go.textContent = 'Update';
+    go.addEventListener('click', function () { ls('fz-upd-ack', String(d.latest)); window.__apkVer = best(); ov.remove(); if (d.download) window.open(d.download, '_blank', 'noopener'); else { var m = document.createElement('div'); m.className = 'ctx-toast on'; m.textContent = 'Sudah memakai versi ' + d.latest + '. Isi aplikasi otomatis terbaru.'; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 3500); } });
+    act.appendChild(go);
     box.appendChild(act); ov.appendChild(box); document.body.appendChild(ov);
   }
   window.__checkUpdate = async function (manual) {
     try {
       var r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' }); var d = await r.json();
       if (!d || !d.latest) throw new Error('x');
-      if (cur && cmp(cur, d.latest) < 0) { show(d); return; }
-      if (manual) { var m = document.createElement('div'); m.className = 'ctx-toast on'; m.textContent = cur ? 'Kamu sudah memakai versi terbaru (' + cur + ').' : 'Kamu memakai versi web, selalu yang terbaru.'; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 3000); }
+      var now = best(); if (cur && cmp(now, d.latest) < 0 && (manual || (Date.now() - (parseInt(ls('fz-upd-later'), 10) || 0) > 24 * 3600 * 1000))) { show(d); return; }
+      if (manual) { var m = document.createElement('div'); m.className = 'ctx-toast on'; m.textContent = cur ? 'Kamu sudah memakai versi terbaru (' + best() + ').' : 'Kamu memakai versi web, selalu yang terbaru.'; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 3000); }
     } catch (e) { if (manual) { var m2 = document.createElement('div'); m2.className = 'ctx-toast on'; m2.textContent = 'Tidak bisa cek update sekarang.'; document.body.appendChild(m2); setTimeout(function () { m2.remove(); }, 3000); } }
   };
   setTimeout(function () { window.__checkUpdate(false); }, 2800);

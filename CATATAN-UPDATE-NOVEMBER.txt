@@ -7,6 +7,7 @@ FILE YANG BERUBAH / BARU (upload ke GitHub, timpa yang lama):
 - version.json
 - api/contacts.js   (diganti)
 - api/channels.js   (BARU)
+- qr.js   (BARU, di folder utama bersama index.html; pembuat kode QR)
 - img/centang-green.png dan img/centang-blue.png   (BARU, taruh di folder img)
 
 FITUR 1.1:
@@ -24,11 +25,15 @@ FITUR 1.1:
 [x] Centang biru di nama developer (akun y8068553@gmail.com, harus login Google terverifikasi minimal sekali agar dikenali)
 [x] Centang hijau Premium (Rp15.000/bulan): tombol Dapatkan verifikasi -> formulir -> terkirim otomatis ke chat developer, status Ditinjau. Balasan developer mengubah status: kata 'disetujui' = Disetujui, 'tidak disetujui'/'ditolak' = Tidak disetujui, 'lunas'/'aktif' (setelah disetujui) = centang hijau aktif 30 hari. Developer cukup membalas di chat biasa.
 [x] Akun Dummy (nomor 222226666123) hanya muncul untuk developer (email y8068553@gmail.com, harus pernah login Google terverifikasi). Ketik di chat Dummy: 'paket pro buat email@gmail.com' (tambah '60 hari' kalau mau lebih lama), 'paket free buat email@gmail.com', atau 'cek email@gmail.com'. Langsung diproses dan Dummy membalas. Email harus sudah terdaftar di web.
+[x] Kontak ala 'Pilih kontak': Grup baru, Kontak baru (ikon QR di kanan), Kode QR, lalu daftar kontak urut abjad. Simpan kontak langsung tersambung tanpa persetujuan (nama boleh kosong, orang yang disimpan melihat kamu sebagai nomor sampai dia menamai). Ganti nomor dihapus; nomor hanya di Akun anda > Profil.
+[x] Kode QR: tampilkan kodemu dan pindai kode teman (pemindai pakai fitur bawaan Chrome Android; HP lain bisa pilih gambar atau ketik nomor). Kode berisi tautan alamat-webmu/?add=NOMOR sehingga kamera bawaan HP juga bisa membukanya.
+[x] Perbaikan kotak 'Update tersedia': bisa digulir, setelah menekan Update tidak muncul lagi untuk versi itu (muncul lagi hanya kalau ada versi lebih baru), 'Nanti' menunda 24 jam. Isi 'download' di version.json dengan link APK baru kalau mau tombol Update membuka unduhan.
+[x] Centang biru developer sekarang dikenali lewat email developer langsung (tidak perlu login ulang dulu) dan nama di Akun anda ikut diperbarui.
 [x] Paket Pro aktif 1 bulan, Rp35.000 per bulan; tombol beli membuka chat developer
 [x] Status: penghalang transparan anti unduh, butuh internet, yang sudah dilihat pindah ke bawah
 
 CARA RILIS:
 1. Upload file di atas ke GitHub, tunggu Vercel selesai deploy.
-2. Cek: buka alamat-webmu/api/contacts -> harus ada contacts_version 12, dan alamat-webmu/api/channels -> channels_version 1.
+2. Cek: buka alamat-webmu/api/contacts -> harus ada contacts_version 14, dan alamat-webmu/api/channels -> channels_version 1.
 3. Buat APK 1.1 di PWABuilder (versi 1.1, start URL /?apk=1.1), unggah ke APKPure.
 4. Isi "download" di version.json dengan link APK 1.1 setelah tersedia.
