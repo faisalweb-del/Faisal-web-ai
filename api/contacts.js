@@ -12,6 +12,7 @@ async function devUid(db) { // akun developer: terdaftar saat dia masuk dengan D
   if (_dev.uid && Date.now() - _dev.t < 60000) return _dev.uid;
   let uid = '';
   try { const s = await db.collection('config').doc('dev').get(); if (s.exists) uid = s.data().uid || ''; } catch (e) {}
+  if (!uid) { try { uid = (await L.admin().auth().getUserByEmail(DEV_EMAIL)).uid || ''; if (uid) await db.collection('config').doc('dev').set({ uid, ts: Date.now() }); } catch (e) {} }
   if (!uid) { try { const n = await db.collection('numbers').doc(DEV_NUMBER).get(); if (n.exists) uid = n.data().uid || ''; } catch (e) {} }
   _dev = { uid, t: Date.now() }; return uid;
 }
@@ -111,7 +112,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 12, fitur: ['lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 14, fitur: ['lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   if (String((req.body || {}).op || '') === 'ack') { // tanda "terkirim" dari service worker saat notifikasi sampai di HP penerima (tanpa login, pakai kunci sekali pakai per pesan)
@@ -462,6 +463,19 @@ module.exports = async function handler(req, res) {
       let snap = await cl(me).get();
       if (me === dvu && !snap.docs.some((d) => d.id === DUMMY_ID)) { await cl(me).doc(DUMMY_ID).set({ first: 'Dummy', last: '', number: DUMMY_NUMBER, status: 'ok', created: Date.now() }); snap = await cl(me).get();
         try { const tr = db.collection('threads').doc(tid(me, DUMMY_ID)), t0 = Date.now(), iid = crypto.randomBytes(8).toString('hex'); await tr.collection('msgs').doc(iid).set({ id: iid, from: DUMMY_ID, text: 'Halo! Aku Dummy, khusus untukmu.\nKetik: paket pro buat email@gmail.com\nBisa tambah lama, contoh: paket pro buat email@gmail.com 60 hari\nPaket free: paket free buat email@gmail.com\nCek: cek email@gmail.com', ts: t0 }); await tr.set({ last: 'Halo! Aku Dummy, khusus untukmu.', lastTs: t0, lastFrom: DUMMY_ID, rd: { [me]: t0 }, dv: { [me]: t0 }, rts: t0 }, { merge: true }); } catch (e) { console.error('dummy intro', e && e.message); } }
+      const legacy = snap.docs.filter((d) => d.data().status === 'in' || d.data().status === 'out'); // sisa sistem lama (menunggu diterima): langsung dijadikan kontak
+      if (legacy.length) {
+        try {
+          await Promise.all(legacy.slice(0, 40).map(async (d) => {
+            if (/^x\d{12}$/.test(d.id) && d.data().status === 'out') return cl(me).doc(d.id).delete();
+            await cl(me).doc(d.id).set({ status: 'ok' }, { merge: true });
+            const th = await cl(d.id).doc(me).get();
+            if (th.exists) { if (th.data().status !== 'ok') await cl(d.id).doc(me).set({ status: 'ok' }, { merge: true }); }
+            else if (!(await bl(d.id).doc(me).get()).exists) await cl(d.id).doc(me).set({ first: '', last: '', number: mine.number, status: 'ok', created: Date.now() });
+          }));
+        } catch (e) { console.error('legacy kontak', e && e.message); }
+        snap = await cl(me).get();
+      }
       const vgm = await vgMap(db, [me].concat(snap.docs.map((d) => d.id)));
       const myv = vgView((await db.collection('verif').doc(me).get()).data());
       const contacts = snap.docs.map((d) => Object.assign({ id: d.id }, d.data()));
@@ -542,52 +556,30 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    if (op === 'newnumber') {
-      if (hit('nn' + me, 3, 3600 * 1000)) return L.bad(res, 429, 'Terlalu sering ganti nomor. Coba lagi nanti.');
-      for (let i = 0; i < 8; i++) {
-        const n = genNum(), nref = db.collection('numbers').doc(n);
-        try {
-          await db.runTransaction(async (tx) => {
-            const x = await tx.get(nref); if (x.exists) throw new Error('taken');
-            tx.set(nref, { uid: me }); tx.delete(db.collection('numbers').doc(mine.number)); tx.set(prof(me), { number: n }, { merge: true });
-          });
-          return res.status(200).json({ number: n });
-        } catch (e) { if (e.message !== 'taken') throw e; }
-      }
-      return L.bad(res, 503, 'Gagal bikin nomor baru, coba lagi.');
-    }
+    if (op === 'newnumber') return L.bad(res, 403, 'Nomor tidak bisa diganti.');
 
-    if (op === 'add') {
+    if (op === 'add') { // simpan kontak langsung tersambung, tanpa menunggu diterima. Nama sementara = nomor kalau tidak diisi
       const num = String(b.number || '').replace(/\D/g, ''), first = clean(b.first, 24), last = clean(b.last, 24);
-      if (!first) return L.bad(res, 400, 'Isi nama awal dulu.');
       if (!validNum(num)) return L.bad(res, 400, 'Nomornya tidak valid. Cek lagi 12 digitnya.');
       if (num === mine.number) return L.bad(res, 400, 'Itu nomor kamu sendiri.');
-      if (hit('add' + me, 15, 24 * 3600 * 1000)) return L.bad(res, 429, 'Batas tambah kontak hari ini sudah habis. Coba lagi besok.');
+      if (hit('add' + me, 40, 24 * 3600 * 1000)) return L.bad(res, 429, 'Batas tambah kontak hari ini sudah habis. Coba lagi besok.');
       const cs = await cl(me).get();
       if (cs.size >= MAX_CONTACTS) return L.bad(res, 400, 'Kontak sudah penuh.');
-      if (cs.docs.some((d) => d.data().number === num)) return L.bad(res, 409, 'Nomor itu sudah ada di kontakmu.');
+      const ex = cs.docs.filter((d) => d.data().number === num)[0];
+      if (ex && ex.data().status === 'ok') return res.status(200).json({ ok: true, status: 'ok', id: ex.id, already: true });
       const nref = await db.collection('numbers').doc(num).get();
       const other = nref.exists ? nref.data().uid : null;
+      if (!other) return L.bad(res, 404, 'Nomor itu belum terdaftar di Partical Message.');
       const now = Date.now();
-      if (!other) { // jawabannya sama seperti nomor yang ada, supaya nomor tidak bisa ditebak-tebak
-        await cl(me).doc('x' + num).set({ first, last, number: num, status: 'out', created: now });
-        return res.status(200).json({ ok: true, status: 'out' });
+      await cl(me).doc(other).set({ first, last, number: num, status: 'ok', created: now });
+      if (ex && ex.id !== other) { try { await cl(me).doc(ex.id).delete(); } catch (e) {} }
+      if (!(await bl(other).doc(me).get()).exists) {
+        const theirs = await cl(other).doc(me).get();
+        if (theirs.exists) await cl(other).doc(me).set({ status: 'ok' }, { merge: true });
+        else await cl(other).doc(me).set({ first: '', last: '', number: mine.number, status: 'ok', created: now });
       }
-      if ((await bl(other).doc(me).get()).exists) {
-        await cl(me).doc(other).set({ first, last, number: num, status: 'out', created: now });
-        return res.status(200).json({ ok: true, status: 'out' });
-      }
-      const theirs = await cl(other).doc(me).get();
-      if (theirs.exists && theirs.data().status === 'out') {
-        await cl(me).doc(other).set({ first, last, number: num, status: 'ok', created: now });
-        await cl(other).doc(me).set({ status: 'ok' }, { merge: true });
-        return res.status(200).json({ ok: true, status: 'ok' });
-      }
-      await cl(me).doc(other).set({ first, last, number: num, status: 'out', created: now });
-      await cl(other).doc(me).set({ first: '', last: '', number: mine.number, name: mine.name || '', status: 'in', created: now });
-      return res.status(200).json({ ok: true, status: 'out' });
+      return res.status(200).json({ ok: true, status: 'ok', id: other });
     }
-
     const id = String(b.id || '');
     if (!/^[\w-]{1,80}$/.test(id)) return L.bad(res, 400, 'Kontak tidak valid.');
     const myEntry = await cl(me).doc(id).get(), my = myEntry.exists ? myEntry.data() : null;
