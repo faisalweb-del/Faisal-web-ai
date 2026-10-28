@@ -30,6 +30,7 @@ const PHOTO_RE = /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+\/=]+$/, PHOTO_MAX 
 const MEDIA = { // jenis lampiran: pola data URL dan batas ukuran (karakter base64), supaya muat di satu dokumen database
   sticker: { re: /^data:image\/(webp|png);base64,[A-Za-z0-9+\/=]+$/, max: 180000, label: 'Stiker' },
   image: { re: /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+\/=]+$/, max: 420000, label: 'Foto' },
+  voice: { re: /^data:audio\/(webm|mp4|ogg|x-m4a|aac)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 330000, label: 'Pesan suara' },
   video: { re: /^data:video\/(webm|mp4)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 880000, label: 'Video' },
 };
 const GID = /^g_[a-f0-9]{10}$/;
@@ -38,6 +39,7 @@ function gView(me, g) {
   return (m) => {
     const o = { id: m.id, from: m.from === me ? 'me' : 'them', text: m.deleted ? '' : m.text, ts: m.ts };
     if (m.deleted) o.deleted = true; else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; }
+    if (m.ed && !m.deleted) o.ed = 1;
     if (m.from !== me) o.by = (g.names && g.names[m.from]) || 'Anggota';
     if (m.react && typeof m.react === 'object') {
       const mine = m.react[me] || '', others = [...new Set(Object.keys(m.react).filter((k) => k !== me && m.react[k]).map((k) => m.react[k]))].slice(0, 3).join('');
@@ -88,6 +90,9 @@ async function notify(db, toId, fromId, entry, fromProfile, text, ack) {
   const w = wp(); if (!w) return;
   const pcol = db.collection('profiles').doc(toId).collection('push'), snap = await pcol.get();
   if (!snap.size) return;
+  let silent = false;
+  try { const pd = await db.collection('profiles').doc(toId).get(), mu = (pd.exists && pd.data().mute) || {}; silent = !!(mu[fromId] && mu[fromId] > Date.now()); } catch (e) {}
+  if (silent) return; // dibisukan: tidak ada push (Chrome mewajibkan push selalu menampilkan notifikasi)
   const keys = await vapidKeys(db, w);
   w.setVapidDetails(vapidSubject(), keys.publicKey, keys.privateKey);
   const nm = ((entry && ((entry.first || '') + ' ' + (entry.last || '')).trim()) || (fromProfile && fromProfile.name) || '').trim() || 'Pesan baru';
@@ -112,7 +117,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 14, fitur: ['lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 15, fitur: ['pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   if (String((req.body || {}).op || '') === 'ack') { // tanda "terkirim" dari service worker saat notifikasi sampai di HP penerima (tanpa login, pakai kunci sekali pakai per pesan)
@@ -206,7 +211,7 @@ module.exports = async function handler(req, res) {
         }
         if (newUpd) {
           const q2 = await mcol.orderBy('ts', 'desc').limit(100).get();
-          upd = q2.docs.map((d) => d.data()).map((m) => { const v = gv(m); return { id: v.id, react: v.react || null, deleted: !!v.deleted }; });
+          upd = q2.docs.map((d) => d.data()).map((m) => { const v = gv(m); return { id: v.id, react: v.react || null, deleted: !!v.deleted, text: v.text, ed: v.ed || 0 }; });
         }
         return res.status(200).json({ msgs: msgs.map(gv), upd, rts });
       }
@@ -215,7 +220,7 @@ module.exports = async function handler(req, res) {
       if (!meta.exists) return res.status(200).json({ msgs: [], rts: 0 });
       const md = meta.data(); let rts = md.rts || 0;
       const newMsgs = !(after > 0 && (md.lastTs || 0) <= after), newUpd = after > 0 && rts > crts;
-      if (!newMsgs && !newUpd) return res.status(200).json({ msgs: [], rts });
+      if (!newMsgs && !newUpd) return res.status(200).json({ msgs: [], rts, dis: md.dis || 0 });
       if (md.lastFrom && md.lastFrom !== me && (md.lastTs || 0) > ((md.rd || {})[me] || 0)) { // penerima membuka obrolan: tandai sudah dibaca
         rts = Math.max(Date.now(), rts + 1);
         try { await db.collection('threads').doc(tid(me, oid)).set({ rd: { [me]: md.lastTs }, dv: { [me]: md.lastTs }, rts }, { merge: true }); } catch (e) {}
@@ -226,6 +231,7 @@ module.exports = async function handler(req, res) {
         if (m.from === me && !m.deleted) o.st = m.ts <= ((md.rd || {})[oid] || 0) ? 3 : m.ts <= ((md.dv || {})[oid] || 0) ? 2 : 1;
         if (m.deleted) o.deleted = true;
         else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; }
+        if (m.ed && !m.deleted) o.ed = 1;
         if (m.react && typeof m.react === 'object') { const r = {}; Object.keys(m.react).forEach((k) => { if (m.react[k]) r[k === me ? 'me' : 'them'] = m.react[k]; }); if (Object.keys(r).length) o.react = r; }
         if (m.reply && m.reply.mid) o.reply = { mid: m.reply.mid, text: m.reply.text || '', who: m.from === me ? m.reply.who : (m.reply.who === 'me' ? 'them' : 'me') };
         return o;
@@ -235,17 +241,33 @@ module.exports = async function handler(req, res) {
         const q = after > 0 ? await mcol.where('ts', '>', after).orderBy('ts', 'asc').limit(100).get() : await mcol.orderBy('ts', 'desc').limit(80).get();
         msgs = q.docs.map((d) => d.data());
         if (!(after > 0)) msgs = msgs.reverse();
+        const nowx = Date.now(), gone = msgs.filter((m) => m.ex && m.ex <= nowx); // pesan hilang otomatis: sembunyikan dan hapus
+        if (gone.length) { msgs = msgs.filter((m) => !(m.ex && m.ex <= nowx)); try { await Promise.all(gone.slice(0, 20).map(async (m) => { await mcol.doc(m.id).delete(); if (m.kind) await db.collection('threads').doc(tid(me, oid)).collection('media').doc(m.id).delete(); })); } catch (e) {} }
       }
       if (newUpd) {
         const q2 = await mcol.orderBy('ts', 'desc').limit(100).get();
-        upd = q2.docs.map((d) => d.data()).map((m) => { const v = view(m); return { id: v.id, react: v.react || null, deleted: !!v.deleted, st: v.st || 0 }; });
+        upd = q2.docs.map((d) => d.data()).map((m) => { const v = view(m); return { id: v.id, react: v.react || null, deleted: !!v.deleted, st: v.st || 0, text: v.text, ed: v.ed || 0 }; });
       }
-      return res.status(200).json({ msgs: msgs.map(view), upd, rts });
+      return res.status(200).json({ msgs: msgs.map((m) => { const v = view(m); if (m.ex) v.ex = m.ex; return v; }), upd, rts, dis: md.dis || 0 });
     }
     if (op === 'ping') { // tanda online: dikirim berkala selama aplikasi terbuka, dan sekali saat aplikasi ditutup
       if (hit('ping' + me, 12, 60 * 1000)) return res.status(200).json({ ok: true });
       await prof(me).set({ seen: Date.now(), on: b.off ? false : true }, { merge: true });
       return res.status(200).json({ ok: true });
+    }
+    if (op === 'mute') { // bisukan notifikasi satu obrolan (pesan tetap masuk, centang terkirim tetap jalan)
+      const mid = String(b.id || ''); if (!/^[\w-]{3,60}$/.test(mid)) return L.bad(res, 400, 'Obrolan tidak valid.');
+      const until = b.hours ? Date.now() + Math.min(24 * 365, Math.max(1, Number(b.hours) || 8)) * 3600000 : (b.forever ? 4102444800000 : 0);
+      await prof(me).set({ mute: { [mid]: until } }, { merge: true });
+      return res.status(200).json({ ok: true, until });
+    }
+    if (op === 'disap') { // pesan hilang otomatis untuk obrolan berdua (24 jam, 7 hari, atau mati)
+      const oid = String(b.id || ''), secs = [0, 86400, 604800].includes(Number(b.secs)) ? Number(b.secs) : -1;
+      if (secs < 0 || !/^[\w-]{3,60}$/.test(oid) || GID.test(oid)) return L.bad(res, 400, 'Pengaturan tidak valid.');
+      const ce = await cl(me).doc(oid).get(); if (!ce.exists || ce.data().status !== 'ok') return L.bad(res, 403, 'Bukan kontakmu.');
+      const tr = db.collection('threads').doc(tid(me, oid)), tm = await tr.get();
+      await tr.set({ dis: secs, rts: Math.max(Date.now(), ((tm.exists && tm.data().rts) || 0) + 1) }, { merge: true });
+      return res.status(200).json({ ok: true, dis: secs });
     }
     const mine = await ensureProfile(me);
 
@@ -310,7 +332,7 @@ module.exports = async function handler(req, res) {
       await Promise.all(add.map((u) => db.collection('ugroups').doc(u).collection('list').doc(gid).set({ ts: now })));
       return res.status(200).json({ ok: true });
     }
-    if (GID.test(String(b.id || '')) && ['send', 'react', 'unsend', 'getmedia'].includes(op)) {
+    if (GID.test(String(b.id || '')) && ['send', 'react', 'unsend', 'edit', 'getmedia'].includes(op)) {
       const gid = String(b.id), g = await loadGroup(gid);
       if (!g) return L.bad(res, 403, 'Kamu bukan anggota grup ini.');
       const col = grp(gid).collection('msgs'), mcol = grp(gid).collection('media');
@@ -329,7 +351,7 @@ module.exports = async function handler(req, res) {
         if (kind && (hit('media' + me, 12, 60 * 1000) || hit('mediad' + me, 150, 24 * 3600 * 1000))) return L.bad(res, 429, 'Terlalu banyak kirim lampiran. Tunggu sebentar.');
         const cid = /^[\w-]{6,40}$/.test(String(b.cid || '')) ? String(b.cid) : crypto.randomBytes(8).toString('hex');
         const ts = Math.max(Date.now(), (g.lastTs || 0) + 1), m = { id: cid, from: me, text, ts };
-        if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
+        if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
         if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me', by: clean(b.reply.by, 30) };
         if (kind) await mcol.doc(cid).set({ data: mdata, kind, ts });
         await col.doc(cid).set(m);
@@ -345,6 +367,13 @@ module.exports = async function handler(req, res) {
       if (op === 'react') {
         if (hit('rx' + me, 60, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat.');
         await mref.set({ react: { [me]: clean(b.emoji, 8) } }, { merge: true });
+      } else if (op === 'edit') {
+        if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa diedit.');
+        if (md.deleted) return L.bad(res, 400, 'Pesan sudah ditarik.');
+        if (Date.now() - md.ts > 15 * 60 * 1000) return L.bad(res, 400, 'Edit hanya bisa dalam 15 menit setelah dikirim.');
+        const nt = String(b.text == null ? '' : b.text).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, MSG_MAX);
+        if (!nt && !md.kind) return L.bad(res, 400, 'Pesan tidak boleh kosong.');
+        await mref.set({ text: nt, ed: true }, { merge: true });
       } else {
         if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa ditarik.');
         await mref.set({ deleted: true, text: '' }, { merge: true });
@@ -496,7 +525,7 @@ module.exports = async function handler(req, res) {
       } catch (e) { console.error('grup list', e && e.message); }
       return res.status(200).json({
         groups,
-        me: { number: mine.number, name: mine.name || '', about: mine.about || '', link: mine.link || '', pv: mine.pv || 0, vf: me === dvu ? 1 : 0, vg: vgm[me] || 0, vs: myv.st, vu: myv.until || 0 },
+        me: { mute: mine.mute || {}, number: mine.number, name: mine.name || '', about: mine.about || '', link: mine.link || '', pv: mine.pv || 0, vf: me === dvu ? 1 : 0, vg: vgm[me] || 0, vs: myv.st, vu: myv.until || 0 },
         contacts: contacts.map((c) => ({ id: c.id, first: c.first || '', last: c.last || '', number: c.number || '', name: c.name || '', status: c.status, created: c.created || 0, lastMsg: lm[c.id] || null, pv: pvm[c.id] || 0, vf: c.id === dvu ? 1 : 0, vg: vgm[c.id] || 0 })),
         blocked: bs.docs.map((d) => ({ id: d.id, first: d.data().first || '', last: d.data().last || '', number: d.data().number || '' })),
       });
@@ -672,8 +701,9 @@ module.exports = async function handler(req, res) {
       const cid = /^[\w-]{6,40}$/.test(String(b.cid || '')) ? String(b.cid) : crypto.randomBytes(8).toString('hex');
       const tref = db.collection('threads').doc(tid(me, id)), meta = await tref.get();
       const ts = Math.max(Date.now(), ((meta.exists && meta.data().lastTs) || 0) + 1), m = { id: cid, from: me, text, ts };
-      if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
+      if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
       m.ak = crypto.randomBytes(8).toString('hex'); m.rk = crypto.randomBytes(8).toString('hex');
+      if (meta.exists && meta.data().dis) m.ex = ts + meta.data().dis * 1000;
       if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me' };
       if (kind) await db.collection('threads').doc(tid(me, id)).collection('media').doc(cid).set({ data: mdata, kind, ts });
       await col.doc(cid).set(m);
@@ -704,7 +734,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ data: d.data().data });
     }
 
-    if (op === 'react' || op === 'unsend') {
+    if (op === 'react' || op === 'unsend' || op === 'edit') {
       if (blocked || !theirE.exists || theirE.data().status !== 'ok') return L.bad(res, 403, 'Tidak bisa diproses.');
       const mid = String(b.mid || '');
       if (!/^[\w-]{6,40}$/.test(mid)) return L.bad(res, 400, 'Pesan tidak valid.');
@@ -715,6 +745,13 @@ module.exports = async function handler(req, res) {
         if (hit('rx' + me, 60, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat.');
         const em = clean(b.emoji, 8);
         await mref.set({ react: { [me]: em } }, { merge: true });
+      } else if (op === 'edit') {
+        if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa diedit.');
+        if (md.deleted) return L.bad(res, 400, 'Pesan sudah ditarik.');
+        if (Date.now() - md.ts > 15 * 60 * 1000) return L.bad(res, 400, 'Edit hanya bisa dalam 15 menit setelah dikirim.');
+        const nt = String(b.text == null ? '' : b.text).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, MSG_MAX);
+        if (!nt && !md.kind) return L.bad(res, 400, 'Pesan tidak boleh kosong.');
+        await mref.set({ text: nt, ed: true }, { merge: true });
       } else {
         if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa ditarik.');
         await mref.set({ deleted: true, text: '' }, { merge: true });

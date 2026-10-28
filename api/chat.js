@@ -188,3 +188,10 @@ module.exports = async function handler(req, res) {
     return bad(res, 502, 'Tidak bisa menghubungi server AI.');
   }
 };
+
+// Dipakai api/assist.js (fitur Faisal di dalam obrolan teman): satu kali tanya, tanpa foto.
+module.exports.ask = async function (turns, referer) {
+  const orKey = process.env.OPENROUTER_API_KEY, key = process.env.GEMINI_API_KEY;
+  if (!orKey && !key) return { ok: false, status: 500, data: { error: { message: 'Server AI belum diatur' } } };
+  return orKey ? viaOpenRouter(orKey, turns, null, referer) : viaGemini(key, turns, null);
+};
