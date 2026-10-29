@@ -16,6 +16,7 @@ async function devUid(db) { // akun developer: terdaftar saat dia masuk dengan D
   if (!uid) { try { const n = await db.collection('numbers').doc(DEV_NUMBER).get(); if (n.exists) uid = n.data().uid || ''; } catch (e) {} }
   _dev = { uid, t: Date.now() }; return uid;
 }
+const FX_OK = ['boom', 'jatuh', 'bisik', 'teriak', 'api', 'salju'];
 const VF_DAY = 24 * 3600 * 1000, VF_PLATFORMS = ['TikTok', 'Instagram', 'YouTube', 'Website'];
 async function vgMap(db, ids) { // siapa saja yang punya centang hijau yang masih aktif
   const out = {}; ids = Array.from(new Set(ids.filter(Boolean))).slice(0, 120); if (!ids.length) return out;
@@ -35,6 +36,7 @@ const MEDIA = { // jenis lampiran: pola data URL dan batas ukuran (karakter base
 };
 const GID = /^g_[a-f0-9]{10}$/;
 const MAX_GROUP = 30;
+function tyOf(md, other) { return md && md.ty && md.ty[other] && Date.now() - md.ty[other] < 5000 ? 1 : 0; }
 function gView(me, g) {
   return (m) => {
     const o = { id: m.id, from: m.from === me ? 'me' : 'them', text: m.deleted ? '' : m.text, ts: m.ts };
@@ -117,7 +119,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 15, fitur: ['pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 17, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   if (String((req.body || {}).op || '') === 'ack') { // tanda "terkirim" dari service worker saat notifikasi sampai di HP penerima (tanpa login, pakai kunci sekali pakai per pesan)
@@ -220,7 +222,7 @@ module.exports = async function handler(req, res) {
       if (!meta.exists) return res.status(200).json({ msgs: [], rts: 0 });
       const md = meta.data(); let rts = md.rts || 0;
       const newMsgs = !(after > 0 && (md.lastTs || 0) <= after), newUpd = after > 0 && rts > crts;
-      if (!newMsgs && !newUpd) return res.status(200).json({ msgs: [], rts, dis: md.dis || 0 });
+      if (!newMsgs && !newUpd) return res.status(200).json({ msgs: [], rts, dis: md.dis || 0, ty: tyOf(md, oid) });
       if (md.lastFrom && md.lastFrom !== me && (md.lastTs || 0) > ((md.rd || {})[me] || 0)) { // penerima membuka obrolan: tandai sudah dibaca
         rts = Math.max(Date.now(), rts + 1);
         try { await db.collection('threads').doc(tid(me, oid)).set({ rd: { [me]: md.lastTs }, dv: { [me]: md.lastTs }, rts }, { merge: true }); } catch (e) {}
@@ -232,6 +234,7 @@ module.exports = async function handler(req, res) {
         if (m.deleted) o.deleted = true;
         else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; }
         if (m.ed && !m.deleted) o.ed = 1;
+        if (m.fx && !m.deleted && FX_OK.indexOf(m.fx) >= 0) o.fx = m.fx;
         if (m.react && typeof m.react === 'object') { const r = {}; Object.keys(m.react).forEach((k) => { if (m.react[k]) r[k === me ? 'me' : 'them'] = m.react[k]; }); if (Object.keys(r).length) o.react = r; }
         if (m.reply && m.reply.mid) o.reply = { mid: m.reply.mid, text: m.reply.text || '', who: m.from === me ? m.reply.who : (m.reply.who === 'me' ? 'them' : 'me') };
         return o;
@@ -248,7 +251,7 @@ module.exports = async function handler(req, res) {
         const q2 = await mcol.orderBy('ts', 'desc').limit(100).get();
         upd = q2.docs.map((d) => d.data()).map((m) => { const v = view(m); return { id: v.id, react: v.react || null, deleted: !!v.deleted, st: v.st || 0, text: v.text, ed: v.ed || 0 }; });
       }
-      return res.status(200).json({ msgs: msgs.map((m) => { const v = view(m); if (m.ex) v.ex = m.ex; return v; }), upd, rts, dis: md.dis || 0 });
+      return res.status(200).json({ msgs: msgs.map((m) => { const v = view(m); if (m.ex) v.ex = m.ex; return v; }), upd, rts, dis: md.dis || 0, ty: tyOf(md, oid) });
     }
     if (op === 'ping') { // tanda online: dikirim berkala selama aplikasi terbuka, dan sekali saat aplikasi ditutup
       if (hit('ping' + me, 12, 60 * 1000)) return res.status(200).json({ ok: true });
@@ -260,6 +263,13 @@ module.exports = async function handler(req, res) {
       const until = b.hours ? Date.now() + Math.min(24 * 365, Math.max(1, Number(b.hours) || 8)) * 3600000 : (b.forever ? 4102444800000 : 0);
       await prof(me).set({ mute: { [mid]: until } }, { merge: true });
       return res.status(200).json({ ok: true, until });
+    }
+    if (op === 'typing') { // "sedang mengetik": disimpan di dokumen obrolan, tidak menambah bacaan database
+      const oid = String(b.id || '');
+      if (!/^[\w-]{3,60}$/.test(oid) || GID.test(oid) || hit('ty' + me, 40, 60 * 1000)) return res.status(200).json({ ok: true });
+      const ce = await cl(me).doc(oid).get(); if (!ce.exists || ce.data().status !== 'ok') return res.status(200).json({ ok: true });
+      await db.collection('threads').doc(tid(me, oid)).set({ ty: { [me]: Date.now() } }, { merge: true });
+      return res.status(200).json({ ok: true });
     }
     if (op === 'disap') { // pesan hilang otomatis untuk obrolan berdua (24 jam, 7 hari, atau mati)
       const oid = String(b.id || ''), secs = [0, 86400, 604800].includes(Number(b.secs)) ? Number(b.secs) : -1;
@@ -491,7 +501,7 @@ module.exports = async function handler(req, res) {
       const dvu = await devUid(db);
       let snap = await cl(me).get();
       if (me === dvu && !snap.docs.some((d) => d.id === DUMMY_ID)) { await cl(me).doc(DUMMY_ID).set({ first: 'Dummy', last: '', number: DUMMY_NUMBER, status: 'ok', created: Date.now() }); snap = await cl(me).get();
-        try { const tr = db.collection('threads').doc(tid(me, DUMMY_ID)), t0 = Date.now(), iid = crypto.randomBytes(8).toString('hex'); await tr.collection('msgs').doc(iid).set({ id: iid, from: DUMMY_ID, text: 'Halo! Aku Dummy, khusus untukmu.\nKetik: paket pro buat email@gmail.com\nBisa tambah lama, contoh: paket pro buat email@gmail.com 60 hari\nPaket free: paket free buat email@gmail.com\nCek: cek email@gmail.com', ts: t0 }); await tr.set({ last: 'Halo! Aku Dummy, khusus untukmu.', lastTs: t0, lastFrom: DUMMY_ID, rd: { [me]: t0 }, dv: { [me]: t0 }, rts: t0 }, { merge: true }); } catch (e) { console.error('dummy intro', e && e.message); } }
+        try { const tr = db.collection('threads').doc(tid(me, DUMMY_ID)), t0 = Date.now(), iid = crypto.randomBytes(8).toString('hex'); await tr.collection('msgs').doc(iid).set({ id: iid, from: DUMMY_ID, text: 'Halo! Aku Dummy, khusus untukmu.\nKetik: paket pro buat email@gmail.com\nBisa tambah lama, contoh: paket pro buat email@gmail.com 60 hari\nPaket free: paket free buat email@gmail.com\nCek: cek email@gmail.com\nCentang hijau: centang hijau buat email@gmail.com (atau tambah 60 hari)\nCabut: cabut centang email@gmail.com', ts: t0 }); await tr.set({ last: 'Halo! Aku Dummy, khusus untukmu.', lastTs: t0, lastFrom: DUMMY_ID, rd: { [me]: t0 }, dv: { [me]: t0 }, rts: t0 }, { merge: true }); } catch (e) { console.error('dummy intro', e && e.message); } }
       const legacy = snap.docs.filter((d) => d.data().status === 'in' || d.data().status === 'out'); // sisa sistem lama (menunggu diterima): langsung dijadikan kontak
       if (legacy.length) {
         try {
@@ -618,9 +628,21 @@ module.exports = async function handler(req, res) {
       if (hit('dum' + me, 60, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat. Tunggu sebentar.');
       const text = String(b.text == null ? '' : b.text).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, 300);
       if (!text) return L.bad(res, 400, 'Pesan kosong.');
-      let reply = 'Perintah belum dikenali. Contoh:\npaket pro buat nama@gmail.com\npaket pro buat nama@gmail.com 60 hari\npaket free buat nama@gmail.com\ncek nama@gmail.com';
+      let reply = 'Perintah belum dikenali. Contoh:\npaket pro buat nama@gmail.com\npaket pro buat nama@gmail.com 60 hari\npaket free buat nama@gmail.com\ncek nama@gmail.com\ncentang hijau buat nama@gmail.com\ncabut centang nama@gmail.com';
       const em = text.match(/([^\s@]+@[^\s@]+\.[^\s@]+)/), t = text.toLowerCase().replace(em ? em[1].toLowerCase() : '', ' ');
-      if (em && /\b(paket\s+)?(pro|free|gratis)\b.*\bbuat\b|\bcek\b/.test(t)) {
+      if (em && /(centang|verif)/.test(t)) { // centang hijau langsung: "centang hijau buat email [30 hari]", "cabut centang email", "cek centang email"
+        const email = em[1].toLowerCase().replace(/[.,;]+$/, '');
+        try {
+          let target = null; try { target = await L.admin().auth().getUserByEmail(email); } catch (e) {}
+          if (!target) reply = 'Gagal: ' + email + ' belum terdaftar. Minta dia daftar dulu di web.';
+          else {
+            const vr = db.collection('verif').doc(target.uid), vd = await vr.get(), cur = vd.exists ? vd.data() : null;
+            if (/\b(cabut|hapus|matikan|batal)/.test(t)) { if (vd.exists) await vr.set({ st: 'rejected', ts: Date.now(), until: 0 }, { merge: true }); reply = 'Centang hijau ' + email + ' dicabut.'; }
+            else if (/\bcek\b/.test(t)) reply = email + ': centang ' + (cur && cur.st === 'active' && cur.until > Date.now() ? 'aktif sampai ' + new Date(cur.until).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' }) : 'tidak aktif' + (cur ? ' (status ' + cur.st + ')' : '')) + '.';
+            else { const dm = t.match(/(\d{1,3})\s*hari/), days = Math.max(1, Math.min(365, dm ? parseInt(dm[1], 10) : 30)), base = cur && cur.st === 'active' && cur.until > Date.now() ? cur.until : Date.now(), until = base + days * VF_DAY; await vr.set({ st: 'active', ts: Date.now(), until }, { merge: true }); reply = 'Selesai. Centang hijau aktif untuk ' + email + ' selama ' + days + ' hari (sampai ' + new Date(until).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' }) + '). Tampil di semua tempat nama dia.'; }
+          }
+        } catch (e) { console.error('dummy vg', e && e.message); reply = 'Gagal memproses. Coba lagi.'; }
+      } else if (em && /\b(paket\s+)?(pro|free|gratis)\b.*\bbuat\b|\bcek\b/.test(t)) {
         const email = em[1].toLowerCase().replace(/[.,;]+$/, '');
         const plan = /\bcek\b/.test(t) ? 'check' : /\b(free|gratis)\b/.test(t) ? 'free' : 'pro';
         const dm = t.match(/(\d{1,3})\s*hari/), days = Math.max(1, Math.min(365, dm ? parseInt(dm[1], 10) : 30));
@@ -703,6 +725,7 @@ module.exports = async function handler(req, res) {
       const ts = Math.max(Date.now(), ((meta.exists && meta.data().lastTs) || 0) + 1), m = { id: cid, from: me, text, ts };
       if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
       m.ak = crypto.randomBytes(8).toString('hex'); m.rk = crypto.randomBytes(8).toString('hex');
+      if (!kind && FX_OK.indexOf(String(b.fx || '')) >= 0) m.fx = String(b.fx); // efek pesan
       if (meta.exists && meta.data().dis) m.ex = ts + meta.data().dis * 1000;
       if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me' };
       if (kind) await db.collection('threads').doc(tid(me, id)).collection('media').doc(cid).set({ data: mdata, kind, ts });
@@ -712,18 +735,34 @@ module.exports = async function handler(req, res) {
       try { await Promise.race([notify(db, id, me, theirE.data(), mine, prev, { t: tid(me, id), u: id, m: cid, k: m.ak, r: m.rk }), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { console.error('push error', e && e.message); }
       if (!kind && text && me === (await devUid(db))) { // balasan developer mengubah status centang hijau milik lawan bicara
         try {
-          const vr = db.collection('verif').doc(id), vd = await vr.get();
-          if (vd.exists) {
-            const x = vd.data(), t = text.toLowerCase();
-            if (/tidak\s+(di)?setuju|ditolak|\btolak\b/.test(t)) await vr.set({ st: 'rejected', ts: Date.now() }, { merge: true });
+          const vr = db.collection('verif').doc(id), vd = await vr.get(), x = vd.exists ? vd.data() : { st: 'none' }, t = text.toLowerCase(), dm = t.match(/(\d{1,3})\s*hari/), days = dm ? Math.max(1, Math.min(365, parseInt(dm[1], 10))) : 30;
+          const onVg = /(centang|verif)/.test(t) || x.st === 'review' || x.st === 'approved' || x.st === 'active';
+          if (onVg) {
+            if (/(cabut|hapus|matikan|dicabut).*(centang|verif)|(centang|verif).*(dicabut|dihapus)|tidak\s+(di)?setuju|ditolak|\btolak\b/.test(t)) await vr.set({ st: 'rejected', ts: Date.now(), until: 0 }, { merge: true });
+            else if (/lunas|sudah\s+bayar|\baktif|diaktifkan|centang.*(hijau|aktif|jadi)|(hijau|verif).*(aktif|jadi|diberikan)/.test(t)) await vr.set({ st: 'active', ts: Date.now(), until: Math.max(Date.now(), x.st === 'active' && x.until > Date.now() ? x.until : 0) + days * VF_DAY }, { merge: true });
             else if (/disetujui|di\s?setujui|\bsetuju\b|approve/.test(t) && x.st !== 'active') await vr.set({ st: 'approved', ts: Date.now() }, { merge: true });
-            else if (/lunas|sudah\s+bayar|\baktif\b|diaktifkan/.test(t) && (x.st === 'approved' || x.st === 'active')) await vr.set({ st: 'active', ts: Date.now(), until: Math.max(Date.now(), x.st === 'active' && x.until > Date.now() ? x.until : 0) + 30 * VF_DAY }, { merge: true });
           }
         } catch (e) { console.error('vf status', e && e.message); }
       }
-      return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, st: 1, kind: kind || undefined, ar: m.ar, dur: m.dur, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who } : undefined } });
+      return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, st: 1, fx: m.fx || undefined, kind: kind || undefined, ar: m.ar, dur: m.dur, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who } : undefined } });
     }
 
+    if (op === 'stats') { // kisah obrolan: ringkasan 500 pesan terakhir (jam teraktif, emoji, api persahabatan)
+      if (blocked) return L.bad(res, 403, 'Tidak bisa dimuat.');
+      if (hit('stt' + me, 12, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat.');
+      const q = await db.collection('threads').doc(tid(me, id)).collection('msgs').orderBy('ts', 'desc').limit(500).get();
+      const OFF = 7 * 3600 * 1000, DAY = 86400000, hours = new Array(24).fill(0), em = {}, wd = {}, days = {}; let mine2 = 0, theirs2 = 0, first = 0, voice = 0, media = 0;
+      const STOP = new Set(['yang', 'dan', 'itu', 'ini', 'aku', 'kamu', 'gue', 'gw', 'lu', 'nya', 'untuk', 'dengan', 'dari', 'saya', 'juga', 'nggak', 'ngga', 'gak', 'tidak', 'udah', 'sudah', 'kalo', 'kalau', 'aja', 'saja', 'yaa', 'ada', 'apa', 'mau', 'bisa', 'lagi', 'jadi', 'tapi', 'atau', 'the']);
+      q.docs.forEach((d) => { const m = d.data(); if (m.deleted) return; const mineM = m.from === me; if (mineM) mine2++; else theirs2++; if (!first || m.ts < first) first = m.ts; hours[Math.floor(((m.ts + OFF) % DAY) / 3600000)]++;
+        const dk = Math.floor((m.ts + OFF) / DAY); (days[dk] = days[dk] || { a: 0, b: 0 })[mineM ? 'a' : 'b']++;
+        if (m.kind === 'voice') voice++; else if (m.kind) media++;
+        const t = String(m.text || ''); (t.match(/\p{Extended_Pictographic}/gu) || []).forEach((e) => { em[e] = (em[e] || 0) + 1; });
+        t.toLowerCase().replace(/[^\p{L}\s]/gu, ' ').split(/\s+/).forEach((w) => { if (w.length >= 4 && !STOP.has(w)) wd[w] = (wd[w] || 0) + 1; }); });
+      const today = Math.floor((Date.now() + OFF) / DAY); let streak = 0, k = days[today] && days[today].a && days[today].b ? today : today - 1; while (days[k] && days[k].a && days[k].b) { streak++; k--; }
+      let best = 0, run = 0; Object.keys(days).map(Number).sort((x, y) => x - y).forEach((dk, i, arr) => { if (days[dk].a && days[dk].b) { run = i && arr[i - 1] === dk - 1 && run ? run + 1 : 1; if (run > best) best = run; } else run = 0; });
+      const top = (o, n) => Object.keys(o).sort((x, y) => o[y] - o[x]).slice(0, n).map((x) => [x, o[x]]);
+      return res.status(200).json({ total: mine2 + theirs2, me: mine2, them: theirs2, hours, emoji: top(em, 3), words: top(wd, 3), streak, best, first, voice, media, days: Object.keys(days).length });
+    }
     if (op === 'getmedia') {
       if (blocked) return L.bad(res, 403, 'Tidak bisa dimuat.');
       const mid = String(b.mid || '');
