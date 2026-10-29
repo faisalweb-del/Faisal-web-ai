@@ -605,6 +605,66 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .ct-note { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #131925; font-size: 13px; color: var(--muted); }
 .ct-note span { flex: 1; min-width: 0; }
 @media (prefers-reduced-motion: reduce) { .pm.pop, .pm.flashin { animation: none !important; } }
+/* ---------- efek pesan dan animasi aplikasi (v1.1) ---------- */
+.fx-pick { position: absolute; left: 8px; right: 8px; bottom: 100%; margin-bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; padding: 10px; border-radius: 16px; background: #151c2b; border: 1px solid #2a3550; box-shadow: 0 10px 30px rgba(0,0,0,.45); z-index: 6; animation: fxPickIn .28s cubic-bezier(.2, 1.4, .3, 1) both; transform-origin: bottom right; }
+.fx-pick[hidden] { display: none; }
+.fx-pick button { border: 0; background: #1f2940; color: var(--fg); border-radius: 12px; padding: 8px 10px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 62px; transition: transform .15s; }
+.fx-pick button:active { transform: scale(.9); }
+.fx-pick button i { font-style: normal; font-size: 22px; }
+.fx-pick .fx-cap { width: 100%; text-align: center; font-size: 12px; color: var(--muted); }
+@keyframes fxPickIn { from { opacity: 0; transform: scale(.6) translateY(14px); } to { opacity: 1; transform: none; } }
+.pm[class*="fx-"] { position: relative; }
+.pm.fx-bisik { font-size: .84em; font-style: italic; opacity: .9; }
+.pm.fx-teriak { font-weight: 800; font-size: 1.12em; }
+.pm.fx-api { box-shadow: 0 0 0 1.5px #ff8a3d, 0 0 14px rgba(255, 120, 40, .55); }
+.pm.fx-salju { box-shadow: 0 0 0 1.5px #bfe6ff, 0 0 12px rgba(160, 215, 255, .5); }
+.pm.fx-boom { box-shadow: 0 0 0 1.5px #ffd54a, 0 0 12px rgba(255, 213, 74, .5); }
+.pm.fx-jatuh { box-shadow: 0 0 0 1.5px #9aa3b6; }
+.pm.fxa.fx-boom { animation: fxBoom .6s cubic-bezier(.2, 1.6, .3, 1) both; }
+.pm.fxa.fx-jatuh { animation: fxJatuh .7s cubic-bezier(.5, 0, .9, .5) both; }
+.pm.fxa.fx-bisik { animation: fxBisik 1.6s ease-out both; }
+.pm.fxa.fx-teriak { animation: fxTeriak .8s ease-out both; }
+.pm.fxa.fx-api { animation: fxApi 1.4s ease-in-out both; }
+.pm.fxa.fx-salju { animation: fxSalju 1.2s ease-out both; }
+@keyframes fxBoom { 0% { transform: scale(.2); opacity: 0; } 55% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes fxJatuh { 0% { transform: translateY(-260px) rotate(-6deg); opacity: 0; } 62% { transform: translateY(0) rotate(0); opacity: 1; } 72% { transform: translateY(-22px); } 82% { transform: translateY(0); } 90% { transform: translateY(-6px); } 100% { transform: none; } }
+@keyframes fxBisik { 0% { transform: scale(.55); opacity: .1; filter: blur(5px); } 60% { opacity: .5; filter: blur(2px); } 100% { transform: none; opacity: .9; filter: none; } }
+@keyframes fxTeriak { 0% { transform: scale(2.1); } 18% { transform: scale(1.45) rotate(-3deg); } 30% { transform: scale(1.45) rotate(3deg); } 42% { transform: scale(1.3) rotate(-2deg); } 56% { transform: scale(1.2) rotate(2deg); } 100% { transform: none; } }
+@keyframes fxApi { 0%, 100% { box-shadow: 0 0 0 1.5px #ff8a3d, 0 0 8px rgba(255, 120, 40, .4); } 25% { box-shadow: 0 0 0 2px #ffcf4a, 0 0 28px rgba(255, 140, 40, .9); } 50% { box-shadow: 0 0 0 1.5px #ff6a2a, 0 0 16px rgba(255, 80, 20, .7); } 75% { box-shadow: 0 0 0 2px #ffcf4a, 0 0 30px rgba(255, 150, 40, .9); } }
+@keyframes fxSalju { 0% { transform: translateY(-14px); opacity: 0; filter: brightness(1.8); } 100% { transform: none; opacity: 1; filter: none; } }
+.ptview.fx-shake .pt-log, .ptview.fx-shake .vlog { animation: fxShake .5s linear; }
+@keyframes fxShake { 0%, 100% { transform: none; } 15% { transform: translate(-6px, 3px); } 30% { transform: translate(6px, -4px); } 45% { transform: translate(-4px, -2px); } 60% { transform: translate(4px, 3px); } 80% { transform: translate(-2px, 1px); } }
+#fx-layer { position: fixed; inset: 0; z-index: 250; pointer-events: none; overflow: hidden; }
+#fx-layer span { position: absolute; left: 0; top: 0; will-change: transform, opacity; line-height: 1; }
+/* animasi umum: tekan membal, daftar masuk berurutan, kartu pegas */
+button, .ct-item, .tab-btn, .home-nav button { -webkit-tap-highlight-color: transparent; }
+.ct-item, .pt-send, .pt-mic, .home-nav button, .ct-fab { transition: transform .18s cubic-bezier(.2, 1.5, .3, 1), background .2s; }
+.ct-item:active, .pt-send:active, .pt-mic:active, .home-nav button:active, .ct-fab:active { transform: scale(.94); }
+.ct-item.pmrow { animation: itemIn .5s cubic-bezier(.2, 1.2, .3, 1) both; }
+.ct-item.pmrow:nth-child(2) { animation-delay: .04s; } .ct-item.pmrow:nth-child(3) { animation-delay: .08s; } .ct-item.pmrow:nth-child(4) { animation-delay: .12s; } .ct-item.pmrow:nth-child(5) { animation-delay: .16s; } .ct-item.pmrow:nth-child(6) { animation-delay: .2s; } .ct-item.pmrow:nth-child(7) { animation-delay: .24s; } .ct-item.pmrow:nth-child(n+8) { animation-delay: .28s; }
+@keyframes itemIn { from { opacity: 0; transform: translateX(-26px) scale(.96); } to { opacity: 1; transform: none; } }
+.ptview:not([hidden]) { animation: ptSpring .42s cubic-bezier(.2, 1.15, .3, 1) both; }
+@keyframes ptSpring { from { transform: translateY(46px) scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
+.home-nav button.on svg, .home-nav button.on .ic { animation: tabBounce .5s cubic-bezier(.2, 1.8, .3, 1); }
+@keyframes tabBounce { 0% { transform: scale(.7) translateY(4px); } 60% { transform: scale(1.22) translateY(-3px); } 100% { transform: none; } }
+.react-chip { animation: chipPop .45s cubic-bezier(.2, 2, .3, 1) both; }
+@keyframes chipPop { from { transform: scale(0) rotate(-40deg); } to { transform: none; } }
+
+.story { position: fixed; inset: 0; z-index: 140; background: radial-gradient(120% 80% at 50% 0%, #2b1a4d 0%, #0b0f17 62%); color: #fff; display: flex; flex-direction: column; padding: 18px 20px 24px; overflow-y: auto; animation: ptSpring .45s cubic-bezier(.2, 1.15, .3, 1) both; }
+.story .st-x { align-self: flex-end; border: 0; background: #ffffff22; color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; }
+.story h2 { margin: 6px 0 2px; font-size: 22px; } .story .st-sub { color: #ffffffaa; font-size: 13px; margin-bottom: 16px; }
+.story .st-flame { text-align: center; margin: 4px 0 14px; } .story .st-flame b { display: block; font-size: 64px; line-height: 1; } .story .st-flame i { font-style: normal; font-size: 54px; display: inline-block; animation: stFlame 1.1s ease-in-out infinite alternate; transform-origin: bottom center; filter: drop-shadow(0 0 14px #ff7a1a); }
+@keyframes stFlame { from { transform: scale(.92) rotate(-4deg); } to { transform: scale(1.12) rotate(4deg); } }
+.story .st-box { background: #ffffff12; border-radius: 16px; padding: 14px; margin-bottom: 12px; animation: itemIn .5s cubic-bezier(.2, 1.2, .3, 1) both; }
+.story .st-box h4 { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: #ffffffb0; letter-spacing: .3px; }
+.story .st-split { display: flex; height: 14px; border-radius: 8px; overflow: hidden; background: #ffffff18; } .story .st-split i { display: block; width: 0; transition: width 1.1s cubic-bezier(.2, .9, .2, 1); } .story .st-split .a { background: #7c8cff; } .story .st-split .b { background: #ff7ac6; }
+.story .st-lg { display: flex; justify-content: space-between; font-size: 13px; margin-top: 8px; }
+.story .st-hrs { display: flex; align-items: flex-end; gap: 3px; height: 70px; } .story .st-hrs i { flex: 1; background: linear-gradient(#ffb74d, #ff5252); border-radius: 3px 3px 0 0; height: 0; transition: height 1s cubic-bezier(.2, 1.3, .3, 1); min-height: 2px; opacity: .85; } .story .st-hrs i.top { opacity: 1; box-shadow: 0 0 10px #ff9a4d; }
+.story .st-ax { display: flex; justify-content: space-between; font-size: 10px; color: #ffffff80; margin-top: 4px; }
+.story .st-chips { display: flex; gap: 8px; flex-wrap: wrap; } .story .st-chips span { background: #ffffff1c; border-radius: 999px; padding: 6px 12px; font-size: 15px; }
+.story .st-num { display: flex; gap: 8px; } .story .st-num div { flex: 1; text-align: center; } .story .st-num b { display: block; font-size: 22px; } .story .st-num small { color: #ffffff99; }
+@media (prefers-reduced-motion: reduce) { .ct-item.pmrow, .ptview:not([hidden]), .react-chip, .pm[class*="fx-"], .fx-pick { animation: none !important; } #fx-layer { display: none; } }
+
 
 .dl-stack { display: flex; flex-direction: column; gap: 2px; }
 .pmrow { border: 0; border-radius: 10px; padding: 8px 8px; }
@@ -675,6 +735,12 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
 .fz-sw button { width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
 .fz-sw button.on { border-color: var(--fg); }
 .fz-err { color: var(--danger); font-size: 13px; min-height: 18px; }
+
+.pm { touch-action: pan-y; }
+.pm.swp { transition: none; }
+.pm.rst { transition: transform .18s ease; }
+.pm-draft { color: #ff8a80; font-style: normal; }
+.fz-sb-ty { color: var(--accent) !important; }
 .pt-form button[hidden] { display: none; }
 .pt-form button.pt-mic { background: var(--accent); color: var(--on-accent); }
 .pt-form button.vr-x { background: var(--surface-2); color: var(--fg); border: 1px solid var(--line); }
@@ -751,6 +817,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   .chat:not(.gated) > .ctsheet, .chat:not(.gated) > .ptview, .chat:not(.gated) > .starsheet, .chat:not(.gated) > .sheet { left: 340px; }
 }
 
+.stick-host { position: fixed; inset: 0; z-index: 95; pointer-events: none; overflow: hidden; }
+.stick-host[hidden] { display: none; }
 .hp { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .hp[hidden] { display: none; }
 .ht-r { display: flex; gap: 2px; }
@@ -3611,7 +3679,8 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var b = el('button', 'ct-item pmrow' + (act ? ' on' : '')); b.type = 'button';
     var pre = c.lastMsg ? (c.lastMsg.from === myUid() ? 'Kamu: ' : (c.group && c.lastMsg.by ? gBy(c.lastMsg.from, c.lastMsg.by) + ': ' : '')) + c.lastMsg.text : '';
     if (isIn('lock', c.id)) pre = '🔒 Obrolan terkunci';
-    var t2 = el('div', 'ct-tx'); t2.appendChild(nmb(el('b', '', dname(c)), c)); t2.appendChild(el('span', '', pre));
+    var dr = (!isIn('lock', c.id) && !act) ? draftOf(c.id) : '';
+    var t2 = el('div', 'ct-tx'); t2.appendChild(nmb(el('b', '', dname(c)), c)); var sp0 = el('span'); if (dr) { sp0.appendChild(el('em', 'pm-draft', 'Draf: ')); sp0.appendChild(document.createTextNode(dr.slice(0, 60))); } else sp0.textContent = pre; t2.appendChild(sp0);
     b.appendChild(mkAv(c)); b.appendChild(t2);
     var mt = el('div', 'pm-meta'); if (c.lastMsg) mt.appendChild(el('small', '', timeOf(c.lastMsg.ts))); if (isMuted(c.id)) mt.appendChild(el('small', '', '🔇')); if (isIn('pin', c.id)) mt.appendChild(el('small', '', '📌')); if (unreadOf(c) && !act) mt.appendChild(el('span', 'ct-dot')); b.appendChild(mt);
     b.addEventListener('click', function () { sheet.hidden = true; openThread(c); });
@@ -3656,12 +3725,14 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   function updBadge() {
     var n = 0; ct.contacts.forEach(function (c) { if (c.status === 'in' || (c.status === 'ok' && unreadOf(c))) n++; }); (ct.groups || []).forEach(function (g) { if (unreadOf(g)) n++; });
+    if (typeof ct.lastBadge === 'number' && n > ct.lastBadge) { try { if (window.PMStick && PMStick.running() && !ct.thread) PMStick.react('message'); } catch (e) {} }
+    ct.lastBadge = n;
     ctBadge.hidden = !n; ctBadge.textContent = String(n);
     var nb = $('#nav-badge'); if (nb) { nb.hidden = !n; nb.textContent = String(n); }
   }
   async function ctRefresh() {
     if (!ctOn() || ct.busy) return; ct.busy = true;
-    try { var d = await capi({ op: 'list' }); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.groups = (d.groups || []).map(gToC); ct.groups.forEach(function (g) { phEnsure(g.id, g.pv || 0); }); ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet(); try { if (homeTab === 'feat') renderFeat(); } catch (e2) {}
+    try { var d = await capi({ op: 'list' }); stickMsgCheck(d.contacts || []); ct.me = d.me; ct.contacts = d.contacts || []; ct.blocked = d.blocked || []; ct.groups = (d.groups || []).map(gToC); ct.groups.forEach(function (g) { phEnsure(g.id, g.pv || 0); }); ct.contacts.forEach(function (c) { if (c.status === 'ok') phEnsure(c.id, c.pv || 0); }); if (ct.me) phEnsure(myUid(), ct.me.pv || 0); updBadge(); renderPm(); if (!sheet.hidden) renderSheet(); try { if (homeTab === 'feat') renderFeat(); } catch (e2) {}
       if (ct.pendingAdd) { var pn = ct.pendingAdd; ct.pendingAdd = null; if (numOk(pn) && !(ct.me && ct.me.number === pn)) { if (chatEl.hidden) openChat(); addContactDialog(pn); } }
       if (ct.pendingOpen) { var po = ct.contacts.concat(ct.groups).filter(function (c) { return c.id === ct.pendingOpen && c.status === 'ok'; })[0]; ct.pendingOpen = null; if (po) { if (chatEl.hidden) openChat(); sheet.hidden = false; renderSheet(); openThread(po); } } }
     catch (e) { if (!sheet.hidden) toast(e.message); } finally { ct.busy = false; }
@@ -3743,6 +3814,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var r = m.react || {}, list = [];
     if (r.me) list.push(r.me); if (r.them && r.them !== r.me) list.push(r.them);
     node.classList.toggle('has-react', !!list.length && !m.deleted);
+    var rk = list.join(''); if (node._rk !== undefined && node._rk !== rk && rk && ct.anim) { var rb = node.getBoundingClientRect(); fxBurst(rb.left + rb.width / 2, rb.top + rb.height / 2, list, 11, { up: 1 }); } node._rk = rk;
     if (!list.length || m.deleted) return;
     var c = el('button', 'react-chip' + (list.length > 1 ? ' multi' : ''), list.join('')); c.type = 'button';
     c.setAttribute('aria-label', 'Reaksi. Ketuk untuk mengubah');
@@ -3761,6 +3833,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if (m.ed && !m.deleted) node.appendChild(el('em', 'ed', 'diedit'));
     node.appendChild(el('time', '', timeOf(m.ts))); paintTick(node);
     paintPm(node);
+    node.className = node.className.replace(/\bfx-\w+/g, '').replace(/\s+/g, ' ').trim(); if (m.fx && !m.deleted && !m.kind) { node.classList.add('fx-' + m.fx); if (!node._fxb) { node._fxb = 1; node.addEventListener('click', function () { if (window.getSelection && String(window.getSelection())) return; if (node._m && node._m.fx) fxPlay(node, node._m.fx); }); } }
   }
   function addPm(m, sending) {
     if (m.id && ct.tids[m.id]) { var ex = ct.tids[m.id]; if (ex.classList.contains('sending') && !sending) { ex.classList.remove('sending'); if (ex._m) ex._m.st = m.st || 1; paintTick(ex); } return ex; }
@@ -3771,7 +3844,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     if (m.ex && m.ex <= Date.now()) return null;
     var d = el('div', 'pm ' + m.from + (sending ? ' sending' : '') + (ct.anim ? ' pop' : '')); d._m = m; fillPm(d);
     if (ct.anim && m.from === 'them') { try { if (navigator.vibrate && !document.hidden) navigator.vibrate(15); } catch (x) {} }
-    vLog.appendChild(d); if (m.id) ct.tids[m.id] = d; return d;
+    vLog.appendChild(d); if (m.id) ct.tids[m.id] = d; if (m.fx && ct.anim && !m.deleted) setTimeout(function () { if (d.isConnected) fxPlay(d, m.fx); }, 320); return d;
   }
   async function pmReact(node, em) {
     var m = node._m, c = ct.thread; if (!m || !c) return;
@@ -3806,6 +3879,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       ctxMenu.appendChild(mi('Balas', I_REPLY, function () { closeMsgMenu(function () { setPmReply(m); }); }));
       if (m.from === 'me' && m.text && !m.poll && Date.now() - m.ts < 15 * 60 * 1000 && !node.classList.contains('sending')) ctxMenu.appendChild(mi('Edit pesan', I_REPLY, function () { closeMsgMenu(function () { startEdit(node); }); }));
       if (m.kind === 'sticker') ctxMenu.appendChild(mi('Simpan stiker', I_STAR, function () { closeMsgMenu(function () { getMedia(m).then(stkSaveUi).catch(function () { toast('Gagal menyimpan'); }); }); }));
+      if (m.text || m.kind) ctxMenu.appendChild(mi('Teruskan', I_SHARE, function () { closeMsgMenu(function () { fwdMsg(m); }); }));
       if (m.text) ctxMenu.appendChild(mi('Terjemahkan', '', function () { closeMsgMenu(function () { fzTranslate(m.text); }); }));
       if (m.text) ctxMenu.appendChild(mi('Salin', I_COPY, function () { closeMsgMenu(function () { copyText(m.text).then(function () { toast('Pesan disalin'); }, function () { toast('Gagal menyalin'); }); }); }));
     }
@@ -3822,6 +3896,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       ms.forEach(function (m) { addPm(m, false); if (m.ts > ct.tlast) ct.tlast = m.ts; });
       if (typeof d.rts === 'number') ct.rts = d.rts;
       if (typeof d.dis === 'number' && d.dis !== ct.dis) { ct.dis = d.dis; fzDisPaint(); }
+      if (!c.group) { var ty = d.ty ? 1 : 0; if (ty !== (ct.ty ? 1 : 0)) { ct.ty = ty; paintPres(); } }
       (d.upd || []).forEach(function (u) {
         var n = ct.tids[u.id]; if (!n || !n._m) return; var ch = false, nr = u.react || null;
         if (JSON.stringify(n._m.react || null) !== JSON.stringify(nr)) { n._m.react = nr; ch = true; }
@@ -3844,13 +3919,13 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   }
   function openThread(c) { unlockThen(c, function () { openThreadReal(c); }); }
   function openThreadReal(c) {
-    ct.thread = c; ct.editing = null; fzFindClose(); ct.dis = 0; fzDisPaint(); ct.tlast = 0; ct.rts = 0; ct.tids = {}; ct.anim = false; ct.lastAct = Date.now(); ct.polling = false; vLog.replaceChildren(); vMenu.hidden = true; clearPmReply();
+    ct.ty = 0; ct.thread = c; ct.editing = null; fzFindClose(); ct.dis = 0; fzDisPaint(); ct.tlast = 0; ct.rts = 0; ct.tids = {}; ct.anim = false; ct.lastAct = Date.now(); ct.polling = false; vLog.replaceChildren(); vMenu.hidden = true; clearPmReply();
     try { ct.hidden = JSON.parse(localStorage.getItem('fz-hide-' + myUid() + '-' + c.id) || '{}') || {}; } catch (e) { ct.hidden = {}; }
     ct.cleared = lsGet('fz-clr-' + myUid() + '-' + c.id, 0);
     markSeen(c.id, (c.lastMsg && c.lastMsg.ts) || 0); renderPm();
     var hav = view.querySelector('.ct-av'); hav.textContent = (dname(c)[0] || '?').toUpperCase(); if (c.group) { hav.classList.add('gav'); hav.dataset.uid = c.id; phPaint(hav); } else { hav.classList.remove('gav'); hav.dataset.uid = c.id; phPaint(hav); }
     view.querySelector('.nm').textContent = dname(c); if (c.vf) view.querySelector('.nm').appendChild(vfb()); else if (c.vg) view.querySelector('.nm').appendChild(vgb()); view.querySelector('.sb').textContent = c.group ? ((c.members || []).length + ' anggota') : fmtNum(c.number); view.querySelector('.sb').classList.remove('on'); ct.pres = null; applyWp(); if (!c.group) loadPresence();
-    view.hidden = false; vTa.value = '';
+    view.hidden = false; vTa.value = draftOf(c.id); vTa.style.height = 'auto'; if (vTa.value) vTa.style.height = Math.min(112, vTa.scrollHeight) + 'px';
     vLog.appendChild(el('div', 'pt-note', 'Obrolan dengan teman. Jangan bagikan data pribadi ke orang yang belum kamu kenal.'));
     pollThread(true).then(schedulePoll); fzReset();
   }
@@ -3889,6 +3964,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     var meds = threadMedia().filter(function (m) { return mediaCache[m.id]; }), all = threadMedia();
     var mr = el('button', 'info-row'); mr.type = 'button'; mr.appendChild(el('span', '', 'Media dan stiker')); mr.appendChild(el('small', '', all.length + '  ›'));
     mr.addEventListener('click', function () { if (meds.length) mediaGrid(meds); else toast('Belum ada media di obrolan ini'); }); b.appendChild(mr);
+    var sr = el('button', 'info-row'); sr.type = 'button'; sr.appendChild(el('span', '', '🔥 Kisah obrolan')); sr.appendChild(el('small', '', 'Statistik  ›')); sr.addEventListener('click', function () { openStory(c); }); b.appendChild(sr);
     if (meds.length) { var st = el('div', 'info-strip'); meds.slice(0, 8).forEach(function (m) { if (m.kind === 'video') return; var im = new Image(); im.src = mediaCache[m.id]; st.appendChild(im); }); if (st.children.length) b.appendChild(st); }
     function toggle(label, on, fn) {
       var r = el('button', 'info-row'); r.type = 'button'; r.appendChild(el('span', '', label)); var sw = el('i', 'sw' + (on ? ' on' : '')); r.appendChild(sw);
@@ -3964,12 +4040,14 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       try { await capi({ op: 'edit', id: c.id, mid: en._m.id, text: text }); en._m.text = text; en._m.ed = 1; fillPm(en); toast('Pesan diedit'); } catch (x) { toast(x.message || 'Gagal mengedit'); }
       return;
     }
-    vTa.value = ''; vTa.style.height = 'auto';
+    vTa.value = ''; vTa.style.height = 'auto'; draftClear(c.id);
     var rp = ct.reply; clearPmReply();
     var rr0 = rp ? { mid: rp.mid, text: rp.text, who: rp.who, by: rp.by } : undefined;
-    var cid = 'c' + uidn(), node = addPm({ id: cid, from: 'me', text: text, ts: Date.now(), st: 0, reply: rr0 }, true); vLog.scrollTop = vLog.scrollHeight;
-    ctSend(c, { text: text, reply: rr0 }, node, cid, text);
+    var fxs = ct.fx || undefined; ct.fx = null;
+    var cid = 'c' + uidn(), node = addPm({ id: cid, from: 'me', text: text, ts: Date.now(), st: 0, reply: rr0, fx: fxs }, true); vLog.scrollTop = vLog.scrollHeight;
+    ctSend(c, { text: text, reply: rr0, fx: fxs }, node, cid, text);
   });
+
   /* ---------- lampiran di chat teman: foto, video, stiker ---------- */
   var mediaCache = {}, mediaKeys = [];
   function mcache(id, d) { if (!mediaCache[id]) mediaKeys.push(id); mediaCache[id] = d; if (mediaKeys.length > 50) delete mediaCache[mediaKeys.shift()]; }
@@ -4178,6 +4256,64 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   icMic.addEventListener('click', recStart);
   vrX.addEventListener('click', function () { REC.cancel = true; try { REC.r.stop(); } catch (e) { recEnd(); } });
   vSend.addEventListener('click', function (e) { if (vForm.classList.contains('rec')) { e.preventDefault(); try { REC.r.stop(); } catch (x) { recEnd(); } } });
+  /* ---------- efek pesan: tahan tombol kirim untuk memilih (meledak, jatuh, bisik, teriak, api, salju) ---------- */
+  function fxLayer() { var l = document.getElementById('fx-layer'); if (!l) { l = document.createElement('div'); l.id = 'fx-layer'; document.body.appendChild(l); } return l; }
+  function fxBurst(cx, cy, chars, n, o) {
+    o = o || {}; var L = fxLayer(); if (L.childElementCount > 90) return; try { if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+    for (var i = 0; i < n; i++) {
+      var p = document.createElement('span'), ch = chars[i % chars.length], isCol = /^#/.test(ch);
+      if (isCol) { p.style.cssText = 'width:8px;height:12px;background:' + ch + ';border-radius:2px'; } else { p.textContent = ch; p.style.fontSize = (o.size || (14 + Math.random() * 12)) + 'px'; }
+      var x0 = o.line ? Math.random() * innerWidth : cx, y0 = o.line ? -30 : cy, ang = Math.random() * 6.283, sp = 60 + Math.random() * (o.up ? 90 : 190);
+      var dx = o.line ? (Math.random() - 0.5) * 120 : Math.cos(ang) * sp, dy = o.line ? innerHeight * (0.7 + Math.random() * 0.5) : (o.up ? -Math.abs(Math.sin(ang)) * sp - 40 : Math.sin(ang) * sp - 40) + (o.fall ? 220 : 0);
+      if (o.rise) { dy = -(120 + Math.random() * 200); dx = (Math.random() - 0.5) * 60; }
+      L.appendChild(p); var dur = o.dur || (800 + Math.random() * 700), rot = (Math.random() - 0.5) * 720;
+      var an = p.animate([{ transform: 'translate(' + x0 + 'px,' + y0 + 'px) scale(.3) rotate(0)', opacity: 1 }, { transform: 'translate(' + (x0 + dx * 0.6) + 'px,' + (y0 + dy * 0.5) + 'px) scale(1.1) rotate(' + rot / 2 + 'deg)', opacity: 1, offset: 0.4 }, { transform: 'translate(' + (x0 + dx) + 'px,' + (y0 + dy + (o.fall ? 0 : 120)) + 'px) scale(.8) rotate(' + rot + 'deg)', opacity: 0 }], { duration: dur, delay: o.line ? Math.random() * 1200 : 0, easing: 'cubic-bezier(.2,.7,.4,1)', fill: 'both' });
+      an.onfinish = (function (q) { return function () { q.remove(); }; })(p);
+    }
+  }
+  function fxPlay(node, fx) {
+    if (!node || !node.isConnected) return; node.classList.remove('fxa'); void node.offsetWidth; node.classList.add('fxa');
+    var r = node.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    if (fx === 'boom') fxBurst(cx, cy, ['#ff5252', '#ffd54a', '#4dd0e1', '#69f0ae', '#b388ff', '🎉', '✨'], 34);
+    else if (fx === 'jatuh') setTimeout(function () { view.classList.add('fx-shake'); setTimeout(function () { view.classList.remove('fx-shake'); }, 520); fxBurst(cx, r.bottom - 6, ['💨', '·'], 8, { size: 18 }); try { if (navigator.vibrate) navigator.vibrate(30); } catch (e) {} }, 430);
+    else if (fx === 'teriak') { fxBurst(cx, cy, ['❗', '💢', '‼️'], 12); try { if (navigator.vibrate) navigator.vibrate([30, 40, 30]); } catch (e) {} }
+    else if (fx === 'api') fxBurst(cx, r.bottom - 8, ['🔥', '🔥', '✨'], 16, { rise: 1 });
+    else if (fx === 'salju') fxBurst(0, 0, ['❄️', '❅', '❆', '✧'], 26, { line: 1, dur: 3200, size: 18 });
+    else if (fx === 'bisik') fxBurst(cx, cy, ['🤫', '💭'], 3, { rise: 1, dur: 1800 });
+  }
+  var FXS = [['boom', '💥', 'Meledak'], ['jatuh', '☄️', 'Jatuh'], ['bisik', '🤫', 'Bisik'], ['teriak', '📢', 'Teriak'], ['api', '🔥', 'Api'], ['salju', '❄️', 'Salju']];
+  var fxPick = el('div', 'fx-pick'); fxPick.hidden = true; fxPick.appendChild(el('div', 'fx-cap', 'Kirim dengan efek'));
+  FXS.forEach(function (f) { var b = el('button'); b.type = 'button'; b.innerHTML = '<i>' + f[1] + '</i>' + f[2]; b.addEventListener('click', function () { fxPick.hidden = true; ct.fx = f[0]; vForm.requestSubmit(); }); fxPick.appendChild(b); });
+  vForm.style.position = vForm.style.position || 'relative'; vForm.appendChild(fxPick);
+  var fxT = 0, fxOpened = false;
+  function fxCan() { return !!vTa.value.trim() && !ct.editing && !vForm.classList.contains('rec') && !(ct.thread && ct.thread.group); }
+  vSend.addEventListener('pointerdown', function () { fxOpened = false; clearTimeout(fxT); if (!fxCan()) return; fxT = setTimeout(function () { fxOpened = true; fxPick.hidden = false; try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {} }, 450); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (n) { vSend.addEventListener(n, function () { clearTimeout(fxT); }); });
+  vSend.addEventListener('click', function (e) { if (fxOpened) { e.preventDefault(); e.stopImmediatePropagation(); fxOpened = false; } }, true);
+  vSend.addEventListener('contextmenu', function (e) { if (fxCan()) { e.preventDefault(); fxPick.hidden = false; } });
+  document.addEventListener('pointerdown', function (e) { if (!fxPick.hidden && !fxPick.contains(e.target) && e.target !== vSend && !vSend.contains(e.target)) fxPick.hidden = true; });
+
+  /* ---------- Kisah obrolan: statistik, api persahabatan, jam teraktif ---------- */
+  async function openStory(c) {
+    var o = el('div', 'story'), x = el('button', 'st-x', '✕'); x.type = 'button'; x.addEventListener('click', function () { o.remove(); }); o.appendChild(x);
+    o.appendChild(el('h2', '', 'Kisah obrolan'));
+    o.appendChild(el('div', 'st-sub', 'Kamu dan ' + dname(c) + ' (dari 500 pesan terakhir)')); var body = el('div'); body.appendChild(el('div', 'st-sub', 'Memuat…')); o.appendChild(body); document.body.appendChild(o);
+    var d; try { d = await capi({ op: 'stats', id: c.id }); } catch (e) { body.replaceChildren(el('div', 'st-sub', staleOr(e) || 'Gagal memuat.')); return; }
+    body.replaceChildren();
+    if (!d.total) { body.appendChild(el('div', 'st-sub', 'Belum ada pesan. Mulai ngobrol dulu!')); return; }
+    var fl = el('div', 'st-flame'); fl.innerHTML = '<i>' + (d.streak ? '🔥' : '🕯️') + '</i><b>' + d.streak + '</b>'; fl.appendChild(el('div', 'st-sub', d.streak ? 'hari berturut-turut kalian saling membalas' + (d.best > d.streak ? ' (rekor ' + d.best + ')' : '') : 'Api padam. Balas hari ini untuk menyalakannya' + (d.best ? ' (rekor ' + d.best + ' hari)' : ''))); body.appendChild(fl);
+    var b1 = el('div', 'st-box'); b1.appendChild(el('h4', '', 'SIAPA YANG LEBIH BANYAK BICARA'));
+    var sp = el('div', 'st-split'), ia = el('i', 'a'), ib = el('i', 'b'); sp.appendChild(ia); sp.appendChild(ib); b1.appendChild(sp);
+    var lg = el('div', 'st-lg'); lg.appendChild(el('span', '', 'Kamu ' + d.me)); lg.appendChild(el('span', '', dname(c) + ' ' + d.them)); b1.appendChild(lg); body.appendChild(b1);
+    setTimeout(function () { ia.style.width = (d.me / d.total * 100) + '%'; ib.style.width = (d.them / d.total * 100) + '%'; }, 80);
+    var mx = Math.max.apply(null, d.hours), top = d.hours.indexOf(mx), b2 = el('div', 'st-box'); b2.appendChild(el('h4', '', 'JAM PALING RAMAI (WIB): ' + (top < 10 ? '0' : '') + top + '.00'));
+    var hr = el('div', 'st-hrs'); d.hours.forEach(function (v, i) { var q = el('i', i === top ? 'top' : ''); hr.appendChild(q); setTimeout(function () { q.style.height = (mx ? v / mx * 100 : 0) + '%'; }, 120 + i * 25); }); b2.appendChild(hr);
+    var ax = el('div', 'st-ax'); ['00', '06', '12', '18', '23'].forEach(function (t) { ax.appendChild(el('span', '', t)); }); b2.appendChild(ax); body.appendChild(b2);
+    if (d.emoji && d.emoji.length) { var b3 = el('div', 'st-box'); b3.appendChild(el('h4', '', 'EMOJI FAVORIT')); var ch = el('div', 'st-chips'); d.emoji.forEach(function (e) { ch.appendChild(el('span', '', e[0] + ' ' + e[1] + 'x')); }); b3.appendChild(ch); body.appendChild(b3); }
+    if (d.words && d.words.length) { var b4 = el('div', 'st-box'); b4.appendChild(el('h4', '', 'KATA YANG SERING MUNCUL')); var c4 = el('div', 'st-chips'); d.words.forEach(function (e) { c4.appendChild(el('span', '', e[0] + ' · ' + e[1])); }); b4.appendChild(c4); body.appendChild(b4); }
+    var b5 = el('div', 'st-box'), nm = el('div', 'st-num'); [[d.days, 'hari aktif'], [d.voice, 'pesan suara'], [d.media, 'foto/video']].forEach(function (a) { var q = el('div'); q.appendChild(el('b', '', String(a[0]))); q.appendChild(el('small', '', a[1])); nm.appendChild(q); }); b5.appendChild(nm); body.appendChild(b5);
+    if (d.first) body.appendChild(el('div', 'st-sub', 'Pesan tertua yang dihitung: ' + dateLong(d.first)));
+  }
   /* ---------- Faisal di dalam obrolan: saran balasan, ringkas, terjemah ---------- */
   var fzStrip = el('div', 'fz-strip'); view.insertBefore(fzStrip, vForm);
   var fzBusy = false;
@@ -4328,6 +4464,45 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
       cd.appendChild(sw);
     }, chatEl);
   }
+
+  /* ---------- sedang mengetik, draf, geser untuk balas, teruskan ---------- */
+  var tyLast = 0;
+  vTa.addEventListener('input', function () {
+    var c = ct.thread; if (!c) return;
+    try { var k = 'fz-draft-' + myUid() + '-' + c.id, v = vTa.value; if (v.trim() && !ct.editing) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch (e) {}
+    if (c.group || !v || Date.now() - tyLast < 3000 || !online()) return;
+    tyLast = Date.now(); capi({ op: 'typing', id: c.id }).catch(function () {});
+  });
+  function draftOf(id) { try { return localStorage.getItem('fz-draft-' + myUid() + '-' + id) || ''; } catch (e) { return ''; } }
+  function draftClear(id) { try { localStorage.removeItem('fz-draft-' + myUid() + '-' + id); } catch (e) {} }
+  var sw = { n: null, x: 0, y: 0, on: false };
+  vLog.addEventListener('pointerdown', function (e) {
+    var n = e.target.closest && e.target.closest('.pm'); if (!n || !n._m || n._m.deleted || e.target.closest('button,a,input,.vcp')) { sw.n = null; return; }
+    sw.n = n; sw.x = e.clientX; sw.y = e.clientY; sw.on = false;
+  });
+  vLog.addEventListener('pointermove', function (e) {
+    if (!sw.n) return; var dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if (!sw.on) { if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { sw.n = null; return; } if (dx > 14 && dx > Math.abs(dy) * 1.5) { sw.on = true; sw.n.classList.remove('rst'); sw.n.classList.add('swp'); } else return; }
+    sw.n.style.transform = 'translateX(' + Math.min(70, dx * 0.7).toFixed(0) + 'px)';
+  });
+  function swEnd(e) {
+    var n = sw.n; if (!n) return; sw.n = null;
+    var dx = (e && e.clientX != null) ? e.clientX - sw.x : 0;
+    if (sw.on) { n.classList.remove('swp'); n.classList.add('rst'); n.style.transform = ''; setTimeout(function () { n.classList.remove('rst'); }, 220); if (dx > 70) { try { if (navigator.vibrate) navigator.vibrate(10); } catch (x) {} setPmReply(n._m); } }
+    sw.on = false;
+  }
+  vLog.addEventListener('pointerup', swEnd); vLog.addEventListener('pointercancel', function () { swEnd(null); });
+  function fwdMsg(m) {
+    pickFriends({ title: 'Teruskan ke…', ok: 'Kirim', cb: async function (ids) {
+      var data = null;
+      try { if (m.kind) data = await getMedia(m); } catch (e) { toast('Lampirannya belum bisa dimuat. Coba lagi.'); return; }
+      var okn = 0;
+      for (var i = 0; i < ids.length; i++) {
+        try { var pl = { op: 'send', id: ids[i], text: m.text || '' }; if (m.kind) { pl.kind = m.kind; pl.data = data; pl.ar = m.ar || 1; if (m.dur) pl.dur = m.dur; } await capi(pl); okn++; } catch (e) { toast(e.message || 'Gagal meneruskan'); }
+      }
+      if (okn) { toast('Diteruskan ke ' + okn + ' obrolan'); ctRefresh(); }
+    } });
+  }
   var stkManage = false, stkTab = 'stk', stkSeg = 'recent';
   var EMOJIS = Array.from('😀😁😂🤣😊😍😘😎🤔😅😭😡😴🥳😇🙃😉😋🤗🙄😬🤯😱🥺😢🤝👍👎👏🙏💪👀🔥✨💯❤️💔🎉🎂🍕🍔☕🌹🌞🌙⭐🐶🐱🙈😜🤪😏😒😞😤🥰😆');
   async function renderPanel() {
@@ -4468,11 +4643,54 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
     b.appendChild(pushCard());
     setRow(b, 'Suara Faisal', 'Pilih suara dan atur balasan otomatis lewat VN.', 'Atur', function () { setS.hidden = true; hideHome(); $('#btn-voice').click(); });
     setRow(b, 'Tema', 'Ganti tampilan terang atau gelap.', 'Ganti', function () { $('#theme').click(); });
+    setRow(b, 'Emoji Partical', emOn() ? 'Emoji gambar buatan Partical dipakai di seluruh aplikasi (kolom ketik tetap emoji bawaan HP). Sedang nyala.' : 'Ganti semua emoji dengan set emoji gambar buatan Partical. Sedang mati.', emOn() ? 'Matikan' : 'Nyalakan', function () { try { localStorage.setItem('fz-emoji', emOn() ? '0' : '1'); } catch (e) {} emSync(); openSettings(); });
     setRow(b, 'Wallpaper chat', wpHas() ? 'Wallpaper kustom aktif. Hanya terlihat di HP ini.' : 'Pakai foto dari galerimu sebagai latar chat. Hanya terlihat di HP ini, tidak dilihat orang lain.', wpHas() ? 'Ganti' : 'Pilih', wpPick);
     if (wpHas()) setRow(b, 'Hapus wallpaper', 'Kembali ke latar bawaan.', 'Hapus', function () { wpClear(); openSettings(); });
     setRow(b, 'Kontak', 'Daftar teman, kontak baru, dan kode QR.', 'Buka', function () { setS.hidden = true; ctLink.click(); });
     setS.hidden = false;
   }
+  /* stickman pajangan yang ikut kamu pindah area (Pengaturan > Show stickman) */
+  function emOn() { try { return localStorage.getItem('fz-emoji') !== '0'; } catch (e) { return true; } }
+  function emSync() { if (!emOn()) { if (window.PMEmoji) PMEmoji.stop(); return; } if (window.PMEmoji) PMEmoji.start(); else loadScript('emoji.js').then(function () { if (emOn() && window.PMEmoji) PMEmoji.start(); }).catch(function () {}); }
+  setTimeout(emSync, 500);
+  var STICK_SEALED = true; // ubah ke false untuk membuka segel fitur stickman
+  function stickOn() { if (STICK_SEALED) return false; try { return localStorage.getItem('fz-stick') !== '0'; } catch (e) { return true; } }
+  var stickY = 0, stickKey = '', stickPrev = '', TABS = ['chat', 'upd', 'feat', 'spot'];
+  function vis(e) { return e && !e.hidden && e.getClientRects().length > 0; }
+  function stickProbe() {
+    var vh = window.innerHeight, key, y;
+    function top(e) { var r = e.getBoundingClientRect(); return r.top; }
+    if (vis(view)) { key = 'thread'; var tops = [vForm]; if (vis(fzStrip)) tops.push(fzStrip); if (vis(pbar)) tops.push(pbar); if (vis(spanel)) tops.push(spanel); y = Math.min.apply(null, tops.map(top)); }
+    else if (document.querySelector('.ctsheet:not([hidden]), .starsheet:not([hidden]), .chview:not([hidden])')) { key = 'sheet'; y = vh - 4; }
+    else if (vis(homeEl)) { key = 'tab:' + homeTab; var nv = homeEl.querySelector('.home-nav'); y = nv ? top(nv) : vh - 70; }
+    else { key = 'faisal'; var cf = $('#chat-form'); y = cf && vis(cf) ? top(cf) : vh - 80; }
+    stickY = y + 2; stickKey = key;
+  }
+  var stickTs = -1, stickAt = 0;
+  function stickMsgCheck(list) {
+    var mx = 0; list.forEach(function (c) { if (c.lastMsg && c.lastMsg.from !== myUid() && c.lastMsg.ts > mx && !isMuted(c.id)) mx = c.lastMsg.ts; });
+    if (stickTs >= 0 && mx > stickTs && window.PMStick && PMStick.running() && Date.now() - stickAt > 25000 && !document.hidden) { stickAt = Date.now(); PMStick.alert(); }
+    if (mx > stickTs) stickTs = mx;
+  }
+  function stickTick() {
+    if (!window.PMStick || !PMStick.running()) return;
+    stickProbe();
+    var dir = 1, a = /^tab:(\w+)/.exec(stickPrev), b2 = /^tab:(\w+)/.exec(stickKey);
+    if (stickKey !== stickPrev) {
+      if (a && b2) dir = TABS.indexOf(b2[1]) > TABS.indexOf(a[1]) ? 1 : -1; else if (stickPrev === 'thread' || stickPrev === 'sheet' || stickPrev === 'faisal') dir = -1; else dir = 1;
+      stickPrev = stickKey;
+    }
+    PMStick.area(stickKey, dir);
+  }
+  function stickSync() {
+    var h = $('#stick-host');
+    if (!stickOn()) { if (window.PMStick) PMStick.stop(); if (h) h.hidden = true; return; }
+    if (!h) { h = el('div', 'stick-host'); h.id = 'stick-host'; h.setAttribute('aria-hidden', 'true'); document.body.appendChild(h); }
+    function go() { if (!stickOn() || !window.PMStick) return; stickProbe(); stickPrev = stickKey; h.hidden = false; PMStick.start(h, { floor: function () { return stickY; }, rows: function () { return [].slice.call(document.querySelectorAll('.ct-item.pmrow, #ct-list .ct-item')).filter(function (e) { return e.offsetParent !== null; }); } }); PMStick.area(stickKey, 1); }
+    if (window.PMStick) go(); else loadScript('stickman.js').then(go).catch(function () {});
+  }
+  setInterval(stickTick, 250);
+  setTimeout(stickSync, 1200);
   var hm = $('#home-menu'), hmBtn = $('#home-more');
   function hmItem(label, fn) { var b = el('button', '', label); b.type = 'button'; b.addEventListener('click', function () { hm.hidden = true; hmBtn.setAttribute('aria-expanded', 'false'); fn(); }); hm.appendChild(b); }
   hmItem('Pesan berbintang', showStarred); hmItem('Akun saya', openAcct); hmItem('Pengaturan', openSettings);
@@ -4849,6 +5067,7 @@ img[src$="faisal-192.jpg"], img[src$="faisal-512.jpg"] { border-radius: 50%; obj
   function paintPres() {
     var c = ct.thread; if (!c || c.group) return;
     var sb = view.querySelector('.sb'), d = ct.pres || {};
+    if (ct.ty) { sb.textContent = 'sedang mengetik…'; sb.classList.add('on'); return; }
     sb.textContent = d.on ? 'online' : d.seen ? 'terakhir online ' + lastSeenText(d.seen) : fmtNum(c.number);
     sb.classList.toggle('on', !!d.on);
   }

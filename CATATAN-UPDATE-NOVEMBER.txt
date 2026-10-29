@@ -9,6 +9,7 @@ FILE YANG BERUBAH / BARU (upload ke GitHub, timpa yang lama):
 - api/channels.js   (BARU)
 - api/assist.js   (BARU, Faisal di dalam chat)
 - api/chat.js   (diganti, hanya menambah satu fungsi untuk assist.js)
+- stickman.js   (BARU, di folder utama; animasi stickman)
 - qr.js   (BARU, di folder utama bersama index.html; pembuat kode QR)
 - img/centang-green.png dan img/centang-blue.png   (BARU, taruh di folder img)
 
@@ -39,9 +40,31 @@ FITUR 1.1:
 [x] EDIT PESAN: tahan pesan sendiri > 'Edit pesan' (dalam 15 menit), tampil label 'diedit' di kedua HP. Jalan di chat teman dan grup.
 [x] WARNA APLIKASI: Akun anda > Profil > Warna aplikasi (6 warna, tersimpan di HP).
 Catatan jujur: bisukan hanya menghentikan notifikasi push; kunci PIN melindungi tampilan di HP ini, bukan enkripsi.
+[x] SHOW STICKMAN: Pengaturan > Show stickman (Nyalakan/Matikan, bawaan nyala). 6 stickman pajangan (tidak bisa diketuk, tidak menghalangi tombol) yang hidup sendiri dan IKUT KAMU pindah area: pindah tab (Chat, Status & Grup, Akun, Social spotlight), buka chat teman, buka Faisal AI, buka halaman lain. Saat area berganti, yang kelihatan lari keluar ke tepi, lalu semuanya berlari masuk lagi di area baru (dari kanan kalau maju, dari kiri kalau mundur), terengah, melambai. Di dalam chat mereka berdiri di atas kolom ketik.
+    Gerakan: jalan santai (lutut menekuk, tangan mengayun, badan sedikit goyang) dan lari (badan condong, siku menekuk, lutut tinggi) ala animasi garis.
+    Adegan (acak, 6-7 per putaran): melambai, bolak-balik, mengintip dari bawah layar, mendekat dan mengetuk layar, dorong bangku lalu main game bareng, selfie, joget, lempar bola, duduk di sofa sambil ngobrol lewat gelembung chat emoji, lomba lari, lari masuk portal lalu muncul lagi, jalan bareng sambil ngobrol. Setelah satu putaran semuanya ngumpet 12-22 detik dulu baru mengulang.
+    Animasi berhenti sendiri kalau aplikasi tidak terlihat. File: stickman.js (taruh di folder utama bersama index.html).
+[x] TAMBAHAN: 'sedang mengetik…' di chat teman (muncul di bawah nama, hilang 5 detik setelah berhenti mengetik); draf pesan tersimpan per chat (tampil 'Draf:' merah di daftar chat, hilang kalau terkirim); geser pesan ke kanan untuk membalas; 'Teruskan' di menu tahan pesan (teks, foto, stiker, suara) ke teman lain; stickman muncul berlari membawa gelembung 💬 saat ada pesan baru (maks 1x per 25 detik, tidak untuk chat yang dibisukan). Perlu api/contacts.js (contacts_version 16) dan stickman.js.
 
 CARA RILIS:
 1. Upload file di atas ke GitHub, tunggu Vercel selesai deploy.
-2. Cek: buka alamat-webmu/api/contacts -> harus ada contacts_version 15, dan alamat-webmu/api/channels -> channels_version 1.
+2. Cek: buka alamat-webmu/api/contacts -> harus ada contacts_version 16, dan alamat-webmu/api/channels -> channels_version 1.
 3. Buat APK 1.1 di PWABuilder (versi 1.1, start URL /?apk=1.1), unggah ke APKPure.
 4. Isi "download" di version.json dengan link APK 1.1 setelah tersedia.
+
+[x] STICKMAN V2 (rombak): gerak lebih luwes (membal/overshoot), tidak lagi melambai-lambai atau bolak-balik. Tiap adegan hanya 2-4 stickman, sisanya absen atau cuma lewat. Adegan: ngobrol berdua (gelembung emoji), lempar barang (bola, peti, batu, sepatu, pai), bawa tangga (naik, ganti bohlam, kadang goyang dan roboh), bangun rumah/menara/piramida pakai block Minecraft (kadang creeper meledakkan, atau dibongkar pakai beliung), PERANG brutal (adu jotos, ada yang terlempar menembus wallpaper bikin lubang, batu menghantam layar bikin lubang dan KONTAK JATUH, lalu 'undo' dan semuanya kembali normal), plus sofa, game, bola, selfie, joget, lomba lari, portal.
+    INTERAKTIF: ketuk stickman = kaget. Tahan atau seret = DIANGKAT jari; yang lain panik, lari, lompat meraih, lalu saat dilepas dia jatuh dan teman-temannya menolong menariknya berdiri. Hanya badan stickman yang menangkap sentuhan, bagian layar lain tetap normal.
+    Perlu file stickman.js dan index.html terbaru.
+
+[x] STICKMAN DISEGEL: di index.html ada 'var STICK_SEALED = true'. Tombol Show stickman di Pengaturan disembunyikan dan stickman tidak jalan untuk siapa pun. Untuk membuka lagi, ubah jadi false lalu tambahkan lagi barisnya di Pengaturan (minta saja).
+[x] PERBAIKAN CENTANG HIJAU: sebelumnya centang hanya aktif kalau (1) temanmu sudah mengirim formulir dan (2) kamu membalas 'disetujui' lalu (3) membalas lagi 'lunas/aktif'. Kalau satu langkah terlewat, tidak muncul. Sekarang ada 3 cara:
+    1. Lewat akun Dummy (paling gampang): ketik  'centang hijau buat email@gmail.com'  (tambah '60 hari' untuk lebih lama). Langsung aktif tanpa formulir. Cek: 'cek centang email@gmail.com'. Cabut: 'cabut centang email@gmail.com'.
+    2. Di chat temanmu (sebagai developer) ketik 'centang hijau aktif' atau 'lunas' (tidak perlu formulir lagi). 'disetujui' = disetujui saja, 'ditolak' atau 'cabut centang' = dicabut.
+    3. Dia mengirim formulir dulu, kamu balas 'disetujui' lalu 'lunas'.
+    Temanmu harus buka ulang aplikasi (tarik muat ulang) supaya centang muncul di namanya dan di HP orang lain. Wajib upload api/contacts.js terbaru (contacts_version 17).
+[x] EFEK PESAN (belum ada di media sosial lain): tahan tombol kirim ~0,5 detik (di komputer: klik kanan) lalu pilih Meledak (konfeti), Jatuh (pesan menghantam dan layar bergetar), Bisik (pesan kecil mengecil lalu muncul pelan), Teriak (membesar dan bergetar), Api (menyala dan api naik), Salju (salju turun di seluruh layar). Penerima melihat efeknya saat pesan datang; ketuk pesan untuk memutar ulang. Ada juga ledakan emoji saat memberi reaksi. Hanya di obrolan teman (bukan grup). Perlu api/contacts.js terbaru.
+[x] ANIMASI APLIKASI: daftar chat masuk berurutan, tombol menekan membal, ruang chat naik dengan pegas, ikon tab memantul, chip reaksi muncul berputar. Otomatis mati kalau HP diatur 'kurangi animasi'.
+
+[x] KISAH OBROLAN: buka chat teman > tombol ⓘ > '🔥 Kisah obrolan'. Menampilkan api persahabatan (berapa hari berturut-turut kalian berdua saling membalas, plus rekor), siapa lebih banyak bicara, grafik jam paling ramai (WIB), emoji favorit, kata yang sering muncul, jumlah hari aktif, pesan suara dan foto/video. Dihitung dari 500 pesan terakhir, tidak ada data tambahan yang disimpan. Perlu api/contacts.js terbaru.
+
+[x] EMOJI PARTICAL: file baru emoji.js (taruh di folder utama bersama index.html). 213 emoji digambar sendiri dari kode (wajah-wajah, hewan, makanan, alam, benda, panah, tangan, hati berbagai warna, api, bintang, jempol, tepuk tangan, doa, hantu, tengkorak, pizza, kue, dll). Gayanya mengkilap dan berbeda dari emoji iPhone/Android mana pun. Di Pengaturan ada tombol 'Emoji Partical' (Nyalakan/Matikan, bawaan nyala). Emoji di teks pesan, daftar chat, reaksi, dan menu diganti gambar. Yang belum ada di set tetap tampil emoji bawaan HP, dan kolom ketik selalu emoji bawaan HP (browser tidak bisa mengganti isi kolom ketik). Teks pesan yang tersimpan dan dikirim tidak berubah, jadi penerima tanpa fitur ini tetap melihat emoji biasa.
