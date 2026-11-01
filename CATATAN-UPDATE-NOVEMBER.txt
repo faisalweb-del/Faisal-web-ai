@@ -68,3 +68,118 @@ CARA RILIS:
 [x] KISAH OBROLAN: buka chat teman > tombol ⓘ > '🔥 Kisah obrolan'. Menampilkan api persahabatan (berapa hari berturut-turut kalian berdua saling membalas, plus rekor), siapa lebih banyak bicara, grafik jam paling ramai (WIB), emoji favorit, kata yang sering muncul, jumlah hari aktif, pesan suara dan foto/video. Dihitung dari 500 pesan terakhir, tidak ada data tambahan yang disimpan. Perlu api/contacts.js terbaru.
 
 [x] EMOJI PARTICAL: file baru emoji.js (taruh di folder utama bersama index.html). 213 emoji digambar sendiri dari kode (wajah-wajah, hewan, makanan, alam, benda, panah, tangan, hati berbagai warna, api, bintang, jempol, tepuk tangan, doa, hantu, tengkorak, pizza, kue, dll). Gayanya mengkilap dan berbeda dari emoji iPhone/Android mana pun. Di Pengaturan ada tombol 'Emoji Partical' (Nyalakan/Matikan, bawaan nyala). Emoji di teks pesan, daftar chat, reaksi, dan menu diganti gambar. Yang belum ada di set tetap tampil emoji bawaan HP, dan kolom ketik selalu emoji bawaan HP (browser tidak bisa mengganti isi kolom ketik). Teks pesan yang tersimpan dan dikirim tidak berubah, jadi penerima tanpa fitur ini tetap melihat emoji biasa.
+
+[x] EMOJI DIPERBAIKI: 🍀 🙏 💪 🤞 👌 🐸 🐮 🐶 digambar ulang supaya bentuknya jelas. Perlu emoji.js terbaru.
+[x] FITUR BARU DI CHAT: (1) pesan yang isinya cuma 1-3 emoji tampil BESAR tanpa gelembung dan muncul memantul; (2) ketuk dua kali pesan = reaksi ❤️ dengan hujan hati; (3) papan emoji punya kategori (Wajah, Hati & tangan, Hewan, Makanan, Benda, Simbol); (4) reaksi cepat bertambah jadi 8 (ada 🔥 dan 💯); (5) Pengaturan > Ukuran teks chat (Kecil/Normal/Besar/Sangat besar); (6) Pengaturan > Gaya gelembung chat (Standar/Bulat/Kotak/Awan). Semua tersimpan di HP masing-masing. Perlu index.html dan emoji.js terbaru.
+
+[x] KEUNTUNGAN PRO (supaya orang merasa worth it): 
+    Free: efek pesan Meledak dan Bisik saja; Kisah obrolan cuma api persahabatan + siapa lebih banyak bicara.
+    Pro: semua 6 efek pesan (Jatuh, Teriak, Api, Salju juga), Kisah obrolan lengkap (jam ramai, emoji, kata favorit, media), Tema Pro (Aurora, Senja, Galaksi, Neon: warna gelembung dan tombol kirim bergradien), plus yang sudah ada (50 foto/hari, suara Faisal lebih banyak).
+    Efek dan Kisah dicek di SERVER (tidak bisa dibobol dari HP). Tema dicek di aplikasi. Fitur terkunci memunculkan kartu 'Fitur Pro' dengan tombol Beli Pro yang membuka chat developer. Pengaturan > Keuntungan Pro berisi ringkasan. Perlu api/contacts.js (contacts_version 18) dan index.html.
+
+[x] TAMPILAN BARU (warna tetap): Daftar chat ala Telegram (avatar besar 54px, nama + jam sebaris, lencana jumlah belum dibaca, pencarian bentuk pil), chip filter ala WhatsApp, gelembung chat berekor ala WhatsApp (gelembung beruntun menyambung, jam di dalam gelembung), kolom ketik bentuk pil + tombol kirim bulat ala Telegram, chip tanggal/info, cincin warna di avatar tab Status ala Instagram, bar bawah ala Instagram (ikon + label kecil, aktif berwarna), tombol baru bulat. Hanya CSS dan sedikit JS di index.html.
+
+[x] FITUR PRO TAMBAHAN (cek di aplikasi kecuali efek):
+    1) Pesan terjadwal: tulis pesan, tahan tombol kirim, pilih Jadwalkan (5 menit/30 menit/1 jam/besok 07.00). Terkirim otomatis HANYA saat aplikasi sedang terbuka di HP (belum ada pengirim di server).
+    2) Efek baru Hujan hati dan Hujan bintang (dicek di server, hanya Pro).
+    3) Warna gelembung Pro (Ungu, Merah, Hijau, Oranye, Pink, Teal), 4) Font chat Pro (Serif, Mono, Tulisan tangan, Bulat), 5) Wallpaper bergerak Pro (Aurora, Langit bintang, Senja, Hujan; tidak dipakai kalau memasang foto wallpaper), 6) Lencana PRO di judul dan bingkai foto profil beranimasi. Lencana dan warna hanya terlihat di HP pemakai sendiri.
+    Perlu index.html dan api/contacts.js (contacts_version 19). Dites di tester dengan Pro dipaksa nyala; belum dites dengan akun Pro asli.
+
+[x] PERBAIKAN (laporan: tema tidak berfungsi, terang/gelap, wallpaper):
+    - Tombol 'Tema' lama cuma mengubah halaman web di belakang aplikasi, jadi tampilan aplikasi tidak berubah. Diganti 'Tema aplikasi' (Gelap/Terang) yang benar-benar mengubah seluruh aplikasi: daftar chat, ruang chat teman, pengaturan, menu. Layar Faisal AI tetap gelap (memang dirancang begitu).
+    - Tema Pro (Aurora/Senja/Galaksi/Neon) tertimpa gaya gelembung baru; sudah dibetulkan, ekor gelembung disembunyikan saat tema/gaya khusus dipakai.
+    - Wallpaper chat tidak hilang, hanya terdorong ke bawah oleh baris Pro baru. Sekarang dipindah ke atas, tepat di bawah Tema aplikasi. Baris Pro dikelompokkan di bagian 'Tampilan Pro'.
+    Upload index.html. Dites di tester (gelap, terang, tema Pro, pasang wallpaper); belum di HP asli.
+
+[x] PERBAIKAN: halaman Pengaturan (termasuk bagian Tampilan Pro) sekarang bisa digeser sampai bawah. Upload index.html.
+
+[x] DETAIL KECIL + FITUR BARU (hanya index.html):
+    1) Format teks ala WhatsApp: *tebal*  _miring_  ~coret~  `kode`. Teks yang tersimpan tidak berubah, penerima tanpa update tetap melihat teks biasa.
+    2) Link (https:// atau www.) di pesan jadi bisa diketuk.
+    3) Pemisah hari di chat (Hari ini, Kemarin, tanggal).
+    4) Tombol panah turun ke pesan terbaru, dengan angka pesan baru yang masuk saat kamu menggulir ke atas.
+    5) Bar oranye 'Tidak ada internet' di atas layar saat offline.
+    6) Suara halus dan getar kecil saat kirim dan terima pesan (Pengaturan > Suara dan getar kecil, bisa dimatikan).
+    7) Judul tab menampilkan jumlah chat belum dibaca, mis. (3) Partical Message.
+    8) Tombol Esc menutup chat di komputer.
+    9) Balasan cepat: tombol petir di kolom ketik, isi diatur di Pengaturan. Free 3, Pro 20.
+    10) Kunci aplikasi: Pengaturan > Kunci aplikasi (pakai PIN yang sama dengan kunci obrolan). Muncul saat aplikasi dibuka dan saat dibuka lagi setelah ditinggal lebih dari 20 detik. Lupa PIN = keluar dari akun. Catatan: kunci ini di sisi aplikasi, bukan enkripsi data.
+    Dites di tester; belum di HP asli.
+
+[x] BATCH FITUR KETIGA (hanya index.html, semua tersimpan di HP masing-masing):
+    1) Folder chat: menu ⋮ di beranda > Folder chat untuk membuat folder (jadi tab di beranda). Isi folder diatur dari ⓘ di dalam chat > Folder chat. Free 2 folder, Pro 12.
+    2) Catatan saya: menu ⋮ > Catatan saya (seperti Pesan Tersimpan). Free 20 catatan, Pro tanpa batas. Mendukung format *tebal* dan link.
+    3) Ekspor obrolan (.txt): ⓘ di chat > Ekspor obrolan. Khusus Pro. Hanya pesan yang sedang dimuat di layar. Di HP akan membuka menu bagikan.
+    4) Tandai semua dibaca: menu ⋮ di beranda.
+    5) Tema aplikasi sekarang Gelap / Terang / Otomatis (ikut pengaturan HP).
+    6) Sembunyikan pratinjau pesan: isi pesan di daftar chat dikaburkan sampai ditekan (tidak mengubah isi notifikasi).
+    7) Daftar chat ringkas.
+    8) Popup 'Yang baru di 1.1' muncul sekali setelah update; bisa dibuka lagi di Pengaturan.
+    Dites di tester (Free dan Pro dipaksa); belum di HP asli.
+
+[x] BATCH FITUR KEEMPAT (hanya index.html; semua tersimpan di HP masing-masing):
+    1) Warna aksen (Pengaturan): Biru, Hijau, Pink, Oranye gratis; Emas, Teal, Merah, Lila khusus Pro.
+    2) Gaya gelembung baru: Modern (bulat penuh) dan Garis tipis.
+    3) Model daftar chat: Baris (Telegram) atau Kartu.
+    4) Jam di gelembung bisa disembunyikan.
+    5) Tombol Enter bisa diatur: kirim atau pindah baris.
+    6) Kurangi animasi (hemat baterai).
+    7) Pengingat (menu ⋮): bunyi saat aplikasi terbuka, ada notifikasi kalau diizinkan dan aplikasi di latar. Free 3 aktif, Pro 20.
+    8) Alat seru (menu ⋮): Dadu, Lempar koin, Roda pilih, Hitung mundur.
+    9) Pencapaian (menu ⋮): 12 lencana (pesan terkirim, efek, folder, catatan, streak, Pro, dll).
+    10) Sapaan waktu + hitungan hari beruntun di bawah judul beranda; ketuk judul untuk kembali ke atas.
+    11) Menu tekan-lama di daftar chat: buka, sematkan, favorit, arsipkan, tandai dibaca.
+    12) Mode jangan ganggu 1 jam (tanpa suara/getar), menu ⋮.
+    13) Ajak teman (menu ⋮): bagikan tautan aplikasi.
+    14) 8 reaksi tambahan (🤩 🥹 🫡 🤝 💀 🦄 👑 🍀) di menu reaksi, GRATIS untuk semua.
+    Dites di tester (Free dan Pro dipaksa); belum di HP asli.
+
+[x] BATCH FITUR KELIMA (hanya index.html; semua tersimpan di HP masing-masing, tidak ada yang Pro):
+    Reaksi dan emoji GRATIS untuk semua orang (tidak ada yang dikunci Pro).
+    A) Pengaturan > Kustomisasi lanjutan (17 pilihan): bentuk avatar (bulat/kotak membulat/kotak), ukuran avatar di daftar, jarak antar pesan, lebar gelembung, gelapkan wallpaper, blur wallpaper, font aplikasi (Partical/sistem), pola titik latar chat, format jam 12/24, huruf kapital otomatis, koreksi ejaan, tutup keyboard setelah kirim, kekuatan getar, nada pesan (Pop/Ding/Tok), volume nada, label bar bawah, kaburkan layar saat ke latar.
+    B) Di halaman yang sama: Statistikku, Info penyimpanan, Cadangkan data (satu file; PIN dan wallpaper tidak ikut), Pulihkan data, Reset tampilan.
+    C) Menu ⋮ > Alat seru, 6 tab: Seru (kocok tim dll), Hitung (kalkulator, bagi tagihan, konverter, hitung umur, angka acak), Teks (hitung kata, teks gaya, ubah huruf, pembuat password), Waktu (stopwatch, fokus 25 menit), Game (batu gunting kertas, tebak angka, tic-tac-toe lawan bot), Harian (kata hari ini, tip Partical, jurnal mood, kebiasaan harian).
+    Perbaikan kecil: tombol salin tidak lagi memunculkan error di browser yang menolak akses clipboard.
+    Dites di tester (klik semua tab dan tombol, tanpa error); belum di HP asli.
+
+BATCH 6
+- Animasi emoji saat dikirim (emoji besar): api, hati, tawa, tepuk, nangis, marah, dll gerak beda + percikan. Ketuk emoji besar untuk ulang. Mati kalau "kurangi gerakan".
+- Info kontak dirombak: sampul gradasi warna tiap kontak, hiasan melayang, cincin avatar berputar, tombol cepat (Cari/Bisukan/Favorit/Sematkan), baris berwarna.
+- Pesan suara: gelombang suara, tombol putar berwarna (kuning kamu, ungu lawan), ikon mik.
+- Layar telepon: latar gradasi bergerak, cincin warna-warni, equalizer saat bicara/mendengar, tombol berwarna.
+Upload: index.html saja.
+
+BATCH 6b
+- Info kontak sekarang bisa di-scroll.
+- Layar telepon disederhanakan: tanpa bola cahaya, equalizer, dan cincin berputar.
+
+BATCH 7
+- Telepon ala WhatsApp: nama + status di atas, avatar bulat besar, bar tombol bulat.
+- Developer tidak bisa dimasukkan ke grup oleh orang lain (api/contacts.js, versi 20). Developer sendiri tetap bisa membuat grup.
+- Pengaturan baru "Layar penuh (tanpa bar link)": bar alamat browser disembunyikan.
+Upload: index.html dan api/contacts.js
+
+BATCH 8
+- Tekstur latar chat baru: pola doodle halus (hati, bintang, petir, chat, not musik) + gradasi, versi gelap dan terang. Wallpaper kustom tetap menimpa.
+- 10 alat baru di Alat seru > tab Baru: Hitung mundur, Zona waktu, Pilih dari daftar, Dadu & koin, BMI, Persen, Diskon, Morse, Timer menit, Catatan tempel.
+Upload: index.html
+
+BATCH 9 - GAYA WECHAT
+- Skin baru ala WeChat (body.wc): latar abu-abu, judul di tengah, avatar kotak bersudut, gelembung hijau (kamu) dan putih (lawan), menu bawah hijau, input bar datar. Mode gelap ala WeChat juga ada.
+- Semua fitur tetap. Bisa dimatikan di Pengaturan > Gaya WeChat.
+- Pengguna baru otomatis mulai di tema terang (kalau belum pernah memilih).
+Upload: index.html
+
+BATCH 10
+- Saran balasan dan Ringkas obrolan dihapus dari bar chat.
+- Bahasa: Indonesia, English, 中文, 日本語, 한국어 (Pengaturan > Bahasa; menu, tab, tombol, panel +). Pesan dan teks panjang tetap Indonesia.
+- Panel + ala WeChat: Foto/Video, Balasan cepat, Stiker, Cari pesan, Info kontak.
+Upload: index.html
+
+BATCH 11
+- Faisal AI sekarang tampil seperti chat biasa (gaya WeChat). Daftar riwayat/Percakapan baru dihapus; obrolan terakhir otomatis dilanjutkan, riwayat tidak hilang. Tombol foto di header membuka Hasil foto.
+- Perbaikan: sapaan pertama Faisal tidak pernah muncul (nama fungsi greet bentrok).
+- Perbaikan warna teks panel stiker/efek/menu di gaya WeChat.
+- Wallpaper: sekarang juga berlaku di chat Faisal; ada tombol Latar chat di panel +.
+- VN Faisal yang sudah dibuat disimpan di HP (Cache API, maks 150) jadi tidak dibuat ulang. Jawaban untuk pertanyaan yang sama disimpan (maks 60) supaya hemat token.
+Upload: index.html
