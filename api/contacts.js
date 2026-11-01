@@ -34,10 +34,24 @@ const MEDIA = { // jenis lampiran: pola data URL dan batas ukuran (karakter base
   sticker: { re: /^data:image\/(webp|png);base64,[A-Za-z0-9+\/=]+$/, max: 180000, label: 'Stiker' },
   image: { re: /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+\/=]+$/, max: 420000, label: 'Foto' },
   voice: { re: /^data:audio\/(webm|mp4|ogg|x-m4a|aac)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 330000, label: 'Pesan suara' },
-  audio: { re: /^data:audio\/(mpeg|mp3|ogg|wav|x-wav|wave|webm|mp4|x-m4a|m4a|aac|flac|opus)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 900000, label: 'Audio' },
-  file: { re: /^data:(application\/(pdf|zip|x-zip-compressed|json|msword|octet-stream|rtf|vnd\.[\w.+-]+)|text\/(plain|csv|markdown));base64,[A-Za-z0-9+\/=]+$/, max: 900000, label: 'Berkas' },
+  audio: { re: /^data:audio\/(mpeg|mp3|ogg|wav|x-wav|wave|webm|mp4|x-m4a|m4a|aac|flac|opus)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 2800000, label: 'Audio' },
+  file: { re: /^data:(application\/(pdf|zip|x-zip-compressed|json|msword|octet-stream|rtf|vnd\.[\w.+-]+)|text\/(plain|csv|markdown));base64,[A-Za-z0-9+\/=]+$/, max: 2800000, label: 'Berkas' },
   video: { re: /^data:video\/(webm|mp4)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 880000, label: 'Video' },
 };
+const PART = 800000; // satu dokumen database maksimal sekitar 1 MB, jadi lampiran besar dipecah
+async function putMedia(coll, cid, data, kind, ts) {
+  if (data.length <= PART) { await coll.doc(cid).set({ data, kind, ts }); return; }
+  const n = Math.ceil(data.length / PART);
+  for (let i = 1; i < n; i++) await coll.doc(cid + '~' + i).set({ data: data.slice(i * PART, (i + 1) * PART), ts });
+  await coll.doc(cid).set({ data: data.slice(0, PART), kind, ts, n });
+}
+async function getMediaData(coll, mid) {
+  const d = await coll.doc(mid).get(); if (!d.exists) return null;
+  const x = d.data(); let out = x.data || '';
+  for (let i = 1; i < (x.n || 1); i++) { const p = await coll.doc(mid + '~' + i).get(); if (!p.exists) return null; out += p.data().data || ''; }
+  return out;
+}
+async function delMedia(coll, mid) { await coll.doc(mid).delete(); for (let i = 1; i < 5; i++) { try { await coll.doc(mid + '~' + i).delete(); } catch (e) {} } }
 const GID = /^g_[a-f0-9]{10}$/;
 const MAX_GROUP = 30;
 function tyOf(md, other) { return md && md.ty && md.ty[other] && Date.now() - md.ty[other] < 5000 ? 1 : 0; }
@@ -123,7 +137,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 21, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 22, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   if (String((req.body || {}).op || '') === 'ack') { // tanda "terkirim" dari service worker saat notifikasi sampai di HP penerima (tanpa login, pakai kunci sekali pakai per pesan)
@@ -249,7 +263,7 @@ module.exports = async function handler(req, res) {
         msgs = q.docs.map((d) => d.data());
         if (!(after > 0)) msgs = msgs.reverse();
         const nowx = Date.now(), gone = msgs.filter((m) => m.ex && m.ex <= nowx); // pesan hilang otomatis: sembunyikan dan hapus
-        if (gone.length) { msgs = msgs.filter((m) => !(m.ex && m.ex <= nowx)); try { await Promise.all(gone.slice(0, 20).map(async (m) => { await mcol.doc(m.id).delete(); if (m.kind) await db.collection('threads').doc(tid(me, oid)).collection('media').doc(m.id).delete(); })); } catch (e) {} }
+        if (gone.length) { msgs = msgs.filter((m) => !(m.ex && m.ex <= nowx)); try { await Promise.all(gone.slice(0, 20).map(async (m) => { await mcol.doc(m.id).delete(); if (m.kind) await delMedia(db.collection('threads').doc(tid(me, oid)).collection('media'), m.id); })); } catch (e) {} }
       }
       if (newUpd) {
         const q2 = await mcol.orderBy('ts', 'desc').limit(100).get();
@@ -353,8 +367,8 @@ module.exports = async function handler(req, res) {
       if (op === 'getmedia') {
         const mid = String(b.mid || ''); if (!/^[\w-]{6,40}$/.test(mid)) return L.bad(res, 400, 'Lampiran tidak valid.');
         if (hit('gm' + me, 200, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat.');
-        const d = await mcol.doc(mid).get(); if (!d.exists) return L.bad(res, 404, 'Lampiran sudah tidak ada.');
-        return res.status(200).json({ data: d.data().data });
+        const dd = await getMediaData(mcol, mid); if (dd === null) return L.bad(res, 404, 'Lampiran sudah tidak ada.');
+        return res.status(200).json({ data: dd });
       }
       if (op === 'send') {
         const text = String(b.text == null ? '' : b.text).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, MSG_MAX);
@@ -367,7 +381,7 @@ module.exports = async function handler(req, res) {
         const ts = Math.max(Date.now(), (g.lastTs || 0) + 1), m = { id: cid, from: me, text, ts };
         if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); if (kind === 'audio') m.dur = Math.min(7200, Math.max(0, Number(b.dur) || 0)); if (kind === 'audio' || kind === 'file') { m.name = clean(b.name, 80).replace(/[\\/:*?"<>|]/g, '_') || (kind === 'audio' ? 'audio' : 'berkas'); m.sz = Math.min(2000000, Math.max(0, Math.floor(Number(b.sz) || 0))); } }
         if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me', by: clean(b.reply.by, 30) };
-        if (kind) await mcol.doc(cid).set({ data: mdata, kind, ts });
+        if (kind) await putMedia(mcol, cid, mdata, kind, ts);
         await col.doc(cid).set(m);
         const prev = kind ? MEDIA[kind].label + (text ? ': ' + text : '') : text, upd = { last: prev.slice(0, 80), lastTs: ts, lastFrom: me };
         const myName = clean(mine.name, 24); if (myName && (!g.names || g.names[me] !== myName)) upd.names = Object.assign({}, g.names, { [me]: myName });
@@ -391,7 +405,7 @@ module.exports = async function handler(req, res) {
       } else {
         if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa ditarik.');
         await mref.set({ deleted: true, text: '' }, { merge: true });
-        if (md.kind) await mcol.doc(mid).delete();
+        if (md.kind) await delMedia(mcol, mid);
         if (g.lastTs === md.ts) await grp(gid).set({ last: 'Pesan ditarik' }, { merge: true });
       }
       await grp(gid).set({ rts: now }, { merge: true });
@@ -732,7 +746,7 @@ module.exports = async function handler(req, res) {
       if (!kind && FX_OK.indexOf(String(b.fx || '')) >= 0) { if (FX_FREE.indexOf(String(b.fx)) < 0 && !(await isProUid(db, me))) return L.bad(res, 403, 'Efek ini khusus pengguna Pro.'); m.fx = String(b.fx); } // efek pesan
       if (meta.exists && meta.data().dis) m.ex = ts + meta.data().dis * 1000;
       if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me' };
-      if (kind) await db.collection('threads').doc(tid(me, id)).collection('media').doc(cid).set({ data: mdata, kind, ts });
+      if (kind) await putMedia(db.collection('threads').doc(tid(me, id)).collection('media'), cid, mdata, kind, ts);
       await col.doc(cid).set(m);
       const prev = kind ? MEDIA[kind].label + (text ? ': ' + text : '') : text;
       await tref.set({ last: prev.slice(0, 80), lastTs: ts, lastFrom: me }, { merge: true });
@@ -773,9 +787,9 @@ module.exports = async function handler(req, res) {
       const mid = String(b.mid || '');
       if (!/^[\w-]{6,40}$/.test(mid)) return L.bad(res, 400, 'Lampiran tidak valid.');
       if (hit('gm' + me, 200, 60 * 1000)) return L.bad(res, 429, 'Terlalu cepat.');
-      const d = await db.collection('threads').doc(tid(me, id)).collection('media').doc(mid).get();
-      if (!d.exists) return L.bad(res, 404, 'Lampiran sudah tidak ada.');
-      return res.status(200).json({ data: d.data().data });
+      const dd = await getMediaData(db.collection('threads').doc(tid(me, id)).collection('media'), mid);
+      if (dd === null) return L.bad(res, 404, 'Lampiran sudah tidak ada.');
+      return res.status(200).json({ data: dd });
     }
 
     if (op === 'react' || op === 'unsend' || op === 'edit') {
@@ -799,7 +813,7 @@ module.exports = async function handler(req, res) {
       } else {
         if (md.from !== me) return L.bad(res, 403, 'Hanya pesanmu yang bisa ditarik.');
         await mref.set({ deleted: true, text: '' }, { merge: true });
-        if (md.kind) await db.collection('threads').doc(tid(me, id)).collection('media').doc(mid).delete();
+        if (md.kind) await delMedia(db.collection('threads').doc(tid(me, id)).collection('media'), mid);
         if (meta.exists && meta.data().lastTs === md.ts) await tref.set({ last: 'Pesan ditarik' }, { merge: true });
       }
       await tref.set({ rts: now }, { merge: true });
