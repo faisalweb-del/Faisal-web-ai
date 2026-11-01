@@ -16,7 +16,9 @@ async function devUid(db) { // akun developer: terdaftar saat dia masuk dengan D
   if (!uid) { try { const n = await db.collection('numbers').doc(DEV_NUMBER).get(); if (n.exists) uid = n.data().uid || ''; } catch (e) {} }
   _dev = { uid, t: Date.now() }; return uid;
 }
-const FX_OK = ['boom', 'jatuh', 'bisik', 'teriak', 'api', 'salju'];
+const FX_FREE = ['boom', 'bisik'];
+async function isProUid(db, uid) { try { if (uid === (await devUid(db))) return true; const u = await L.rpc('faisal_usage', { p_user: uid }); return !!(u && u.plan === 'pro'); } catch (e) { return false; } }
+const FX_OK = ['boom', 'jatuh', 'bisik', 'teriak', 'api', 'salju', 'hati', 'bintang'];
 const VF_DAY = 24 * 3600 * 1000, VF_PLATFORMS = ['TikTok', 'Instagram', 'YouTube', 'Website'];
 async function vgMap(db, ids) { // siapa saja yang punya centang hijau yang masih aktif
   const out = {}; ids = Array.from(new Set(ids.filter(Boolean))).slice(0, 120); if (!ids.length) return out;
@@ -119,7 +121,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 17, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 20, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   if (String((req.body || {}).op || '') === 'ack') { // tanda "terkirim" dari service worker saat notifikasi sampai di HP penerima (tanpa login, pakai kunci sekali pakai per pesan)
@@ -290,8 +292,8 @@ module.exports = async function handler(req, res) {
       if (hit('gc' + me, 5, 3600 * 1000)) return L.bad(res, 429, 'Terlalu sering bikin grup. Coba lagi nanti.');
       const name = clean(b.name, 40); if (!name) return L.bad(res, 400, 'Isi nama grup dulu.');
       const oks = await okContacts();
-      const ms = [...new Set((Array.isArray(b.members) ? b.members : []).map(String))].filter((x) => x !== me && oks[x]).slice(0, MAX_GROUP - 1);
-      if (!ms.length) return L.bad(res, 400, 'Pilih minimal 1 teman.');
+      const dv0 = await devUid(db), ms = [...new Set((Array.isArray(b.members) ? b.members : []).map(String))].filter((x) => x !== me && oks[x] && (me === dv0 || x !== dv0)).slice(0, MAX_GROUP - 1);
+      if (!ms.length) return L.bad(res, 400, 'Pilih minimal 1 teman. Developer tidak bisa dimasukkan ke grup.');
       const all = [me].concat(ms), profs = await db.getAll(...all.map((u) => prof(u))), names = {};
       all.forEach((u, i) => { const p = profs[i] && profs[i].exists ? profs[i].data() : {}; names[u] = clean(p.name, 24) || (oks[u] ? label(oks[u]) : '') || 'Anggota'; });
       const gid = 'g_' + crypto.randomBytes(5).toString('hex'), now = Date.now();
@@ -332,8 +334,8 @@ module.exports = async function handler(req, res) {
         return res.status(200).json({ ok: true });
       }
       if (g.owner !== me) return L.bad(res, 403, 'Hanya pembuat grup yang bisa menambah anggota.');
-      const oks = await okContacts();
-      const add = [...new Set((Array.isArray(b.members) ? b.members : []).map(String))].filter((x) => oks[x] && !g.members.includes(x)).slice(0, MAX_GROUP - g.members.length);
+      const oks = await okContacts(), dv1 = await devUid(db);
+      const add = [...new Set((Array.isArray(b.members) ? b.members : []).map(String))].filter((x) => oks[x] && !g.members.includes(x) && (me === dv1 || x !== dv1)).slice(0, MAX_GROUP - g.members.length);
       if (!add.length) return L.bad(res, 400, 'Tidak ada teman yang bisa ditambahkan (penuh atau sudah masuk).');
       const profs = await db.getAll(...add.map((u) => prof(u))), names = Object.assign({}, g.names);
       add.forEach((u, i) => { const p = profs[i] && profs[i].exists ? profs[i].data() : {}; names[u] = clean(p.name, 24) || label(oks[u]) || 'Anggota'; });
@@ -725,7 +727,7 @@ module.exports = async function handler(req, res) {
       const ts = Math.max(Date.now(), ((meta.exists && meta.data().lastTs) || 0) + 1), m = { id: cid, from: me, text, ts };
       if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
       m.ak = crypto.randomBytes(8).toString('hex'); m.rk = crypto.randomBytes(8).toString('hex');
-      if (!kind && FX_OK.indexOf(String(b.fx || '')) >= 0) m.fx = String(b.fx); // efek pesan
+      if (!kind && FX_OK.indexOf(String(b.fx || '')) >= 0) { if (FX_FREE.indexOf(String(b.fx)) < 0 && !(await isProUid(db, me))) return L.bad(res, 403, 'Efek ini khusus pengguna Pro.'); m.fx = String(b.fx); } // efek pesan
       if (meta.exists && meta.data().dis) m.ex = ts + meta.data().dis * 1000;
       if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me' };
       if (kind) await db.collection('threads').doc(tid(me, id)).collection('media').doc(cid).set({ data: mdata, kind, ts });
@@ -761,6 +763,7 @@ module.exports = async function handler(req, res) {
       const today = Math.floor((Date.now() + OFF) / DAY); let streak = 0, k = days[today] && days[today].a && days[today].b ? today : today - 1; while (days[k] && days[k].a && days[k].b) { streak++; k--; }
       let best = 0, run = 0; Object.keys(days).map(Number).sort((x, y) => x - y).forEach((dk, i, arr) => { if (days[dk].a && days[dk].b) { run = i && arr[i - 1] === dk - 1 && run ? run + 1 : 1; if (run > best) best = run; } else run = 0; });
       const top = (o, n) => Object.keys(o).sort((x, y) => o[y] - o[x]).slice(0, n).map((x) => [x, o[x]]);
+      const pro2 = await isProUid(db, me); if (!pro2) return res.status(200).json({ lock: 1, total: mine2 + theirs2, me: mine2, them: theirs2, streak, best, days: Object.keys(days).length, hours: new Array(24).fill(0), emoji: [], words: [], voice: 0, media: 0, first: 0 });
       return res.status(200).json({ total: mine2 + theirs2, me: mine2, them: theirs2, hours, emoji: top(em, 3), words: top(wd, 3), streak, best, first, voice, media, days: Object.keys(days).length });
     }
     if (op === 'getmedia') {
