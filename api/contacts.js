@@ -34,6 +34,8 @@ const MEDIA = { // jenis lampiran: pola data URL dan batas ukuran (karakter base
   sticker: { re: /^data:image\/(webp|png);base64,[A-Za-z0-9+\/=]+$/, max: 180000, label: 'Stiker' },
   image: { re: /^data:image\/(jpeg|webp);base64,[A-Za-z0-9+\/=]+$/, max: 420000, label: 'Foto' },
   voice: { re: /^data:audio\/(webm|mp4|ogg|x-m4a|aac)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 330000, label: 'Pesan suara' },
+  audio: { re: /^data:audio\/(mpeg|mp3|ogg|wav|x-wav|wave|webm|mp4|x-m4a|m4a|aac|flac|opus)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 900000, label: 'Audio' },
+  file: { re: /^data:(application\/(pdf|zip|x-zip-compressed|json|msword|octet-stream|rtf|vnd\.[\w.+-]+)|text\/(plain|csv|markdown));base64,[A-Za-z0-9+\/=]+$/, max: 900000, label: 'Berkas' },
   video: { re: /^data:video\/(webm|mp4)(;codecs=[\w.,-]+)?;base64,[A-Za-z0-9+\/=]+$/, max: 880000, label: 'Video' },
 };
 const GID = /^g_[a-f0-9]{10}$/;
@@ -42,7 +44,7 @@ function tyOf(md, other) { return md && md.ty && md.ty[other] && Date.now() - md
 function gView(me, g) {
   return (m) => {
     const o = { id: m.id, from: m.from === me ? 'me' : 'them', text: m.deleted ? '' : m.text, ts: m.ts };
-    if (m.deleted) o.deleted = true; else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; }
+    if (m.deleted) o.deleted = true; else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; if (m.name) { o.name = m.name; o.sz = m.sz || 0; } }
     if (m.ed && !m.deleted) o.ed = 1;
     if (m.from !== me) o.by = (g.names && g.names[m.from]) || 'Anggota';
     if (m.react && typeof m.react === 'object') {
@@ -121,7 +123,7 @@ async function notifyUser(db, toId, payload) {
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 20, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
+  if (req.method === 'GET') return res.status(200).json({ ok: true, contacts_version: 21, fitur: ['efek-pesan', 'centang-dummy', 'mengetik', 'pesan-suara', 'bisukan', 'pesan-hilang', 'edit-pesan', 'lampiran', 'stiker', 'foto-profil', 'grup', 'status', 'online', 'centang', 'grup-profil', 'status-video', 'notif-aksi', 'developer', 'centang-hijau', 'dummy', 'kontak-langsung', 'qr', 'kontak-langsung', 'qr-kontak'] });
   if (req.method !== 'POST') return L.bad(res, 405, 'Gunakan POST.');
   if (!L.enabled()) return L.bad(res, 404, 'Login belum diaktifkan.');
   if (String((req.body || {}).op || '') === 'ack') { // tanda "terkirim" dari service worker saat notifikasi sampai di HP penerima (tanpa login, pakai kunci sekali pakai per pesan)
@@ -234,7 +236,7 @@ module.exports = async function handler(req, res) {
         const o = { id: m.id, from: m.from === me ? 'me' : 'them', text: m.deleted ? '' : m.text, ts: m.ts };
         if (m.from === me && !m.deleted) o.st = m.ts <= ((md.rd || {})[oid] || 0) ? 3 : m.ts <= ((md.dv || {})[oid] || 0) ? 2 : 1;
         if (m.deleted) o.deleted = true;
-        else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; }
+        else if (m.kind) { o.kind = m.kind; o.ar = m.ar || 1; if (m.dur) o.dur = m.dur; if (m.name) { o.name = m.name; o.sz = m.sz || 0; } }
         if (m.ed && !m.deleted) o.ed = 1;
         if (m.fx && !m.deleted && FX_OK.indexOf(m.fx) >= 0) o.fx = m.fx;
         if (m.react && typeof m.react === 'object') { const r = {}; Object.keys(m.react).forEach((k) => { if (m.react[k]) r[k === me ? 'me' : 'them'] = m.react[k]; }); if (Object.keys(r).length) o.react = r; }
@@ -363,7 +365,7 @@ module.exports = async function handler(req, res) {
         if (kind && (hit('media' + me, 12, 60 * 1000) || hit('mediad' + me, 150, 24 * 3600 * 1000))) return L.bad(res, 429, 'Terlalu banyak kirim lampiran. Tunggu sebentar.');
         const cid = /^[\w-]{6,40}$/.test(String(b.cid || '')) ? String(b.cid) : crypto.randomBytes(8).toString('hex');
         const ts = Math.max(Date.now(), (g.lastTs || 0) + 1), m = { id: cid, from: me, text, ts };
-        if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
+        if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); if (kind === 'audio') m.dur = Math.min(7200, Math.max(0, Number(b.dur) || 0)); if (kind === 'audio' || kind === 'file') { m.name = clean(b.name, 80).replace(/[\\/:*?"<>|]/g, '_') || (kind === 'audio' ? 'audio' : 'berkas'); m.sz = Math.min(2000000, Math.max(0, Math.floor(Number(b.sz) || 0))); } }
         if (b.reply && typeof b.reply === 'object' && /^[\w-]{6,40}$/.test(String(b.reply.mid || ''))) m.reply = { mid: String(b.reply.mid), text: clean(b.reply.text, 120), who: b.reply.who === 'them' ? 'them' : 'me', by: clean(b.reply.by, 30) };
         if (kind) await mcol.doc(cid).set({ data: mdata, kind, ts });
         await col.doc(cid).set(m);
@@ -371,7 +373,7 @@ module.exports = async function handler(req, res) {
         const myName = clean(mine.name, 24); if (myName && (!g.names || g.names[me] !== myName)) upd.names = Object.assign({}, g.names, { [me]: myName });
         await grp(gid).set(upd, { merge: true });
         try { await Promise.race([Promise.all(g.members.filter((u) => u !== me).slice(0, 15).map((u) => notifyUser(db, u, { title: g.name || 'Grup', body: ((g.names && g.names[me]) || 'Anggota') + ': ' + prev.slice(0, 100), tag: 'chat-' + gid, url: '/?chat=' + gid }))), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { console.error('push grup', e && e.message); }
-        return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, kind: kind || undefined, ar: m.ar, dur: m.dur, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who, by: m.reply.by } : undefined } });
+        return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, kind: kind || undefined, ar: m.ar, dur: m.dur, name: m.name, sz: m.sz, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who, by: m.reply.by } : undefined } });
       }
       const mid = String(b.mid || ''); if (!/^[\w-]{6,40}$/.test(mid)) return L.bad(res, 400, 'Pesan tidak valid.');
       const mref = col.doc(mid), ms = await mref.get(); if (!ms.exists) return L.bad(res, 404, 'Pesan tidak ditemukan.');
@@ -725,7 +727,7 @@ module.exports = async function handler(req, res) {
       const cid = /^[\w-]{6,40}$/.test(String(b.cid || '')) ? String(b.cid) : crypto.randomBytes(8).toString('hex');
       const tref = db.collection('threads').doc(tid(me, id)), meta = await tref.get();
       const ts = Math.max(Date.now(), ((meta.exists && meta.data().lastTs) || 0) + 1), m = { id: cid, from: me, text, ts };
-      if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); }
+      if (kind) { m.kind = kind; m.ar = Math.min(4, Math.max(0.25, Number(b.ar) || 1)); if (kind === 'video' || kind === 'voice') m.dur = Math.min(60, Math.max(0, Number(b.dur) || 0)); if (kind === 'audio') m.dur = Math.min(7200, Math.max(0, Number(b.dur) || 0)); if (kind === 'audio' || kind === 'file') { m.name = clean(b.name, 80).replace(/[\\/:*?"<>|]/g, '_') || (kind === 'audio' ? 'audio' : 'berkas'); m.sz = Math.min(2000000, Math.max(0, Math.floor(Number(b.sz) || 0))); } }
       m.ak = crypto.randomBytes(8).toString('hex'); m.rk = crypto.randomBytes(8).toString('hex');
       if (!kind && FX_OK.indexOf(String(b.fx || '')) >= 0) { if (FX_FREE.indexOf(String(b.fx)) < 0 && !(await isProUid(db, me))) return L.bad(res, 403, 'Efek ini khusus pengguna Pro.'); m.fx = String(b.fx); } // efek pesan
       if (meta.exists && meta.data().dis) m.ex = ts + meta.data().dis * 1000;
@@ -746,7 +748,7 @@ module.exports = async function handler(req, res) {
           }
         } catch (e) { console.error('vf status', e && e.message); }
       }
-      return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, st: 1, fx: m.fx || undefined, kind: kind || undefined, ar: m.ar, dur: m.dur, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who } : undefined } });
+      return res.status(200).json({ ok: true, msg: { id: cid, from: 'me', text, ts, st: 1, fx: m.fx || undefined, kind: kind || undefined, ar: m.ar, dur: m.dur, name: m.name, sz: m.sz, reply: m.reply ? { mid: m.reply.mid, text: m.reply.text, who: m.reply.who } : undefined } });
     }
 
     if (op === 'stats') { // kisah obrolan: ringkasan 500 pesan terakhir (jam teraktif, emoji, api persahabatan)
